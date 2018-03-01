@@ -2,8 +2,11 @@
   "name": "tw-reader",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "dependencies": {
+    "ejs": "^2.5.7",
+    "express": "^4.16.2",
+    "request": "^2.83.0",
     "twitter": "^1.7.1"
   },
   "devDependencies": {
@@ -16,7 +19,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/twitter.js"
+    "start": "node app.js"
   },
   "author": "",
   "license": "ISC"
