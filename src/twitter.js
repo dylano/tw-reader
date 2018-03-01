@@ -15,6 +15,10 @@ function logError(error) {
   log(`**Error: ${error.message}`);
 }
 
+function formatTweet(tweet) {
+  return `${tweet.user.name} (${tweet.user.id}):  <${tweet.id}>  ${tweet.text}`;
+}
+
 // Sample user timeline
 const userParams = {
   screen_name: "dtoliver",
@@ -23,14 +27,16 @@ const userParams = {
   include_entities: 0
 };
 
-client
-  .get("statuses/user_timeline", userParams)
-  .then(tweets => {
-    console.log(tweets);
-  })
-  .catch(error => {
-    logError(error);
-  });
+function getUserTimeline(params) {
+  client
+    .get("statuses/user_timeline", params)
+    .then(tweets => {
+      tweets.forEach(tweet => console.log(formatTweet(tweet)));
+    })
+    .catch(error => {
+      logError(error);
+    });
+}
 
 // Sample home timeline
 const homeParams = {
@@ -40,42 +46,37 @@ const homeParams = {
   trim_user: 0
 };
 
-client
-  .get("statuses/home_timeline", homeParams)
-  .then(tweets => {
-    for (tweet of tweets) {
-      console.log(formatTweet(tweet));
-    }
-  })
-  .catch(error => {
-    logError(error);
-  });
-
-function formatTweet(tweet) {
-  return `${tweet.user.name} (${tweet.user.id}):  <${tweet.id}>  ${tweet.text}`;
+function getHomeTimeline(params) {
+  client
+    .get("statuses/home_timeline", params)
+    .then(tweets => {
+      tweets.forEach(tweet => console.log(formatTweet(tweet)));
+    })
+    .catch(error => {
+      logError(error);
+    });
 }
 
 // Sample list of friends
-const friendCursor = -1;
 const friendParams = {
   screen_name: "dtoliver",
   count: 20,
   next_cursor_str: -1
 };
 
-friendParams.next_cursor_str = friendCursor;
-getFriends(friendParams);
-// update friendCursor and call for the next batch
-
 function getFriends(params) {
   client
     .get("friends/list", params)
     .then(fList => {
-      for (user of fList.users) {
+      fList.users.forEach(user => {
         log(user.name);
-      }
+      });
     })
     .catch(error => {
       logError(error);
     });
 }
+
+getUserTimeline(userParams);
+getHomeTimeline(homeParams);
+getFriends(friendParams);
