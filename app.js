@@ -12,6 +12,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/user", (req, res) => {
+  twreader.getUserTimeline();
   res.render("user");
 });
 
@@ -20,9 +21,14 @@ app.get("/timeline", (req, res) => {
 });
 
 app.get("/friends", (req, res) => {
-  twreader.getFriends().then(friends => {
-    res.render("friends", { friends });
-  });
+  twreader
+    .getFriends("dtoliver")
+    .then(friends => {
+      res.render("friends", { friends });
+    })
+    .catch(err => {
+      console.log(err);
+    });
 });
 
 app.listen(PORT, () => {

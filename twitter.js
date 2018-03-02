@@ -17,9 +17,9 @@ function logError(error) {
   log(`**Error: ${error.message}`);
 }
 
-methods.formatTweet = tweet => {
+function formatTweet(tweet) {
   return `${tweet.user.name} (${tweet.user.id}):  <${tweet.id}>  ${tweet.text}`;
-};
+}
 
 // Sample user timeline
 const userParams = {
@@ -52,31 +52,34 @@ methods.getHomeTimeline = () => {
   client
     .get("statuses/home_timeline", homeParams)
     .then(tweets => {
-      tweets.forEach(tweet => console.log(formatTweet(tweet)));
+      tweets.forEach(tweet => console.log(this.formatTweet(tweet)));
     })
     .catch(error => {
       logError(error);
     });
 };
 
-// Sample list of friends
-const friendParams = {
-  screen_name: "dtoliver",
-  count: 20,
-  next_cursor_str: -1
-};
+methods.getFriends = async screenName => {
+  let allFriends = [];
+  const friendParams = {
+    screen_name: screenName,
+    count: 50
+  };
+  let cursor = "-1";
+  try {
+    while (cursor !== "0") {
+      friendParams.cursor = cursor;
+      console.log(`** Cursor = ${cursor}`);
+      const fList = await client.get("friends/list", friendParams);
+      allFriends = allFriends.concat(fList.users);
+      cursor = fList.next_cursor_str;
+    }
 
-methods.getFriends = () => {
-  return new Promise((resolve, reject) => {
-    client
-      .get("friends/list", friendParams)
-      .then(fList => {
-        resolve(fList.users);
-      })
-      .catch(error => {
-        reject(error);
-      });
-  });
+    return allFriends;
+  } catch (err) {
+    console.log(err);
+    throw new Error(err);
+  }
 };
 
 module.exports = methods;
