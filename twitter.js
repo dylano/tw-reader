@@ -9,68 +9,59 @@ const client = new Twitter({
   access_token_secret: process.env.TW_TOKEN_SECRET
 });
 
-function log(msg) {
-  console.log(msg);
-}
-
-function logError(error) {
-  log(`**Error: ${error.message}`);
-}
-
 function formatTweet(tweet) {
-  return `${tweet.user.name} (${tweet.user.id}):  <${tweet.id}>  ${tweet.text}`;
+  // console.log(tweet);
+  return `${tweet.user.name} (${tweet.user.id}):  <${tweet.id_str}>  ${
+    tweet.full_text
+  }`;
 }
 
-// Sample user timeline
-const userParams = {
-  screen_name: "dtoliver",
-  count: 1,
-  trim_user: 1,
-  include_entities: 0
+methods.getUserTimeline = async () => {
+  const params = {
+    screen_name: "dtoliver",
+    count: 5,
+    trim_user: 1
+  };
+  const tweets = await client.get("statuses/user_timeline", params);
+  tweets.forEach(tweet => console.log(formatTweet(tweet)));
 };
 
-methods.getUserTimeline = () => {
-  client
-    .get("statuses/user_timeline", userParams)
-    .then(tweets => {
-      tweets.forEach(tweet => console.log(formatTweet(tweet)));
-    })
-    .catch(error => {
-      logError(error);
-    });
+methods.getTweet = async tweetId => {
+  try {
+    const params = {
+      tweet_mode: "extended",
+      id: tweetId,
+      trim_user: 1
+    };
+    const tweet = await client.get("statuses/show", params);
+    console.log(tweet);
+  } catch (err) {
+    console.log(err);
+  }
 };
 
-// Sample home timeline
-const homeParams = {
-  screen_name: "dtoliver",
-  since_id: "949401650174840800",
-  count: 5,
-  trim_user: 0
-};
-
-methods.getHomeTimeline = () => {
-  client
-    .get("statuses/home_timeline", homeParams)
-    .then(tweets => {
-      tweets.forEach(tweet => console.log(this.formatTweet(tweet)));
-    })
-    .catch(error => {
-      logError(error);
-    });
+methods.getHomeTimeline = async () => {
+  const params = {
+    screen_name: "dtoliver",
+    since_id: "949401650174840800",
+    tweet_mode: "extended",
+    count: 5,
+    trim_user: 0
+  };
+  const tweets = await client.get("statuses/home_timeline", params);
+  tweets.forEach(tweet => console.log(formatTweet(tweet)));
 };
 
 methods.getFriends = async screenName => {
   let allFriends = [];
-  const friendParams = {
-    screen_name: screenName,
-    count: 50
-  };
+  const params = { screen_name: screenName, count: 50 };
   let cursor = "-1";
   try {
     while (cursor !== "0") {
-      friendParams.cursor = cursor;
+      params.cursor = cursor;
       console.log(`** Cursor = ${cursor}`);
-      const fList = await client.get("friends/list", friendParams);
+      // eslint-disable-next-line no-await-in-loop, call depends on previous iteration
+      const fList = await client.get("friends/list", params);
       allFriends = allFriends.concat(fList.users);
       cursor = fList.next_cursor_str;
     }

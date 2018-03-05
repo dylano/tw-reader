@@ -17,6 +17,8 @@ app.get("/user", (req, res) => {
 });
 
 app.get("/timeline", (req, res) => {
+  twreader.getHomeTimeline();
+  twreader.getTweet("970637621243334656");
   res.render("timeline");
 });
 
