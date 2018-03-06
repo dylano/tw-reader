@@ -17,6 +17,19 @@
                 </li>
             </ul>
 
+
+            <h4>Timeline</h4>
+            <ul>
+                <% tweets.forEach( tweet => { 
+                    const text = tweet.full_text || tweet.text;
+                    const tweetstr = `@${tweet.user.name} - ${text}`; %>
+                    <li>
+                        <%= tweetstr %>
+                    </li>
+                    <% }) %>
+            </ul>
         </div>
 
-        <% include partials/footer %>
+    </div>
+
+    <% include partials/footer %>

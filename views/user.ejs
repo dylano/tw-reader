@@ -17,6 +17,14 @@
                 </li>
             </ul>
 
+            <h4>User Tweets</h4>
+            <ul>
+                <% tweets.forEach( tweet => { %>
+                    <li>
+                        <%= tweet.full_text %>
+                    </li>
+                    <% }) %>
+            </ul>
         </div>
 
         <% include partials/footer %>

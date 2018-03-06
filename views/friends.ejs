@@ -21,9 +21,7 @@
             <ul>
                 <% friends.forEach( friend => { %>
                     <li>
-                        <%= friend.name %> (
-                            <a href="https://twitter.com/<%=friend.screen_name%>">@
-                                <%=friend.screen_name%>)</a>
+                        <%= friend.name %>
                     </li>
                     <% }) %>
             </ul>
