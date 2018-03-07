@@ -28,7 +28,12 @@
                     const tweetStr = `@${tweet.userScreenName}: ${tweet.text}`;
                     %>
                     <li>
-                        <%= tweetStr %>
+                        <% if(!tweet.isRead) { %>
+                            <form class="text-left" action="/tweets/<%=tweet._id%>?_method=PUT" method="POST">
+                                <button class="btn btn-link btn-xs">Read</button>
+                            </form>
+                            <% } %>
+                                <%= tweetStr %>
                     </li>
                     <% }) %>
             </ul>

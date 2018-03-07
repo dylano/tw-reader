@@ -1,6 +1,7 @@
 const express = require("express");
 const TwData = require("./twdata");
 const mongoose = require("mongoose");
+const methodOverride = require("method-override");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -8,6 +9,7 @@ const twData = new TwData();
 
 app.use(express.static("public"));
 app.set("view engine", "ejs");
+app.use(methodOverride("_method"));
 
 const dbconnect = process.env.MONGODB_URI || "mongodb://localhost/twreader";
 console.log(`Connecting to Mongo: ${dbconnect}`);
@@ -77,7 +79,13 @@ app.post("/friends", (req, res) => {
 });
 
 app.post("/timeline", (req, res) => {
-  twData.loadTweets("dtoliver", 50).then(() => {
+  twData.loadTweets("dtoliver", 30).then(() => {
+    res.redirect("/timeline");
+  });
+});
+
+app.put("/tweets/:id", (req, res) => {
+  twData.markTweetAsRead(req.params.id).then(() => {
     res.redirect("/timeline");
   });
 });

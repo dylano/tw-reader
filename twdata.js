@@ -42,11 +42,8 @@ module.exports = class TwData {
     return Tweet.find();
   }
 
-  async markTweetAsRead(tweetId) {
-    /*
-    find tweet in db and update read=1
-    */
-    console.log(`twdata.markTweetAsRead ${tweetId}`);
+  async markTweetAsRead(tweetMongoId) {
+    await Tweet.findByIdAndUpdate(tweetMongoId, { isRead: true });
   }
 
   async getFriends() {
@@ -82,6 +79,7 @@ module.exports = class TwData {
         Tweet.create({
           id: tweet.id_str,
           text: tweet.full_text || tweet.text,
+          timestamp: tweet.created_at,
           userId: tweet.user.id_str,
           userName: tweet.user.name,
           userScreenName: tweet.user.screen_name,
