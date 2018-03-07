@@ -1,0 +1,37 @@
+<% include partials/header %>
+
+    <div class="container">
+
+        <div class="container">
+            <h1>tw-reader User</h1>
+
+            <ul>
+                <li>
+                    <a href="/user/">User</a>
+                </li>
+                <li>
+                    <a href="/timeline/">Timeline</a>
+                </li>
+                <li>
+                    <a href="/friends/">Friends</a>
+                </li>
+            </ul>
+
+            <h4>
+                Tweets by
+                <%=friend.name%>
+                    <a href="https://twitter.com/<%=friend.screenName%>">(@
+                        <%=friend.screenName%>)</a>
+            </h4>
+            <ul>
+                <% tweets.forEach( tweet => { 
+                        const tweetStr = `${tweet.text}`;
+                        %>
+                    <li>
+                        <%= tweetStr %>
+                    </li>
+                    <% }) %>
+            </ul>
+        </div>
+
+        <% include partials/footer %>

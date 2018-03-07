@@ -36,7 +36,7 @@ app.get("/user", (req, res) => {
 app.get("/timeline", (req, res) => {
   // twData.loadTweets("dtoliver", 30);
   twData
-    .getHomeTweets()
+    .getTimelineTweets()
     .then(tweets => {
       res.render("timeline", { tweets });
     })
@@ -58,7 +58,16 @@ app.get("/friends", (req, res) => {
 });
 
 app.get("/friends/:id", (req, res) => {
-  res.send(`tweets for friend ${req.params.id}`);
+  try {
+    twData.getFriend(req.params.id).then(friend => {
+      twData.getTweetsByFriendId(friend.id).then(tweets => {
+        res.render("friend", { friend, tweets });
+      });
+    });
+    // res.send(`tweets for user ${req.params.id}`);
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 app.post("/friends", (req, res) => {

@@ -27,7 +27,9 @@
                     <% friends.forEach( friend => { %>
                         <li>
                             <img src="<%=friend.imgUrl%>" />
-                            <%= friend.name %>
+                            <a href="/friends/<%=friend._id%>">
+                                <%= friend.name %>
+                            </a>
                         </li>
                         <% }) %>
                 </ul>

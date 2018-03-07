@@ -1,18 +1,9 @@
 /* eslint class-methods-use-this: 0 */ // --> OFF
 const Twitter = require("./twitter");
-const mongoose = require("mongoose");
 const Friend = require("./models/friend");
 const Tweet = require("./models/tweet");
 
 const twitter = new Twitter();
-
-const sampleFriend = {
-  id: "abc123",
-  screenName: "deezknees",
-  name: "D's Knees",
-  imgUrl:
-    "https://pbs.twimg.com/profile_images/2858269006/7f17d572927d186238fbf0776fd997e4_normal.jpeg"
-};
 
 function formatTweet(tweet) {
   // console.log(tweet);
@@ -32,6 +23,10 @@ module.exports = class TwData {
     console.log(tweet);
   }
 
+  async getFriend(friendId) {
+    return Friend.findById(friendId);
+  }
+
   async getUserTweets(screenName, count) {
     /*
     look up most recent tweets 
@@ -40,7 +35,7 @@ module.exports = class TwData {
     return tweets;
   }
 
-  async getHomeTweets() {
+  async getTimelineTweets() {
     /*
     look up most recent tweets 
     */
@@ -51,7 +46,7 @@ module.exports = class TwData {
     /*
     find tweet in db and update read=1
     */
-    console.log("twdata.markTweetAsRead");
+    console.log(`twdata.markTweetAsRead ${tweetId}`);
   }
 
   async getFriends() {
@@ -99,12 +94,13 @@ module.exports = class TwData {
     return tweets;
   }
 
-  async getTweetsByFriend(friendId) {
+  async getTweetsByFriendId(friendId) {
     /*
     read tweets from db
     return {new: [], unread:[]}
     */
-    console.log("twdata.getTweetsByFriend");
+    console.log(`twdata.getTweetsByFriend ${friendId}`);
+    return Tweet.find({ userId: friendId });
   }
 
   async refreshTweets() {
