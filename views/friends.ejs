@@ -17,18 +17,21 @@
                 </li>
             </ul>
 
-            <h4>Friends</h4>
-            <ul>
-                <% friends.forEach( friend => { %>
-                    <li>
-                        <%= friend.name %>
-                    </li>
-                    <% }) %>
-            </ul>
-
-            <form action='/friends' method="POST">
+            <form class="text-right" action='/friends' method="POST">
                 <button>Refresh from Twitter</button>
             </form>
+
+            <h4>Friends</h4>
+            <div class="friendlist">
+                <ul>
+                    <% friends.forEach( friend => { %>
+                        <li>
+                            <img src="<%=friend.imgUrl%>" />
+                            <%= friend.name %>
+                        </li>
+                        <% }) %>
+                </ul>
+            </div>
         </div>
 
         <% include partials/footer %>

@@ -2,6 +2,7 @@
 const Twitter = require("./twitter");
 const mongoose = require("mongoose");
 const Friend = require("./models/friend");
+const Tweet = require("./models/tweet");
 
 const twitter = new Twitter();
 
@@ -39,12 +40,11 @@ module.exports = class TwData {
     return tweets;
   }
 
-  async getHomeTweets(screenName, count) {
+  async getHomeTweets() {
     /*
     look up most recent tweets 
     */
-    const tweets = await twitter.getHomeTimeline(screenName, count);
-    return tweets;
+    return Tweet.find();
   }
 
   async markTweetAsRead(tweetId) {
@@ -59,11 +59,6 @@ module.exports = class TwData {
   }
 
   async loadFriends(screenName) {
-    /*
-    call twitter to get friends list
-    insert into db
-    return db.find()
-    */
     const friends = await twitter.getFriends(screenName);
 
     // Clean out DB and re-load with new friend list.
@@ -80,6 +75,28 @@ module.exports = class TwData {
       });
     });
     return friends;
+  }
+
+  async loadTweets(screenName, count) {
+    const tweets = await twitter.getHomeTimeline(screenName, count);
+
+    // todo: implement since_id param so that we aren't getting duplicates
+    // todo: don't insert duplicates
+    Tweet.remove({}).then(() => {
+      tweets.forEach(tweet => {
+        Tweet.create({
+          id: tweet.id_str,
+          text: tweet.full_text || tweet.text,
+          userId: tweet.user.id_str,
+          userName: tweet.user.name,
+          userScreenName: tweet.user.screen_name,
+          isRead: false
+        }).then(newTweet => {
+          console.log(`Added tweet ${newTweet.id}`);
+        });
+      });
+    });
+    return tweets;
   }
 
   async getTweetsByFriend(friendId) {

@@ -18,17 +18,22 @@
             </ul>
 
 
+            <form class="text-right" action='/timeline' method="POST">
+                <button>Refresh from Twitter</button>
+            </form>
+
             <h4>Timeline</h4>
             <ul>
                 <% tweets.forEach( tweet => { 
-                    const text = tweet.full_text || tweet.text;
-                    const tweetstr = `@${tweet.user.name} - ${text}`; %>
+                    const tweetStr = `@${tweet.userScreenName}: ${tweet.text}`;
+                    %>
                     <li>
-                        <%= tweetstr %>
+                        <%= tweetStr %>
                     </li>
                     <% }) %>
             </ul>
         </div>
+
 
     </div>
 
