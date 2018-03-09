@@ -24,21 +24,21 @@ module.exports = class TwData {
   }
 
   async getFriend(friendId) {
+    // todo: if not in local db, retrieve from twitter and insert
     return Friend.findById(friendId);
   }
 
+  async getFriendByTwitterUserId(userId) {
+    return Friend.find({ id: userId });
+  }
+
+  // get count most recent tweets by the logged in user
   async getUserTweets(screenName, count) {
-    /*
-    look up most recent tweets 
-    */
     const tweets = await twitter.getUserTimeline(screenName, count);
     return tweets;
   }
 
   async getTimelineTweets() {
-    /*
-    look up most recent tweets 
-    */
     return Tweet.find();
   }
 
@@ -93,20 +93,37 @@ module.exports = class TwData {
   }
 
   async getTweetsByFriendId(friendId) {
-    /*
-    read tweets from db
-    return {new: [], unread:[]}
-    */
+    // todo: ? param for includeReadTweets
     console.log(`twdata.getTweetsByFriend ${friendId}`);
-    return Tweet.find({ userId: friendId });
+    const result = await Tweet.find({ userId: friendId });
+    return result;
   }
 
-  async refreshTweets() {
-    /*
-    get most recent tweet ID from db
-    call twitter for new tweets since
-    store in db
-    */
-    console.log("twdata.refreshTweets");
+  // (users with unread tweets)> db.tweets.aggregate([ {$match : {"isRead":false} }, {$group : {_id:"$userId", count:{$sum:1}}}, {$sort:{"count":-1}} ])
+  async getFriendsWithTweets() {
+    const result = [];
+
+    // get users with unread tweets
+    const users = await Tweet.aggregate([
+      { $match: { isRead: false } },
+      { $group: { _id: "$userId", count: { $sum: 1 } } },
+      { $sort: { count: -1 } }
+    ]);
+
+    // get tweets for each user -- todo: clean this up with Promise.all
+    const usertweets = [];
+    for (let i = 0; i < users.length; i++) {
+      usertweets[i] = await this.getTweetsByFriendId(users[i]._id);
+    }
+
+    // build return structure
+    let count = 0;
+    users.forEach(user => {
+      const item = { name: user._id, tweets: usertweets[count++] };
+      result.push(item);
+    });
+
+    console.log(`getFriendsWithTweets result = ${result}`);
+    return result;
   }
 };
