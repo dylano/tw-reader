@@ -23,6 +23,12 @@ app.get("/", (req, res) => {
   res.render("home");
 });
 
+app.get("/main", (req, res) => {
+  twData.getFriendsWithTweets().then(data => {
+    res.render("main", { data });
+  });
+});
+
 app.get("/user", (req, res) => {
   // twData.getTweet("971131048036839430");
   twData
@@ -81,6 +87,12 @@ app.post("/friends", (req, res) => {
 app.post("/timeline", (req, res) => {
   twData.loadTweets("dtoliver", 30).then(() => {
     res.redirect("/timeline");
+  });
+});
+
+app.post("/main", (req, res) => {
+  twData.loadTweets("dtoliver", 30).then(() => {
+    res.redirect("/main");
   });
 });
 

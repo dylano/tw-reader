@@ -110,7 +110,7 @@ module.exports = class TwData {
       { $sort: { count: -1 } }
     ]);
 
-    // get tweets for each user -- todo: clean this up with Promise.all
+    // get tweets for each user
     const usertweets = [];
     for (let i = 0; i < users.length; i++) {
       usertweets[i] = await this.getTweetsByFriendId(users[i]._id);
@@ -118,9 +118,8 @@ module.exports = class TwData {
 
     // build return structure
     let count = 0;
-    users.forEach(user => {
-      const item = { name: user._id, tweets: usertweets[count++] };
-      result.push(item);
+    users.forEach(async user => {
+      result.push({ name: user._id, tweets: usertweets[count++] });
     });
 
     console.log(`getFriendsWithTweets result = ${result}`);
