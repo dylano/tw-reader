@@ -92,11 +92,12 @@ module.exports = class TwData {
     return tweets;
   }
 
-  async getTweetsByFriendId(friendId) {
-    // todo: ? param for includeReadTweets
+  async getTweetsByFriendId(friendId, unreadOnly = false) {
     console.log(`twdata.getTweetsByFriend ${friendId}`);
-    const result = await Tweet.find({ userId: friendId });
-    return result;
+    if (unreadOnly) {
+      return Tweet.find({ userId: friendId, isRead: false });
+    }
+    return Tweet.find({ userId: friendId });
   }
 
   // (users with unread tweets)> db.tweets.aggregate([ {$match : {"isRead":false} }, {$group : {_id:"$userId", count:{$sum:1}}}, {$sort:{"count":-1}} ])
@@ -113,10 +114,10 @@ module.exports = class TwData {
     // get tweets for each user
     const usertweets = [];
     for (let i = 0; i < users.length; i++) {
-      usertweets[i] = await this.getTweetsByFriendId(users[i]._id);
+      usertweets[i] = await this.getTweetsByFriendId(users[i]._id, true);
     }
 
-    // build return structure
+    // todo: figure out how to clean this up with Promise.all() and get rid of the parallel arrays
     let count = 0;
     users.forEach(async user => {
       result.push({ name: user._id, tweets: usertweets[count++] });
