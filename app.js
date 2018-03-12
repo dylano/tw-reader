@@ -98,7 +98,8 @@ app.post("/main", (req, res) => {
 
 app.put("/tweets/:id", (req, res) => {
   twData.markTweetAsRead(req.params.id).then(() => {
-    res.redirect("/timeline");
+    console.log(req.query);
+    res.redirect("/" + req.query.dest);
   });
 });
 

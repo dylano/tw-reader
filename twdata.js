@@ -112,12 +112,12 @@ module.exports = class TwData {
     ]);
 
     // get tweets for each user
+    // todo: figure out how to clean this up with Promise.all() and get rid of the parallel arrays
     const usertweets = [];
     for (let i = 0; i < users.length; i++) {
-      usertweets[i] = await this.getTweetsByFriendId(users[i]._id, true);
+      usertweets.push(await this.getTweetsByFriendId(users[i]._id, true));
     }
 
-    // todo: figure out how to clean this up with Promise.all() and get rid of the parallel arrays
     let count = 0;
     users.forEach(async user => {
       result.push({ name: user._id, tweets: usertweets[count++] });

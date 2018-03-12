@@ -28,13 +28,18 @@
                         <li>
                             <%= item.name %> (
                                 <%=item.tweets ? item.tweets.length : 0%> )
-                                    <% if(item.tweets) { %>}
+                                    <% if(item.tweets) { %>
                                         <ul>
                                             <% item.tweets.forEach(tweet => { %>
-                                                <li>
-                                                    <%=tweet%>
-                                                </li>
-                                                <% }) %>
+                                                <% if(!tweet.isRead) { %>
+                                                    <form class="text-left" action="/tweets/<%=tweet._id%>?_method=PUT&dest=main" method="POST">
+                                                        <button class="btn btn-link btn-xs">Read</button>
+                                                    </form>
+                                                    <% } %>
+                                                        <li>
+                                                            <%=tweet%>
+                                                        </li>
+                                                        <% }) %>
                                         </ul>
                                         <% } %>
                         </li>
