@@ -1,45 +1,24 @@
 <% include partials/header %>
 
-    <div class="container">
+    <form class="text-right" action='/timeline' method="POST">
+        <button>Refresh from Twitter</button>
+    </form>
 
-        <div class="container">
-            <h1>tw-reader Timeline</h1>
-
-            <ul>
-                <li>
-                    <a href="/user/">User</a>
-                </li>
-                <li>
-                    <a href="/timeline/">Timeline</a>
-                </li>
-                <li>
-                    <a href="/friends/">Friends</a>
-                </li>
-            </ul>
-
-
-            <form class="text-right" action='/timeline' method="POST">
-                <button>Refresh from Twitter</button>
-            </form>
-
-            <h4>Timeline</h4>
-            <ul>
-                <% tweets.forEach( tweet => { 
+    <h4>Timeline</h4>
+    <ul>
+        <% tweets.forEach( tweet => { 
                     const tweetStr = `@${tweet.userScreenName}: ${tweet.text}`;
                     %>
-                    <li>
-                        <% if(!tweet.isRead) { %>
-                            <form class="text-left" action="/tweets/<%=tweet._id%>?_method=PUT&dest=timeline" method="POST">
-                                <button class="btn btn-link btn-xs">Read</button>
-                            </form>
-                            <% } %>
-                                <%= tweetStr %>
-                    </li>
-                    <% }) %>
-            </ul>
-        </div>
-
-
+            <li>
+                <% if(!tweet.isRead) { %>
+                    <form class="text-left" action="/tweets/<%=tweet._id%>?_method=PUT&dest=timeline" method="POST">
+                        <button class="btn btn-link btn-xs">Read</button>
+                    </form>
+                    <% } %>
+                        <%= tweetStr %>
+            </li>
+            <% }) %>
+    </ul>
     </div>
 
     <% include partials/footer %>

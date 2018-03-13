@@ -1,30 +1,12 @@
 <% include partials/header %>
 
-    <div class="container">
+    <h4>User Tweets</h4>
+    <ul>
+        <% tweets.forEach( tweet => { %>
+            <li>
+                <%= tweet.full_text %>
+            </li>
+            <% }) %>
+    </ul>
 
-        <div class="container">
-            <h1>tw-reader User</h1>
-
-            <ul>
-                <li>
-                    <a href="/user/">User</a>
-                </li>
-                <li>
-                    <a href="/timeline/">Timeline</a>
-                </li>
-                <li>
-                    <a href="/friends/">Friends</a>
-                </li>
-            </ul>
-
-            <h4>User Tweets</h4>
-            <ul>
-                <% tweets.forEach( tweet => { %>
-                    <li>
-                        <%= tweet.full_text %>
-                    </li>
-                    <% }) %>
-            </ul>
-        </div>
-
-        <% include partials/footer %>
+    <% include partials/footer %>

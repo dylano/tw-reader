@@ -1,51 +1,34 @@
 <% include partials/header %>
 
-    <div class="container">
+    <form class="text-right" action='/main' method="POST">
+        <button>Get new tweets</button>
+    </form>
 
-        <div class="container">
-            <h1>tw-reader Friends & Tweets</h1>
-
-            <ul>
+    <h4>Tweets</h4>
+    <div class="friendlist">
+        <ul>
+            <% data.forEach( item => { %>
                 <li>
-                    <a href="/user/">User</a>
+                    <%= item.name %> (
+                        <%=item.tweets ? item.tweets.length : 0%> )
+                            <% if(item.tweets) { %>
+                                <ul>
+                                    <% item.tweets.forEach(tweet => { %>
+                                        <% if(!tweet.isRead) { %>
+                                            <form class="text-left" action="/tweets/<%=tweet._id%>?_method=PUT&dest=main" method="POST">
+                                                <button class="btn btn-link btn-xs">Read</button>
+                                            </form>
+                                            <% } %>
+                                                <li>
+                                                    <%=tweet%>
+                                                </li>
+                                                <% }) %>
+                                </ul>
+                                <% } %>
                 </li>
-                <li>
-                    <a href="/timeline/">Timeline</a>
-                </li>
-                <li>
-                    <a href="/friends/">Friends</a>
-                </li>
-            </ul>
+                <% }) %>
+        </ul>
+    </div>
 
-            <form class="text-right" action='/main' method="POST">
-                <button>Get new tweets</button>
-            </form>
 
-            <h4>Friends</h4>
-            <div class="friendlist">
-                <ul>
-                    <% data.forEach( item => { %>
-                        <li>
-                            <%= item.name %> (
-                                <%=item.tweets ? item.tweets.length : 0%> )
-                                    <% if(item.tweets) { %>
-                                        <ul>
-                                            <% item.tweets.forEach(tweet => { %>
-                                                <% if(!tweet.isRead) { %>
-                                                    <form class="text-left" action="/tweets/<%=tweet._id%>?_method=PUT&dest=main" method="POST">
-                                                        <button class="btn btn-link btn-xs">Read</button>
-                                                    </form>
-                                                    <% } %>
-                                                        <li>
-                                                            <%=tweet%>
-                                                        </li>
-                                                        <% }) %>
-                                        </ul>
-                                        <% } %>
-                        </li>
-                        <% }) %>
-                </ul>
-            </div>
-        </div>
-
-        <% include partials/footer %>
+    <% include partials/footer %>
