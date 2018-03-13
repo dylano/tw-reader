@@ -12,6 +12,12 @@ function formatTweet(tweet) {
 }
 
 module.exports = class TwData {
+  constructor() {
+    // todo: read from db
+    this.tweetSinceId = "973422524259356672";
+    // older id =        973351312023805952
+  }
+
   async getTweet(tweetId) {
     /*
     check db for tweet
@@ -70,26 +76,32 @@ module.exports = class TwData {
   }
 
   async loadTweets(screenName, count) {
-    const tweets = await twitter.getHomeTimeline(screenName, count);
+    const tweets = await twitter.getHomeTimeline(
+      screenName,
+      this.tweetSinceId,
+      count
+    );
 
-    // todo: implement since_id param so that we aren't getting duplicates
-    // todo: don't insert duplicates
+    // todo: implement since_id param
     Tweet.remove({}).then(() => {
       tweets.forEach(tweet => {
-        Tweet.create({
-          id: tweet.id_str,
-          text: tweet.full_text || tweet.text,
-          timestamp: tweet.created_at,
-          userId: tweet.user.id_str,
-          userName: tweet.user.name,
-          userScreenName: tweet.user.screen_name,
-          isRead: false
-        }).then(newTweet => {
+        Tweet.update(
+          { id: tweet.id_str },
+          {
+            id: tweet.id_str,
+            text: tweet.full_text || tweet.text,
+            timestamp: tweet.created_at,
+            userId: tweet.user.id_str,
+            userName: tweet.user.name,
+            userScreenName: tweet.user.screen_name,
+            isRead: false
+          },
+          { upsert: true }
+        ).then(newTweet => {
           console.log(`Added tweet ${newTweet.id}`);
         });
       });
     });
-    return tweets;
   }
 
   async getTweetsByFriendId(friendId, unreadOnly = false) {

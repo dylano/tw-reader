@@ -32,7 +32,7 @@ app.get("/main", (req, res) => {
 app.get("/user", (req, res) => {
   // twData.getTweet("971131048036839430");
   twData
-    .getUserTweets("dtoliver", 3)
+    .getUserTweets("dtoliver")
     .then(tweets => {
       res.render("user", { tweets });
     })
@@ -42,7 +42,6 @@ app.get("/user", (req, res) => {
 });
 
 app.get("/timeline", (req, res) => {
-  // twData.loadTweets("dtoliver", 30);
   twData
     .getTimelineTweets()
     .then(tweets => {
@@ -84,14 +83,16 @@ app.post("/friends", (req, res) => {
   });
 });
 
+const numTweets = 8;
+
 app.post("/timeline", (req, res) => {
-  twData.loadTweets("dtoliver", 30).then(() => {
+  twData.loadTweets("dtoliver", numTweets).then(() => {
     res.redirect("/timeline");
   });
 });
 
 app.post("/main", (req, res) => {
-  twData.loadTweets("dtoliver", 30).then(() => {
+  twData.loadTweets("dtoliver", numTweets).then(() => {
     res.redirect("/main");
   });
 });
@@ -99,7 +100,7 @@ app.post("/main", (req, res) => {
 app.put("/tweets/:id", (req, res) => {
   twData.markTweetAsRead(req.params.id).then(() => {
     console.log(req.query);
-    res.redirect("/" + req.query.dest);
+    res.redirect(`/${req.query.dest}`);
   });
 });
 

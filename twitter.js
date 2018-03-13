@@ -22,22 +22,22 @@ module.exports = class TwData {
     }
   }
 
-  async getUserTimeline(screenName, numTweets) {
+  async getUserTimeline(screenName, numTweets = 10) {
     const params = {
       screen_name: screenName,
-      count: numTweets || 5,
+      count: numTweets,
       tweet_mode: "extended",
       trim_user: 0
     };
     return client.get("statuses/user_timeline", params);
   }
 
-  async getHomeTimeline(screenName, numTweets) {
+  async getHomeTimeline(screenName, sinceId, numTweets = 10) {
     const params = {
       screen_name: screenName,
-      count: numTweets || 5,
+      count: numTweets,
       tweet_mode: "extended",
-      since_id: "949401650174840800",
+      // since_id: sinceId,
       trim_user: 0
     };
     return client.get("statuses/home_timeline", params);
