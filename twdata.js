@@ -2,6 +2,7 @@
 const Twitter = require("./twitter");
 const Friend = require("./models/friend");
 const Tweet = require("./models/tweet");
+const AppData = require("./models/appdata");
 
 const twitter = new Twitter();
 
@@ -12,15 +13,9 @@ function formatTweet(tweet) {
 }
 
 module.exports = class TwData {
-  constructor() {
-    // todo: read from db
-    this.tweetSinceId = "973422524259356672";
-    // older id =        973351312023805952
-  }
-
   async getTweet(tweetId) {
     /*
-    check db for tweet
+    todo: check db for tweet
     else retrieve from twitter & store
     return db.find()
     */
@@ -75,32 +70,43 @@ module.exports = class TwData {
     return friends;
   }
 
-  async loadTweets(screenName, count) {
-    const tweets = await twitter.getHomeTimeline(
-      screenName,
-      this.tweetSinceId,
-      count
-    );
+  async getMostRecentTweet(screenName) {
+    return AppData.findOne({ screenName });
+  }
 
-    // todo: implement since_id param
-    Tweet.remove({}).then(() => {
-      tweets.forEach(tweet => {
-        Tweet.update(
-          { id: tweet.id_str },
-          {
-            id: tweet.id_str,
-            text: tweet.full_text || tweet.text,
-            timestamp: tweet.created_at,
-            userId: tweet.user.id_str,
-            userName: tweet.user.name,
-            userScreenName: tweet.user.screen_name,
-            isRead: false
-          },
-          { upsert: true }
-        ).then(newTweet => {
-          console.log(`Added tweet ${newTweet.id}`);
-        });
-      });
+  async loadTweets(screenName, count) {
+    // get most recent timeline tweet seen for this user
+    const recentTweetId = await this.getMostRecentTweet(screenName);
+    const sinceId = recentTweetId ? recentTweetId.mostRecentTweet : "0";
+
+    // get tweets
+    const tweets = await twitter.getHomeTimeline(screenName, sinceId, count);
+    console.log(`Retrived ${tweets.length} tweets from twitter`);
+
+    // save the latest tweet ID from new tweets
+    if (tweets && tweets.length) {
+      await AppData.update(
+        { screenName },
+        { screenName, mostRecentTweet: tweets[0].id_str },
+        { upsert: true }
+      );
+    }
+
+    // save new tweets to DB
+    tweets.forEach(tweet => {
+      Tweet.update(
+        { id: tweet.id_str },
+        {
+          id: tweet.id_str,
+          text: tweet.full_text || tweet.text,
+          timestamp: tweet.created_at,
+          userId: tweet.user.id_str,
+          userName: tweet.user.name,
+          userScreenName: tweet.user.screen_name,
+          isRead: false
+        },
+        { upsert: true }
+      ).then(() => {});
     });
   }
 
@@ -135,7 +141,6 @@ module.exports = class TwData {
       result.push({ name: user._id, tweets: usertweets[count++] });
     });
 
-    console.log(`getFriendsWithTweets result = ${result}`);
     return result;
   }
 };

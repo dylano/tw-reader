@@ -33,11 +33,12 @@ module.exports = class TwData {
   }
 
   async getHomeTimeline(screenName, sinceId, numTweets = 10) {
+    console.log("twitter since", sinceId);
     const params = {
       screen_name: screenName,
       count: numTweets,
       tweet_mode: "extended",
-      // since_id: sinceId,
+      since_id: sinceId,
       trim_user: 0
     };
     return client.get("statuses/home_timeline", params);
