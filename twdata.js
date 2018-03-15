@@ -40,7 +40,8 @@ module.exports = class TwData {
   }
 
   async getTimelineTweets() {
-    return Tweet.find();
+    // return Tweet.find();
+    return Tweet.aggregate([{ $sort: { timestamp: -1 } }]);
   }
 
   async markTweetAsRead(tweetMongoId) {
@@ -70,15 +71,15 @@ module.exports = class TwData {
     return friends;
   }
 
-  async getMostRecentTweet(screenName) {
+  async getAppData(screenName) {
     return AppData.findOne({ screenName });
   }
 
   async loadTweets(screenName, count) {
     try {
       // get most recent timeline tweet seen for this user
-      const recentTweetId = await this.getMostRecentTweet(screenName);
-      const sinceId = recentTweetId ? recentTweetId.mostRecentTweet : "1";
+      const userAppData = await this.getAppData(screenName);
+      const sinceId = userAppData ? userAppData.mostRecentTweet : "1";
 
       // get tweets
       const tweets = await twitter.getHomeTimeline(screenName, sinceId, count);
