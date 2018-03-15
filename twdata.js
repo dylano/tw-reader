@@ -75,39 +75,43 @@ module.exports = class TwData {
   }
 
   async loadTweets(screenName, count) {
-    // get most recent timeline tweet seen for this user
-    const recentTweetId = await this.getMostRecentTweet(screenName);
-    const sinceId = recentTweetId ? recentTweetId.mostRecentTweet : "0";
+    try {
+      // get most recent timeline tweet seen for this user
+      const recentTweetId = await this.getMostRecentTweet(screenName);
+      const sinceId = recentTweetId ? recentTweetId.mostRecentTweet : "1";
 
-    // get tweets
-    const tweets = await twitter.getHomeTimeline(screenName, sinceId, count);
-    console.log(`Retrived ${tweets.length} tweets from twitter`);
+      // get tweets
+      const tweets = await twitter.getHomeTimeline(screenName, sinceId, count);
+      console.log(`Retrived ${tweets.length} tweets from twitter`);
 
-    // save the latest tweet ID from new tweets
-    if (tweets && tweets.length) {
-      await AppData.update(
-        { screenName },
-        { screenName, mostRecentTweet: tweets[0].id_str },
-        { upsert: true }
-      );
+      // save the latest tweet ID from new tweets
+      if (tweets && tweets.length) {
+        await AppData.update(
+          { screenName },
+          { screenName, mostRecentTweet: tweets[0].id_str },
+          { upsert: true }
+        );
+      }
+
+      // save new tweets to DB
+      tweets.forEach(tweet => {
+        Tweet.update(
+          { id: tweet.id_str },
+          {
+            id: tweet.id_str,
+            text: tweet.full_text || tweet.text,
+            timestamp: tweet.created_at,
+            userId: tweet.user.id_str,
+            userName: tweet.user.name,
+            userScreenName: tweet.user.screen_name,
+            isRead: false
+          },
+          { upsert: true }
+        ).then(() => {});
+      });
+    } catch (err) {
+      console.error("loadTweets error:", err);
     }
-
-    // save new tweets to DB
-    tweets.forEach(tweet => {
-      Tweet.update(
-        { id: tweet.id_str },
-        {
-          id: tweet.id_str,
-          text: tweet.full_text || tweet.text,
-          timestamp: tweet.created_at,
-          userId: tweet.user.id_str,
-          userName: tweet.user.name,
-          userScreenName: tweet.user.screen_name,
-          isRead: false
-        },
-        { upsert: true }
-      ).then(() => {});
-    });
   }
 
   async getTweetsByFriendId(friendId, unreadOnly = false) {
