@@ -20,7 +20,7 @@ mongoose.connect(dbconnect).catch(err => {
 
 // ROUTES
 app.get("/", (req, res) => {
-  res.render("home");
+  res.redirect("main");
 });
 
 app.get("/main", (req, res) => {

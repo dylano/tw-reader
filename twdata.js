@@ -139,7 +139,7 @@ module.exports = class TwData {
     const users = await Tweet.aggregate([
       { $match: { isRead: false } },
       { $group: { _id: "$userScreenName", count: { $sum: 1 } } },
-      { $sort: { count: -1 } }
+      { $sort: { 2: 1 } }
     ]);
 
     // get tweets for each user

@@ -7,7 +7,7 @@
     <h4>Timeline</h4>
     <ul>
         <% tweets.forEach( tweet => { 
-                    const tweetStr = `@${tweet.userScreenName}: ${tweet.text} (${tweet.id})`;
+                    const tweetStr = `@${tweet.userScreenName}: ${tweet.text}`;
                     %>
             <li>
                 <% if(!tweet.isRead) { %>
