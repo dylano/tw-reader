@@ -1,4 +1,8 @@
 body {
-    background: black;
-    color: green;
+  background: black;
+  color: green;
+}
+
+.inline {
+  display: inline;
 }

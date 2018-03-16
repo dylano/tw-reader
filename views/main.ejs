@@ -9,22 +9,26 @@
         <ul>
             <% data.forEach( item => { %>
                 <li>
-                    <%= item.name %> (
-                        <%=item.tweets ? item.tweets.length : 0%> )
-                            <% if(item.tweets) { %>
-                                <ul>
-                                    <% item.tweets.forEach(tweet => { %>
+                    <a href="https://twitter.com/<%=item.name%>">
+                        <%= item.name %>
+                    </a> (
+                    <%=item.tweets ? item.tweets.length : 0%> )
+                        <% if(item.tweets) { %>
+                            <ul>
+                                <% item.tweets.forEach(tweet => { %>
+
+                                    <li>
                                         <% if(!tweet.isRead) { %>
-                                            <form class="text-left" action="/tweets/<%=tweet._id%>?_method=PUT&dest=main" method="POST">
-                                                <button class="btn btn-link btn-xs">Read</button>
+                                            <form class="inline" action="/tweets/<%=tweet._id%>?_method=PUT&dest=main" method="POST">
+                                                <button class="btn btn-link btn-xs">(X)</button>
                                             </form>
-                                            <% } %>
-                                                <li>
-                                                    <%=tweet%>
-                                                </li>
-                                                <% }) %>
-                                </ul>
-                                <% } %>
+                                            <%=tweet.text%>
+                                                <% } %>
+                                    </li>
+
+                                    <% }) %>
+                            </ul>
+                            <% } %>
                 </li>
                 <% }) %>
         </ul>

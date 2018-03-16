@@ -11,8 +11,8 @@
                     %>
             <li>
                 <% if(!tweet.isRead) { %>
-                    <form class="text-left" action="/tweets/<%=tweet._id%>?_method=PUT&dest=timeline" method="POST">
-                        <button class="btn btn-link btn-xs">Read</button>
+                    <form class="inline" action="/tweets/<%=tweet._id%>?_method=PUT&dest=timeline" method="POST">
+                        <button class="btn btn-link btn-xs">(X)</button>
                     </form>
                     <% } %>
                         <%= tweetStr %>
