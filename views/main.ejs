@@ -13,6 +13,9 @@
                         <%= item.name %>
                     </a> (
                     <%=item.tweets ? item.tweets.length : 0%> )
+                        <form class="inline" action="/friends/<%=item.name%>/tweets?_method=PUT&dest=main" method="POST">
+                            <button class="btn btn-link btn-xs">(Mark All Read)</button>
+                        </form>
                         <% if(item.tweets) { %>
                             <ul>
                                 <% item.tweets.forEach(tweet => { %>

@@ -48,6 +48,14 @@ module.exports = class TwData {
     await Tweet.findByIdAndUpdate(tweetMongoId, { isRead: true });
   }
 
+  async markAllTweetsAsRead(screenName) {
+    // db.tweets.updateMany({ "userScreenName" : "TheAthleticSF","isRead":false }, {$set:{"isRead":true}} )
+    await Tweet.updateMany(
+      { userScreenName: screenName, isRead: false },
+      { $set: { isRead: true } }
+    );
+  }
+
   async getFriends() {
     return Friend.find();
   }

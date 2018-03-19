@@ -102,6 +102,13 @@ app.put("/tweets/:id", (req, res) => {
   });
 });
 
+app.put("/friends/:screenName/tweets", (req, res) => {
+  console.log(`mark read ${req.params.screenName}`);
+  twData.markAllTweetsAsRead(req.params.screenName).then(() => {
+    res.redirect(`/${req.query.dest}`);
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`tw-reader listening on port ${PORT}...`);
 });
