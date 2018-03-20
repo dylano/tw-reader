@@ -17,13 +17,16 @@
                         </button>
                     </form>
                     <% } %>
-                        <%= tweetStr %>
-                            <a href="https://twitter.com/<%=tweet.userScreenName%>/status/<%=tweet.id%>" target="_new">
-                                <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
-                            </a>
+                        <span class="tweetstr">
+                            <%= tweetStr %>
+                        </span>
+                        <a href="https://twitter.com/<%=tweet.userScreenName%>/status/<%=tweet.id%>" target="_blank">
+                            <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                        </a>
             </li>
             <% }) %>
     </ul>
     </div>
+    <script type="text/javascript" src="/link.js"></script>
 
     <% include partials/footer %>

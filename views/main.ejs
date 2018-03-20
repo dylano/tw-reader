@@ -1,5 +1,6 @@
 <% include partials/header %>
 
+
     <form class="text-right" action='/main' method="POST">
         <button>Get new tweets</button>
     </form>
@@ -9,7 +10,7 @@
         <ul>
             <% data.forEach( item => { %>
                 <li>
-                    <a href="https://twitter.com/<%=item.name%>" target="_new">
+                    <a href="https://twitter.com/<%=item.name%>" target="_blank">
                         <%= item.name %>
                     </a> (
                     <%=item.tweets ? item.tweets.length : 0%> )
@@ -27,11 +28,13 @@
                                                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                                 </button>
                                             </form>
-                                            <%=tweet.text%>
-                                                <a href="https://twitter.com/<%=item.name%>/status/<%=tweet.id%>" target="_new">
-                                                    <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
-                                                </a>
-                                                <% } %>
+                                            <span class="tweetstr">
+                                                <%=tweet.text%>
+                                            </span>
+                                            <a href="https://twitter.com/<%=item.name%>/status/<%=tweet.id%>" target="_blank">
+                                                <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                                            </a>
+                                            <% } %>
                                     </li>
 
                                     <% }) %>
@@ -42,5 +45,6 @@
         </ul>
     </div>
 
+    <script type="text/javascript" src="/link.js"></script>
 
     <% include partials/footer %>
