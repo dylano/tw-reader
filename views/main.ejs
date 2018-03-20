@@ -9,12 +9,12 @@
         <ul>
             <% data.forEach( item => { %>
                 <li>
-                    <a href="https://twitter.com/<%=item.name%>">
+                    <a href="https://twitter.com/<%=item.name%>" target="_new">
                         <%= item.name %>
                     </a> (
                     <%=item.tweets ? item.tweets.length : 0%> )
                         <form class="inline" action="/friends/<%=item.name%>/tweets?_method=PUT&dest=main" method="POST">
-                            <button class="btn btn-link btn-xs">(Mark All Read)</button>
+                            <button class="btn btn-link btn-xs">Mark All Read</button>
                         </form>
                         <% if(item.tweets) { %>
                             <ul>
@@ -23,9 +23,14 @@
                                     <li>
                                         <% if(!tweet.isRead) { %>
                                             <form class="inline" action="/tweets/<%=tweet._id%>?_method=PUT&dest=main" method="POST">
-                                                <button class="btn btn-link btn-xs">(X)</button>
+                                                <button class="btn btn-link btn-xs">
+                                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                                </button>
                                             </form>
                                             <%=tweet.text%>
+                                                <a href="https://twitter.com/<%=item.name%>/status/<%=tweet.id%>" target="_new">
+                                                    <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                                                </a>
                                                 <% } %>
                                     </li>
 

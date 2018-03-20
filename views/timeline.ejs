@@ -12,10 +12,15 @@
             <li>
                 <% if(!tweet.isRead) { %>
                     <form class="inline" action="/tweets/<%=tweet._id%>?_method=PUT&dest=timeline" method="POST">
-                        <button class="btn btn-link btn-xs">(X)</button>
+                        <button class="btn btn-link btn-xs">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </button>
                     </form>
                     <% } %>
                         <%= tweetStr %>
+                            <a href="https://twitter.com/<%=tweet.userScreenName%>/status/<%=tweet.id%>" target="_new">
+                                <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                            </a>
             </li>
             <% }) %>
     </ul>

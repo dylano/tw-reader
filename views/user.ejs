@@ -5,6 +5,9 @@
         <% tweets.forEach( tweet => { %>
             <li>
                 <%= tweet.full_text %>
+                    <a href="https://twitter.com/<%=tweet.user.screen_name%>/status/<%=tweet.id_str%>" target="_new">
+                        <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                    </a>
             </li>
             <% }) %>
     </ul>

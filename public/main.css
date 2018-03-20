@@ -6,3 +6,7 @@ body {
 .inline {
   display: inline;
 }
+
+ul {
+  list-style-type: none;
+}
