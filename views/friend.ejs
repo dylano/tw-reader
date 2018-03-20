@@ -12,9 +12,15 @@
                         const tweetStr = `${tweet.text}`;
                         %>
             <li>
-                <%= tweetStr %>
+                <a href="https://twitter.com/<%=tweet.userScreenName%>/status/<%=tweet.id%>" target="_blank">
+                    <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                </a>
+                <span class="tweetstr">
+                    <%= tweetStr %>
+                </span>
             </li>
             <% }) %>
     </ul>
+    <script type="text/javascript" src="/link.js"></script>
 
     <% include partials/footer %>
