@@ -84,13 +84,13 @@ app.post("/friends", (req, res) => {
 });
 
 app.post("/timeline", (req, res) => {
-  twData.loadTweets("dtoliver", 30).then(() => {
+  twData.loadTweets("dtoliver", 100).then(() => {
     res.redirect("/timeline");
   });
 });
 
 app.post("/main", (req, res) => {
-  twData.loadTweets("dtoliver", 30).then(() => {
+  twData.loadTweets("dtoliver", 100).then(() => {
     res.redirect("/main");
   });
 });

@@ -28,12 +28,12 @@
                                                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                                 </button>
                                             </form>
-                                            <span class="tweetstr">
-                                                <%=tweet.text%>
-                                            </span>
                                             <a href="https://twitter.com/<%=item.name%>/status/<%=tweet.id%>" target="_blank">
                                                 <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
                                             </a>
+                                            <span class="tweetstr">
+                                                <%=tweet.text%>
+                                            </span>
                                             <% } %>
                                     </li>
 
@@ -44,7 +44,5 @@
                 <% }) %>
         </ul>
     </div>
-
-    <script type="text/javascript" src="/link.js"></script>
 
     <% include partials/footer %>
