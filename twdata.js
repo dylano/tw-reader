@@ -45,6 +45,7 @@ module.exports = class TwData {
   }
 
   async markTweetAsRead(tweetMongoId) {
+    console.log(`mark read tweet id = ${tweetMongoId}`);
     await Tweet.findByIdAndUpdate(tweetMongoId, { isRead: true });
   }
 

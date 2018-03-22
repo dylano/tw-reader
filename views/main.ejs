@@ -12,37 +12,35 @@
                 <li>
                     <a href="https://twitter.com/<%=item.name%>" target="_blank">
                         <%= item.name %>
-                    </a> (
-                    <%=item.tweets ? item.tweets.length : 0%> )
-                        <form class="inline" action="/friends/<%=item.name%>/tweets?_method=PUT&dest=main" method="POST">
-                            <button class="btn btn-link btn-xs">Mark All Read</button>
-                        </form>
-                        <% if(item.tweets) { %>
-                            <ul>
-                                <% item.tweets.forEach(tweet => { %>
-
-                                    <li>
-                                        <% if(!tweet.isRead) { %>
-                                            <form class="inline" action="/tweets/<%=tweet._id%>?_method=PUT&dest=main" method="POST">
-                                                <button class="btn btn-link btn-xs">
-                                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                                </button>
-                                            </form>
-                                            <a href="https://twitter.com/<%=item.name%>/status/<%=tweet.id%>" target="_blank">
-                                                <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
-                                            </a>
-                                            <span class="tweetstr">
-                                                <%=tweet.text%>
-                                            </span>
-                                            <% } %>
+                    </a>
+                    <form class="inline" action="/friends/<%=item.name%>/tweets?_method=PUT&dest=main" method="POST">
+                        <button class="btn btn-link btn-xs">Mark All Read</button>
+                    </form>
+                    <% if(item.tweets) { %>
+                        <ul>
+                            <% item.tweets.forEach(tweet => { %>
+                                <% if(!tweet.isRead) { %>
+                                    <li data-key="<%=tweet._id%>">
+                                        <button class="btn btn-link btn-xs markread">
+                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                        </button>
+                                        <a href="https://twitter.com/<%=item.name%>/status/<%=tweet.id%>" target="_blank">
+                                            <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                                        </a>
+                                        <span class="tweetstr">
+                                            <%=tweet.text%>
+                                                <%=tweet._id%>
+                                        </span>
+                                        <% } %>
                                     </li>
-
                                     <% }) %>
-                            </ul>
-                            <% } %>
+                        </ul>
+                        <% } %>
                 </li>
                 <% }) %>
         </ul>
     </div>
+
+    <script type="text/javascript" src="js/main.js"></script>
 
     <% include partials/footer %>
