@@ -6,5 +6,19 @@ readButtons.forEach(btn => {
     const tweetId = li.getAttribute("data-key");
     li.classList.add("hidden");
     fetch(`/tweets/${tweetId}`, { method: "put" });
+
+    // if there are no visible items left, hide the section
+    const ul = li.parentElement;
+    console.log(ul);
+    let hasChildren = false;
+
+    ul.childNodes.forEach(cnode => {
+      if (!hasChildren && cnode.nodeName === "LI") {
+        hasChildren = !cnode.classList.contains("hidden");
+      }
+    });
+    if (!hasChildren) {
+      ul.parentElement.classList.add("hidden");
+    }
   });
 });
