@@ -8,27 +8,25 @@
     <h4>Tweets</h4>
     <div class="friendlist">
         <% data.forEach( item => { %>
-            <div class="friendtweets">
+            <div class="friendtweets" data-key="<%=item.name%>">
                 <a href="https://twitter.com/<%=item.name%>" target="_blank">
                     <%= item.name %>
                 </a>
-                <form class="inline" action="/friends/<%=item.name%>/tweets?_method=PUT&dest=main" method="POST">
-                    <button class="btn btn-link btn-xs">Mark All Read</button>
-                </form>
+                <button class="btn btn-link btn-xs markreaduser">Mark All Read</button>
                 <% if(item.tweets) { %>
                     <ul>
                         <% item.tweets.forEach(tweet => { %>
                             <% if(!tweet.isRead) { %>
                                 <li data-key="<%=tweet._id%>">
-                                    <button class="btn btn-link btn-xs markread">
+                                    <button class="btn btn-link btn-xs markreaditem">
                                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                     </button>
-                                    <a href="https://twitter.com/<%=item.name%>/status/<%=tweet.id%>" target="_blank">
-                                        <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
-                                    </a>
                                     <span class="tweetstr">
                                         <%=tweet.text%>
                                     </span>
+                                    <a href="https://twitter.com/<%=item.name%>/status/<%=tweet.id%>" target="_blank">
+                                        <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                                    </a>
                                     <% } %>
                                 </li>
                                 <% }) %>

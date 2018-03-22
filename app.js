@@ -97,7 +97,6 @@ app.post("/main", (req, res) => {
 
 app.put("/tweets/:id", (req, res) => {
   twData.markTweetAsRead(req.params.id).then(() => {
-    console.log(req.query);
     if (req.query.dest) {
       res.redirect(`/${req.query.dest}`);
     } else {
@@ -109,7 +108,11 @@ app.put("/tweets/:id", (req, res) => {
 app.put("/friends/:screenName/tweets", (req, res) => {
   console.log(`mark read ${req.params.screenName}`);
   twData.markAllTweetsAsRead(req.params.screenName).then(() => {
-    res.redirect(`/${req.query.dest}`);
+    if (req.query.dest) {
+      res.redirect(`/${req.query.dest}`);
+    } else {
+      res.sendStatus(200);
+    }
   });
 });
 
