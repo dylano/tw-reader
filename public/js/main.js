@@ -39,7 +39,7 @@ function processKeypress(event) {
   const keypress = event.key.toLowerCase();
   if (keypress === "?") {
     alert("Navigation: \nJ/K - down/up\nX - delete");
-  } else if (["j", "k", "x"].includes(keypress)) {
+  } else if (["j", "k", "o", "x"].includes(keypress)) {
     if (selectedIndex === -1) {
       selectedIndex = 0;
       tweetItems[selectedIndex].classList.add("selected");
@@ -49,6 +49,8 @@ function processKeypress(event) {
     } else if (keypress === "k" && selectedIndex > 0) {
       tweetItems[selectedIndex].classList.remove("selected");
       tweetItems[--selectedIndex].classList.add("selected");
+    } else if (keypress === "o") {
+      tweetItems[selectedIndex].querySelector(".twitterlink").click();
     } else if (keypress === "x") {
       console.log(
         `delete ${
@@ -83,6 +85,16 @@ document.querySelectorAll(".markreaditem").forEach(btn => {
 
 document.querySelectorAll(".markreaduser").forEach(btn => {
   btn.addEventListener("click", markUserRead);
+});
+
+tweetItems.forEach(item => {
+  item.addEventListener("click", function(e) {
+    if (selectedIndex >= 0) {
+      tweetItems[selectedIndex].classList.remove("selected");
+    }
+    selectedIndex = tweetItems.indexOf(this);
+    tweetItems[selectedIndex].classList.add("selected");
+  });
 });
 
 window.addEventListener("keydown", processKeypress);
