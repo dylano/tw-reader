@@ -20,26 +20,46 @@ function markItemRead(li) {
   }
 }
 
-function markReadClicked(el) {
+function markReadItemClicked() {
   markItemRead(this.parentElement);
 }
 
-function markUserRead(el) {
-  const div = this.parentElement;
+function markReadUserClicked() {
+  markUserRead(this.parentElement);
+}
+
+function markUserRead(div) {
   const screenName = div.getAttribute("data-key");
   div.classList.add("hidden");
   fetch(`/friends/${screenName}/tweets`, { method: "PUT" });
+
+  // remove the elements from the tweetItems array and adjust the selection
+  const children = div.querySelectorAll("li");
+  children.forEach(child => {
+    const index = tweetItems.indexOf(child);
+    tweetItems.splice(index, 1);
+    if (selectedIndex >= index) {
+      selectedIndex--;
+      console.log(`new index: ${selectedIndex}`);
+    }
+  });
+  if (selectedIndex < 0) {
+    selectedIndex = 0;
+  } else if (selectedIndex > tweetItems.length) {
+    selectedIndex = tweetItems.length - 1;
+  }
+  tweetItems[selectedIndex].classList.add("selected");
 }
 
-function select() {
-  this.classList.toggle("selected");
-}
+function swipeItem(el) {}
 
 function processKeypress(event) {
-  const keypress = event.key.toLowerCase();
+  const keypress = event.key;
   if (keypress === "?") {
-    alert("Navigation: \nJ/K - down/up\nX - delete");
-  } else if (["j", "k", "o", "x"].includes(keypress)) {
+    alert(
+      "j / k - down/up\nx - mark tweet read\nX - mark all read for current user"
+    );
+  } else if (["j", "k", "o", "x", "X"].includes(keypress)) {
     if (selectedIndex === -1) {
       selectedIndex = 0;
       tweetItems[selectedIndex].classList.add("selected");
@@ -52,25 +72,15 @@ function processKeypress(event) {
     } else if (keypress === "o") {
       tweetItems[selectedIndex].querySelector(".twitterlink").click();
     } else if (keypress === "x") {
-      console.log(
-        `delete ${
-          tweetItems[selectedIndex]
-        }; selectedIndex = ${selectedIndex}; tweetItems.length=${
-          tweetItems.length
-        }`
-      );
       markItemRead(tweetItems[selectedIndex]);
       tweetItems.splice(selectedIndex, 1);
       if (selectedIndex === tweetItems.length) {
-        console.log(
-          `selectedIndex = ${selectedIndex}; tweetItems.length = ${
-            tweetItems.length
-          }`
-        );
         tweetItems[--selectedIndex].classList.add("selected");
       } else {
         tweetItems[selectedIndex].classList.add("selected");
       }
+    } else if (keypress === "X") {
+      console.log(`TODO: mark USER read`);
     }
     tweetItems[selectedIndex].scrollIntoView({
       behavior: "smooth",
@@ -80,11 +90,11 @@ function processKeypress(event) {
 }
 
 document.querySelectorAll(".markreaditem").forEach(btn => {
-  btn.addEventListener("click", markReadClicked);
+  btn.addEventListener("click", markReadItemClicked);
 });
 
 document.querySelectorAll(".markreaduser").forEach(btn => {
-  btn.addEventListener("click", markUserRead);
+  btn.addEventListener("click", markReadUserClicked);
 });
 
 tweetItems.forEach(item => {
@@ -95,6 +105,12 @@ tweetItems.forEach(item => {
     selectedIndex = tweetItems.indexOf(this);
     tweetItems[selectedIndex].classList.add("selected");
   });
+
+  //   const mc = new Hammer(item);
+  //   mc.on("panleft panright", function(ev) {
+  //     console.log(`${ev.type} gesture detected.`);
+  //     console.log(this);
+  //   });
 });
 
 window.addEventListener("keydown", processKeypress);
