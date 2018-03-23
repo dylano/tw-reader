@@ -10,3 +10,11 @@ body {
 ul {
   list-style-type: none;
 }
+
+.selected {
+  color: rgba(255, 255, 0, 0.75);
+}
+
+li {
+  transition: all 0.2s;
+}
