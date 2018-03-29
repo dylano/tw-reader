@@ -5,10 +5,10 @@
     </form>
 
     <h4>Friends</h4>
-    <div class="friendlist">
-        <ul>
+    <div>
+        <ul class="friendlist">
             <% friends.forEach( friend => { %>
-                <li>
+                <li class="friend">
                     <img src="<%=friend.imgUrl%>" />
                     <a href="/friends/<%=friend._id%>">
                         <%= friend.name %>
