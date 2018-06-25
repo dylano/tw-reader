@@ -1,5 +1,6 @@
 const tweetItems = [...document.querySelectorAll("div li")];
 let selectedIndex = -1;
+let fontSize = 1.0;
 
 function markItemRead(li) {
   // hide list item and mark tweet as read
@@ -51,16 +52,16 @@ function markUserRead(div) {
   tweetItems[selectedIndex].classList.add("selected");
 }
 
-function swipeItem(el) {}
-
 function processKeypress(event) {
   const keypress = event.key;
   if (keypress === "?") {
     alert(
-      "j / k - down/up\nx - mark tweet read\nX - mark all read for current user"
+      "G - retrieve new tweets\nj / k - down/up\no - open current on Twitter\nx - mark tweet read\nX - mark all read for current user"
     );
-  } else if (["j", "k", "o", "x", "X"].includes(keypress)) {
-    if (selectedIndex === -1) {
+  } else if (["j", "k", "o", "x", "X", "G"].includes(keypress)) {
+    if (keypress === "G") {
+      document.querySelector("#btnNewTweets").submit();
+    } else if (selectedIndex === -1) {
       selectedIndex = 0;
       tweetItems[selectedIndex].classList.add("selected");
     } else if (keypress === "j" && selectedIndex < tweetItems.length - 1) {
@@ -107,6 +108,24 @@ document.querySelectorAll(".markreaduser").forEach(btn => {
 
 tweetItems.forEach(item => {
   item.addEventListener("click", highlightSelection);
+});
+
+document.querySelector("#font-up").addEventListener("click", () => {
+  if (fontSize <= 2.0) {
+    fontSize += 0.5;
+    document.querySelectorAll(".tweetstr").forEach(str => {
+      str.style.fontSize = `${fontSize}em`;
+    });
+  }
+});
+
+document.querySelector("#font-down").addEventListener("click", () => {
+  if (fontSize >= 1.0) {
+    fontSize -= 0.5;
+    document.querySelectorAll(".tweetstr").forEach(str => {
+      str.style.fontSize = `${fontSize}em`;
+    });
+  }
 });
 
 window.addEventListener("keydown", processKeypress);

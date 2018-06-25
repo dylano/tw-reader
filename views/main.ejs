@@ -1,12 +1,11 @@
 <% include partials/header %>
 
-
-    <form class="text-right" action='/main' method="POST">
+    <form id="btnNewTweets" action='/main' method="POST" class="text-right">
         <button>Get new tweets</button>
     </form>
 
-    <h4>Tweets</h4>
     <div>
+        <h4>Tweets</h4>
         <% data.forEach( item => { %>
             <div class="friendtweets" data-key="<%=item.name%>">
                 <a href="https://twitter.com/<%=item.name%>" target="_blank">
@@ -18,14 +17,14 @@
                         <% item.tweets.forEach(tweet => { %>
                             <% if(!tweet.isRead) { %>
                                 <li data-key="<%=tweet._id%>">
-                                    <button class="btn btn-link btn-xs markreaditem">
-                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                    <button class="btn btn-link btn-sm markreaditem">
+                                        <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
                                     </button>
                                     <span class="tweetstr">
-                                        <%=tweet.text%>
+                                        <%-tweet.text%>
                                     </span>
                                     <a class="twitterlink" href="https://twitter.com/<%=item.name%>/status/<%=tweet.id%>" target="_blank">
-                                        <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                                        <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
                                     </a>
                                     <% } %>
                                 </li>
@@ -35,6 +34,16 @@
             </div>
             <% }) %>
     </div>
+
+    <div class="text-right" ]>
+        <button class='big' id='font-up'>
+            Aa
+        </button>&nbsp;
+        <button class='small' id='font-down'>
+            Aa
+        </button>
+    </div>
+
 
     <script type="text/javascript" src="js/main.js"></script>
 
