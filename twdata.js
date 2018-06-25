@@ -131,12 +131,12 @@ module.exports = class TwData {
     if (unreadOnly) {
       return Tweet.aggregate([
         { $match: { userScreenName: screenName, isRead: false } },
-        { $sort: { timestamp: -1 } }
+        { $sort: { timestamp: 1 } }
       ]);
     }
     return Tweet.aggregate([
       { $match: { userScreenName: screenName } },
-      { $sort: { timestamp: -1 } }
+      { $sort: { timestamp: 1 } }
     ]);
   }
 
