@@ -12,11 +12,8 @@ body {
 
 button {
   background: none;
-  font-size: 100%;
   padding: 3px;
-  display: inline-block;
-  text-decoration: none;
-  transition: background 250ms ease-in-out, transform 150ms ease;
+  transition: transform 150ms ease;
   border-radius: 5px;
   border-bottom-color: var(--text-color);
   border-right-color: var(--text-color);
@@ -39,11 +36,11 @@ li {
 }
 
 .big {
-  font-size: 2em;
+  font-size: 1em;
 }
 
 .small {
-  font-size: 1em;
+  font-size: 0.5em;
 }
 
 .inline {
@@ -52,6 +49,12 @@ li {
 
 .selected {
   color: rgba(255, 255, 0, 0.75);
+}
+
+.removing {
+  margin-left: 500px;
+  opacity: 0;
+  transition: all 1s;
 }
 
 .friendlist {

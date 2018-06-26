@@ -4,47 +4,36 @@
         <button>Get new tweets</button>
     </form>
 
-    <div>
-        <h4>Tweets</h4>
-        <% data.forEach( item => { %>
-            <div class="friendtweets" data-key="<%=item.name%>">
-                <a href="https://twitter.com/<%=item.name%>" target="_blank">
-                    <%= item.name %>
-                </a>
-                <button class="btn btn-link btn-xs markreaduser">Mark All Read</button>
-                <% if(item.tweets) { %>
-                    <ul>
-                        <% item.tweets.forEach(tweet => { %>
-                            <% if(!tweet.isRead) { %>
-                                <li data-key="<%=tweet._id%>">
-                                    <button class="btn btn-link btn-sm markreaditem">
-                                        <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
-                                    </button>
-                                    <span class="tweetstr">
-                                        <%-tweet.text%>
-                                    </span>
-                                    <a class="twitterlink" href="https://twitter.com/<%=item.name%>/status/<%=tweet.id%>" target="_blank">
-                                        <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
-                                    </a>
-                                    <% } %>
-                                </li>
-                                <% }) %>
-                    </ul>
-                    <% } %>
-            </div>
-            <% }) %>
-    </div>
-
-    <div class="text-right" ]>
-        <button class='big' id='font-up'>
-            Aa
-        </button>&nbsp;
-        <button class='small' id='font-down'>
-            Aa
-        </button>
-    </div>
+    <h4>Tweets</h4>
+    <% data.forEach( item => { %>
+        <div class="friendtweets" data-key="<%=item.name%>">
+            <a class="sizeable-text" href="https://twitter.com/<%=item.name%>" target="_blank">
+                <%= item.name %>
+            </a>
+            <button class="btn btn-link btn-xs markreaduser">Mark All Read</button>
+            <% if(item.tweets) { %>
+                <ul>
+                    <% item.tweets.forEach(tweet => { %>
+                        <% if(!tweet.isRead) { %>
+                            <li data-key="<%=tweet._id%>">
+                                <button class="btn btn-link btn-sm markreaditem">
+                                    <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
+                                </button>
+                                <a class="twitterlink" href="https://twitter.com/<%=item.name%>/status/<%=tweet.id%>" target="_blank">
+                                    <span class="glyphicon glyphicon-comment" aria-hidden="true">&nbsp;</span>
+                                </a>
+                                <span class="tweetstr sizeable-text">
+                                    <%-tweet.text%>
+                                </span>
+                                <% } %>
+                            </li>
+                            <% }) %>
+                </ul>
+                <% } %>
+        </div>
+        <% }) %>
 
 
-    <script type="text/javascript" src="js/main.js"></script>
+            <script type="text/javascript" src="js/main.js"></script>
 
-    <% include partials/footer %>
+            <% include partials/footer %>

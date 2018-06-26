@@ -1,6 +1,5 @@
 const tweetItems = [...document.querySelectorAll("div li")];
 let selectedIndex = -1;
-let fontSize = 1.0;
 
 function markItemRead(li) {
   // hide list item and mark tweet as read
@@ -108,24 +107,6 @@ document.querySelectorAll(".markreaduser").forEach(btn => {
 
 tweetItems.forEach(item => {
   item.addEventListener("click", highlightSelection);
-});
-
-document.querySelector("#font-up").addEventListener("click", () => {
-  if (fontSize <= 2.0) {
-    fontSize += 0.5;
-    document.querySelectorAll(".tweetstr").forEach(str => {
-      str.style.fontSize = `${fontSize}em`;
-    });
-  }
-});
-
-document.querySelector("#font-down").addEventListener("click", () => {
-  if (fontSize >= 1.0) {
-    fontSize -= 0.5;
-    document.querySelectorAll(".tweetstr").forEach(str => {
-      str.style.fontSize = `${fontSize}em`;
-    });
-  }
 });
 
 window.addEventListener("keydown", processKeypress);
