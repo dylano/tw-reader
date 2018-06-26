@@ -13,14 +13,14 @@
                 <% if(!tweet.isRead) { %>
                     <form class="inline" action="/tweets/<%=tweet._id%>?_method=PUT&dest=timeline" method="POST">
                         <button class="btn btn-link btn-xs">
-                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
                         </button>
                     </form>
                     <% } %>
                         <a href="https://twitter.com/<%=tweet.userScreenName%>/status/<%=tweet.id%>" target="_blank">
-                            <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                            <span class="glyphicon glyphicon-comment" aria-hidden="true">&nbsp;</span>
                         </a>
-                        <span class="tweetstr">
+                        <span class="tweetstr sizeable-text">
                             <%= tweetStr %>
                         </span>
             </li>
