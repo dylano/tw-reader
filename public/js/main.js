@@ -109,4 +109,10 @@ tweetItems.forEach(item => {
   item.addEventListener("click", highlightSelection);
 });
 
+document.querySelector("#btnNewTweets").addEventListener("click", () => {
+  const loader = document.querySelector("#load-animation");
+  loader.classList.remove("not-loading");
+  loader.classList.add("loading");
+});
+
 window.addEventListener("keydown", processKeypress);

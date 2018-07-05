@@ -1,0 +1,57 @@
+@charset "UTF-8";
+/**
+ *
+ * three-dots.css v0.1.0
+ *
+ * https://nzbin.github.io/three-dots/
+ *
+ * Copyright (c) 2018 nzbin
+ *
+ * Released under the MIT license
+ *
+ */
+
+/**
+ * ==============================================
+ * Dot Pulse
+ * ==============================================
+ */
+:root {
+  --pulse-color: green;
+}
+
+.dot-pulse {
+  position: relative;
+  left: -9999px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: var(--pulse-color);
+  color: var(--pulse-color);
+  box-shadow: 9984px 0 0 0 var(--pulse-color), 9999px 0 0 0 var(--pulse-color),
+    10014px 0 0 0 var(--pulse-color);
+  animation: dotPulse 1.5s infinite linear;
+}
+
+@keyframes dotPulse {
+  0% {
+    box-shadow: 9984px 0 0 -5px var(--pulse-color),
+      9999px 0 0 0 var(--pulse-color), 10014px 0 0 2px var(--pulse-color);
+  }
+  25% {
+    box-shadow: 9984px 0 0 0 var(--pulse-color),
+      9999px 0 0 2px var(--pulse-color), 10014px 0 0 0 var(--pulse-color);
+  }
+  50% {
+    box-shadow: 9984px 0 0 2px var(--pulse-color),
+      9999px 0 0 0 var(--pulse-color), 10014px 0 0 -5px var(--pulse-color);
+  }
+  75% {
+    box-shadow: 9984px 0 0 0 var(--pulse-color),
+      9999px 0 0 -5px var(--pulse-color), 10014px 0 0 0 var(--pulse-color);
+  }
+  100% {
+    box-shadow: 9984px 0 0 -5px var(--pulse-color),
+      9999px 0 0 0 var(--pulse-color), 10014px 0 0 2px var(--pulse-color);
+  }
+}

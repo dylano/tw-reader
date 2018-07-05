@@ -4,9 +4,11 @@
         <button>Get new tweets</button>
     </form>
 
+    <div id="load-animation" class="dot-pulse not-loading"></div>
+
     <h4>Tweets</h4>
     <% data.forEach( item => { %>
-        <div class="friendtweets" data-key="<%=item.name%>">
+        <div class="friendtweets " data-key="<%=item.name%>">
             <a class="sizeable-text" href="https://twitter.com/<%=item.name%>" target="_blank">
                 <%= item.name %>
             </a>
