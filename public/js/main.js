@@ -57,11 +57,19 @@ function processKeypress(event) {
     alert(
       "G - retrieve new tweets\nj / k - down/up\no - open current on Twitter\nx - mark tweet read\nX - mark all read for current user"
     );
-  } else if (["j", "k", "o", "x", "X", "G"].includes(keypress)) {
+  } else if (["j", "k", "o", "x", "X", "G", "-", "="].includes(keypress)) {
+    // page actions
     if (keypress === "G") {
       showLoader();
       document.querySelector("#btnNewTweets").submit();
-    } else if (selectedIndex === -1) {
+    } else if (keypress === "-") {
+      document.querySelector("#font-down").click();
+    } else if (keypress === "=") {
+      document.querySelector("#font-up").click();
+    }
+
+    // nav / item actions
+    if (selectedIndex === -1) {
       selectedIndex = 0;
       tweetItems[selectedIndex].classList.add("selected");
     } else if (keypress === "j" && selectedIndex < tweetItems.length - 1) {
@@ -83,6 +91,7 @@ function processKeypress(event) {
     } else if (keypress === "X") {
       markUserRead(tweetItems[selectedIndex].parentElement.parentElement);
     }
+
     tweetItems[selectedIndex].scrollIntoView({
       behavior: "smooth",
       block: "center"
