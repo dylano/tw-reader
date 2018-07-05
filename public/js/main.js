@@ -59,6 +59,7 @@ function processKeypress(event) {
     );
   } else if (["j", "k", "o", "x", "X", "G"].includes(keypress)) {
     if (keypress === "G") {
+      showLoader();
       document.querySelector("#btnNewTweets").submit();
     } else if (selectedIndex === -1) {
       selectedIndex = 0;
@@ -97,6 +98,12 @@ function highlightSelection() {
   tweetItems[selectedIndex].classList.add("selected");
 }
 
+function showLoader() {
+  const loader = document.querySelector("#load-animation");
+  loader.classList.remove("not-loading");
+  loader.classList.add("loading");
+}
+
 document.querySelectorAll(".markreaditem").forEach(btn => {
   btn.addEventListener("click", markReadItemClicked);
 });
@@ -109,10 +116,6 @@ tweetItems.forEach(item => {
   item.addEventListener("click", highlightSelection);
 });
 
-document.querySelector("#btnNewTweets").addEventListener("click", () => {
-  const loader = document.querySelector("#load-animation");
-  loader.classList.remove("not-loading");
-  loader.classList.add("loading");
-});
+document.querySelector("#btnNewTweets").addEventListener("click", showLoader);
 
 window.addEventListener("keydown", processKeypress);
