@@ -5,6 +5,8 @@ function markItemRead(li) {
   // remove list item from page and mark tweet as read in DB
   const tweetId = li.getAttribute("data-key");
   const ul = li.parentElement;
+  const index = tweetItems.indexOf(li);
+  tweetItems.splice(index, 1);
   li.remove();
   fetch(`/tweets/${tweetId}`, { method: "put" });
 
@@ -83,7 +85,6 @@ function processKeypress(event) {
       tweetItems[selectedIndex].querySelector(".twitterlink").click();
     } else if (keypress === "x") {
       markItemRead(tweetItems[selectedIndex]);
-      tweetItems.splice(selectedIndex, 1);
       if (selectedIndex === tweetItems.length) {
         tweetItems[--selectedIndex].classList.add("selected");
       } else {
@@ -101,11 +102,25 @@ function processKeypress(event) {
 }
 
 function highlightSelection() {
-  if (selectedIndex >= 0) {
-    tweetItems[selectedIndex].classList.remove("selected");
-  }
+  // remove any existing highlight
+  tweetItems.forEach(item => item.classList.remove("selected"));
+
+  // create new highlight -- this is more complex than it should be because some
+  // clicks are from the button to remove a tweet. So we need to check if the
+  // row that generated this click still exists before we know what to highlight.
+  const prevSelection = selectedIndex;
   selectedIndex = tweetItems.indexOf(this);
-  tweetItems[selectedIndex].classList.add("selected");
+  if (selectedIndex >= 0) {
+    // the simple case
+    tweetItems[selectedIndex].classList.add("selected");
+  } else if (selectedIndex === -1 && prevSelection !== -1) {
+    // the delete case
+    selectedIndex =
+      prevSelection >= tweetItems.length
+        ? tweetItems.length - 1
+        : prevSelection;
+    tweetItems[selectedIndex].classList.add("selected");
+  }
 }
 
 function showLoader() {
