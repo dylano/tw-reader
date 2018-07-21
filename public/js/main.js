@@ -70,11 +70,6 @@ function processKeypress(event) {
     }
 
     // nav / item actions
-    console.log(
-      `pre -- selected index:${selectedIndex}, tweetItems.length:${
-        tweetItems.length
-      }`
-    );
     if (selectedIndex === -1) {
       selectedIndex = 0;
       tweetItems[selectedIndex].classList.add("selected");
@@ -97,11 +92,6 @@ function processKeypress(event) {
     } else if (keypress === "X") {
       markUserRead(tweetItems[selectedIndex].parentElement.parentElement);
     }
-    console.log(
-      `post -- selected index:${selectedIndex}, tweetItems.length:${
-        tweetItems.length
-      }`
-    );
 
     tweetItems[selectedIndex].scrollIntoView({
       behavior: "smooth",
