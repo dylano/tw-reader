@@ -54,6 +54,12 @@ function markReadUserClicked() {
   markUserRead(this.parentElement);
 }
 
+function showLoader() {
+  const loader = document.querySelector("#load-animation");
+  loader.classList.remove("not-loading");
+  loader.classList.add("loading");
+}
+
 function processKeypress(event) {
   const keypress = event.key;
   if (keypress === "?") {
@@ -121,12 +127,6 @@ function highlightSelection() {
         : prevSelection;
     tweetItems[selectedIndex].classList.add("selected");
   }
-}
-
-function showLoader() {
-  const loader = document.querySelector("#load-animation");
-  loader.classList.remove("not-loading");
-  loader.classList.add("loading");
 }
 
 document.querySelectorAll(".markreaditem").forEach(btn => {

@@ -12,7 +12,7 @@ document.querySelector("#font-up").addEventListener("click", () => {
 
 document.querySelector("#font-down").addEventListener("click", () => {
   console.log("font down");
-  if (fontSize >= 1.0) {
+  if (fontSize >= 1.5) {
     fontSize -= 0.5;
     document.querySelectorAll(".sizeable-text").forEach(str => {
       str.style.fontSize = `${fontSize}em`;
