@@ -3,7 +3,7 @@ const appHelper = require("../helpers/appHelper");
 
 const router = express.Router();
 
-router.get("/", (req, res) => res.redirect("/main"));
+router.get("/", (req, res) => res.redirect("main"));
 router.get("/main", appHelper.renderMain);
 router.get("/user", appHelper.renderUser);
 router.get("/timeline", appHelper.renderTimeline);
