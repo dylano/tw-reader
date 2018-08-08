@@ -1,8 +1,8 @@
 /* eslint class-methods-use-this: 0 */ // --> OFF
 const Twitter = require("./twitter");
-const Friend = require("./models/friend");
-const Tweet = require("./models/tweet");
-const AppData = require("./models/appdata");
+const Friend = require("../models/friend");
+const Tweet = require("../models/tweet");
+const AppData = require("../models/appdata");
 
 const twitter = new Twitter();
 
