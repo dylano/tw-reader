@@ -1,10 +1,10 @@
+require("newrelic");
 const express = require("express");
 const mongoose = require("mongoose");
 const methodOverride = require("method-override");
 const bodyParser = require("body-parser");
 const apiRoutes = require("./routes/apiRoutes");
 const appRoutes = require("./routes/appRoutes");
-require("newrelic");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
