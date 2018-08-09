@@ -45,8 +45,11 @@ module.exports = class TwData {
   }
 
   async markTweetAsRead(tweetMongoId) {
-    console.log(`mark read tweet id = ${tweetMongoId}`);
-    await Tweet.findByIdAndUpdate(tweetMongoId, { isRead: true });
+    return Tweet.findByIdAndUpdate(
+      tweetMongoId,
+      { isRead: true },
+      { new: true }
+    );
   }
 
   async markAllTweetsAsRead(screenName) {
@@ -159,7 +162,7 @@ module.exports = class TwData {
     }
 
     let count = 0;
-    users.forEach(async user => {
+    users.forEach(user => {
       result.push({ name: user._id, tweets: usertweets[count++] });
     });
 

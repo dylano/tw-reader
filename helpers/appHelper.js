@@ -2,8 +2,6 @@ const TwData = require("./twdata");
 
 const twData = new TwData();
 
-exports.getFriends = async () => twData.getFriends();
-
 exports.renderMain = async (req, res) => {
   try {
     const data = await twData.getFriendsWithTweets();
@@ -15,7 +13,7 @@ exports.renderMain = async (req, res) => {
 
 exports.renderFriends = async (req, res) => {
   try {
-    const friends = await this.getFriends();
+    const friends = await twData.getFriends();
     res.render("friends", { friends });
   } catch (err) {
     console.log(err);
@@ -40,14 +38,67 @@ exports.renderTimeline = async (req, res) => {
   }
 };
 
-exports.renderFriend = (req, res) => {
+exports.renderFriend = async (req, res) => {
   try {
-    twData.getFriend(req.params.id).then(friend => {
-      twData.getTweetsByScreenName(friend.screenName).then(tweets => {
-        res.render("friend", { friend, tweets });
-      });
-    });
-    // res.send(`tweets for user ${req.params.id}`);
+    const friend = await twData.getFriend(req.params.id);
+    const tweets = await twData.getTweetsByScreenName(friend.screenName);
+    const data = { friend, tweets };
+    res.render("friend", { data });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+exports.updateTweet = async (req, res) => {
+  try {
+    await twData.markTweetAsRead(req.params.id);
+    if (req.query.dest) {
+      res.redirect(`/${req.query.dest}`);
+    } else {
+      res.sendStatus(200);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+exports.updateFriend = async (req, res) => {
+  try {
+    console.log(`mark read ${req.params.screenName}`);
+    await twData.markAllTweetsAsRead(req.params.screenName);
+
+    if (req.query.dest) {
+      res.redirect(`/${req.query.dest}`);
+    } else {
+      res.sendStatus(200);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+exports.refreshMain = async (req, res) => {
+  try {
+    await twData.loadTweets("dtoliver", 100);
+    res.redirect("/main");
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+exports.refreshFriends = async (req, res) => {
+  try {
+    await twData.loadFriends("dtoliver");
+    res.redirect("/friends");
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+exports.refreshTimeline = async (req, res) => {
+  try {
+    await twData.loadTweets("dtoliver", 100);
+    res.redirect("/timeline");
   } catch (err) {
     console.log(err);
   }

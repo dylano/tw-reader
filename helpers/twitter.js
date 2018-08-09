@@ -8,7 +8,7 @@ const client = new Twitter({
   access_token_secret: process.env.TW_TOKEN_SECRET
 });
 
-module.exports = class TwData {
+module.exports = class TwitterWrapper {
   async getTweet(tweetId) {
     try {
       const params = {

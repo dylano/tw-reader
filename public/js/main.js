@@ -25,7 +25,7 @@ function markItemRead(li) {
 function markUserRead(div) {
   const screenName = div.getAttribute("data-key");
   div.classList.add("hidden");
-  fetch(`/friends/${screenName}/tweets`, { method: "PUT" });
+  fetch(`/friends/${screenName}`, { method: "PUT" });
 
   // remove the elements from the tweetItems array and adjust the selection
   const children = div.querySelectorAll("li");

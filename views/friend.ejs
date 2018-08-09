@@ -1,25 +1,30 @@
 <% include partials/header %>
 
-    <img src="<%=friend.imgUrl%>" />
-    <h4>
-        Tweets by
-        <%=friend.name%>
-            <a href="https://twitter.com/<%=friend.screenName%>">(@
-                <%=friend.screenName%>)</a>
-    </h4>
-    <ul>
-        <% tweets.forEach( tweet => { 
-                        const tweetStr = `${tweet.text}`;
-                        %>
-            <li>
-                <a href="https://twitter.com/<%=tweet.userScreenName%>/status/<%=tweet.id%>" target="_blank">
-                    <span class="glyphicon glyphicon-comment" aria-hidden="true">&nbsp;</span>
-                </a>
-                <span class="tweetstr">
-                    <%- tweetStr %>
-                </span>
-            </li>
-            <% }) %>
-    </ul>
+    <%
+        const friend = data.friend;
+        const tweets = data.tweets;
+    %>
 
-    <% include partials/footer %>
+        <img src="<%=friend.imgUrl%>" />
+        <h4>
+            Tweets by
+            <%=friend.name%>
+                <a href="https://twitter.com/<%=friend.screenName%>">(@
+                    <%=friend.screenName%>)</a>
+        </h4>
+        <ul>
+            <% tweets.forEach( tweet => { 
+                    const tweetStr = `${tweet.text}`;
+                    %>
+                <li>
+                    <a href="https://twitter.com/<%=tweet.userScreenName%>/status/<%=tweet.id%>" target="_blank">
+                        <span class="glyphicon glyphicon-comment" aria-hidden="true">&nbsp;</span>
+                    </a>
+                    <span class="tweetstr">
+                        <%- tweetStr %>
+                    </span>
+                </li>
+                <% }) %>
+        </ul>
+
+        <% include partials/footer %>
