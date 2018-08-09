@@ -9,6 +9,7 @@
     "express": "^4.16.2",
     "method-override": "^2.3.10",
     "mongoose": "^5.0.9",
+    "newrelic": "^4.7.0",
     "request": "^2.83.0",
     "twitter": "^1.7.1"
   },
