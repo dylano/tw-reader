@@ -37,10 +37,12 @@ li {
 
 .big {
   font-size: 1em;
+  margin: 10px;
 }
 
 .small {
   font-size: 0.5em;
+  margin: 10px;
 }
 
 .inline {
@@ -70,4 +72,16 @@ li {
 .loading {
   visibility: visible;
   margin: 0 auto;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+}
+
+.sub-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 20px;
 }

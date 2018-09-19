@@ -1,17 +1,19 @@
 <% include partials/header %>
-
-    <h4>User Tweets</h4>
+<main>
+    <header class="sub-header">
+        <h3>My Tweets</h3>
+    </header>
     <ul>
         <% tweets.forEach( tweet => { %>
-            <li>
-                <a href="https://twitter.com/<%=tweet.user.screen_name%>/status/<%=tweet.id_str%>" target="_blank">
-                    <span class="glyphicon glyphicon-comment" aria-hidden="true">&nbsp;</span>
-                </a>
-                <span class="tweetstr sizeable-text">
-                    <%= tweet.full_text %>
-                </span>
-            </li>
-            <% }) %>
+        <li>
+            <a href="https://twitter.com/<%=tweet.user.screen_name%>/status/<%=tweet.id_str%>" target="_blank">
+                <span class="glyphicon glyphicon-comment" aria-hidden="true">&nbsp;</span>
+            </a>
+            <span class="tweetstr sizeable-text">
+                <%= tweet.full_text %>
+            </span>
+        </li>
+        <% }) %>
     </ul>
-
-    <% include partials/footer %>
+</main>
+<% include partials/footer %>

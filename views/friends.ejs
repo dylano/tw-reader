@@ -1,20 +1,24 @@
 <% include partials/header %>
 
-    <form class="text-right" action='/friends' method="POST">
-        <button>Refresh from Twitter</button>
-    </form>
+<main>
+    <header class="sub-header">
+        <h3>Friends</h3>
+        <form class="text-right" action='/friends' method="POST">
+            <button>Refresh from Twitter</button>
+        </form>
+    </header>
 
-    <h4>Friends</h4>
-    <div>
+    <div class='all-friends'>
         <ul class="friendlist">
             <% friends.forEach( friend => { %>
-                <li class="friend sizeable-text">
-                    <img src="<%=friend.imgUrl%>" />
-                    <a href="/friends/<%=friend._id%>">
-                        <%= friend.name %>
-                    </a>
-                </li>
-                <% }) %>
+            <li class="friend sizeable-text">
+                <img src="<%=friend.imgUrl%>" />
+                <a href="/friends/<%=friend._id%>">
+                    <%= friend.name %>
+                </a>
+            </li>
+            <% }) %>
         </ul>
     </div>
-    <% include partials/footer %>
+</main>
+<% include partials/footer %>

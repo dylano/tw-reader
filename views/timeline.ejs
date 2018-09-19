@@ -1,31 +1,34 @@
 <% include partials/header %>
 
-    <form class="text-right" action='/timeline' method="POST">
-        <button>Refresh from Twitter</button>
-    </form>
-
-    <h4>Timeline</h4>
-    <ul>
+<main>
+    <header class="sub-header">
+        <h3>Timeline</h3>
+        <form class="text-right" action='/timeline' method="POST">
+            <button>Refresh from Twitter</button>
+        </form>
+    </header>
+    <ul class="timeline-tweets">
         <% tweets.forEach( tweet => { 
                     const tweetStr = `@${tweet.userScreenName}: ${tweet.text}`;
                     %>
-            <li>
-                <% if(!tweet.isRead) { %>
-                    <form class="inline" action="/tweets/<%=tweet._id%>?_method=PUT&dest=timeline" method="POST">
-                        <button class="btn btn-link btn-xs">
-                            <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
-                        </button>
-                    </form>
-                    <% } %>
-                        <a href="https://twitter.com/<%=tweet.userScreenName%>/status/<%=tweet.id%>" target="_blank">
-                            <span class="glyphicon glyphicon-comment" aria-hidden="true">&nbsp;</span>
-                        </a>
-                        <span class="tweetstr sizeable-text">
-                            <%= tweetStr %>
-                        </span>
-            </li>
-            <% }) %>
+        <li>
+            <% if(!tweet.isRead) { %>
+            <form class="inline" action="/tweets/<%=tweet._id%>?_method=PUT&dest=timeline" method="POST">
+                <button class="btn btn-link btn-xs">
+                    <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
+                </button>
+            </form>
+            <% } %>
+            <a href="https://twitter.com/<%=tweet.userScreenName%>/status/<%=tweet.id%>" target="_blank">
+                <span class="glyphicon glyphicon-comment" aria-hidden="true">&nbsp;</span>
+            </a>
+            <span class="tweetstr sizeable-text">
+                <%= tweetStr %>
+            </span>
+        </li>
+        <% }) %>
     </ul>
-    </div>
 
-    <% include partials/footer %>
+</main>
+
+<% include partials/footer %>
