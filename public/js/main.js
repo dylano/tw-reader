@@ -71,10 +71,6 @@ function processKeypress(event) {
     if (keypress === "G") {
       showLoader();
       document.querySelector("#btnNewTweets").submit();
-    } else if (keypress === "-") {
-      document.querySelector("#font-down").click();
-    } else if (keypress === "=") {
-      document.querySelector("#font-up").click();
     }
 
     // nav / item actions
