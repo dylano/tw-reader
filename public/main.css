@@ -94,7 +94,7 @@ main {
 }
 
 .friend-tweets:nth-child(odd) {
-  background-color: rgb(48, 48, 48);
+  background-color: rgba(100, 100, 100, 0.35);
 }
 
 .main-tweet {
