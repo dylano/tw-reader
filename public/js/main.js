@@ -47,7 +47,7 @@ function markUserRead(div) {
 }
 
 function markReadItemClicked() {
-  markItemRead(this.parentElement);
+  markItemRead(this.parentElement.parentElement);
 }
 
 function markReadUserClicked() {
