@@ -85,3 +85,26 @@ main {
   align-items: center;
   padding-bottom: 20px;
 }
+
+.friend-tweets {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-tweet {
+  display: flex;
+  align-items: flex-start;
+  padding-bottom: 10px;
+}
+
+.main-tweet-buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 3px;
+}
+
+.markreaduser {
+  align-self: flex-end;
+}
