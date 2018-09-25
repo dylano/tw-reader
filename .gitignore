@@ -1,3 +1,4 @@
 node_modules
 twitter.env
 *.log
+.env

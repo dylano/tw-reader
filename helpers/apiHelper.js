@@ -21,7 +21,7 @@ exports.getFriend = async (req, res) => {
 };
 
 exports.getUserTweets = async (req, res) =>
-  res.json(await twData.getUserTweets("dtoliver"));
+  res.json(await twData.getUserTweets(process.env.TW_USERNAME));
 
 exports.getTimeline = async (req, res) =>
   res.json(await twData.getTimelineTweets());

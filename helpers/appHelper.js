@@ -1,6 +1,7 @@
 const TwData = require("./twdata");
 
 const twData = new TwData();
+const TW_USER = process.env.TW_USERNAME;
 
 exports.renderMain = async (req, res) => {
   try {
@@ -22,7 +23,7 @@ exports.renderFriends = async (req, res) => {
 
 exports.renderUser = async (req, res) => {
   try {
-    const tweets = await twData.getUserTweets("dtoliver");
+    const tweets = await twData.getUserTweets(TW_USER);
     res.render("user", { tweets });
   } catch (err) {
     console.log(err);
@@ -79,7 +80,7 @@ exports.updateFriend = async (req, res) => {
 
 exports.refreshMain = async (req, res) => {
   try {
-    await twData.loadTweets("dtoliver", 100);
+    await twData.loadTweets(TW_USER, 100);
     res.redirect("/main");
   } catch (err) {
     console.log(err);
@@ -88,7 +89,7 @@ exports.refreshMain = async (req, res) => {
 
 exports.refreshFriends = async (req, res) => {
   try {
-    await twData.loadFriends("dtoliver");
+    await twData.loadFriends(TW_USER);
     res.redirect("/friends");
   } catch (err) {
     console.log(err);
@@ -97,7 +98,7 @@ exports.refreshFriends = async (req, res) => {
 
 exports.refreshTimeline = async (req, res) => {
   try {
-    await twData.loadTweets("dtoliver", 100);
+    await twData.loadTweets(TW_USER, 100);
     res.redirect("/timeline");
   } catch (err) {
     console.log(err);
