@@ -114,3 +114,14 @@ main {
 .markreaduser {
   align-self: flex-end;
 }
+
+@media screen and (min-width: 800px) {
+  .main-tweet-buttons {
+    flex-direction: row;
+  }
+
+  .main-tweet {
+    align-items: center;
+    padding: 0;
+  }
+}
