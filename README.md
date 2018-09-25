@@ -18,5 +18,5 @@ I want a presentation that:
 
 
 ### How?
-* Currently this only supports a single user, authorized by a Twitter application key & user access token. Get those from https://apps.twitter.com/, and enter store them into environment variables. See `env.sample` for the required vars.
+* Currently this only supports a single user, authorized by a Twitter application key & user access token. Get those from https://apps.twitter.com/, and put them into environment variables. See `env.sample` for the required vars.
 * Data is stored in MongoDB. Specify the connection string in `MONGODB_URI`
