@@ -13,10 +13,10 @@ I want a presentation that:
 * groups tweets by user 
 * remembers the tweets I've already seen 
 * has keyboard navigation
-* makes it simple to dismiss the tweets I'm done with or an entire rant thread that I don't care aobut.
+* makes it simple to dismiss the tweets I'm done with or an entire rant thread that I don't care aobut
 * filters out duplicate tweets _(TBD)_
 
 
 ### How?
 * Currently this only supports a single user, authorized by a Twitter application key & user access token. Get those from https://apps.twitter.com/, and enter store them into environment variables. See `env.sample` for the required vars.
-* Data is stored in MongoDB, specify the connection string in `https://apps.twitter.com/`
+* Data is stored in MongoDB. Specify the connection string in `MONGODB_URI`
