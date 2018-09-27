@@ -64,26 +64,27 @@ module.exports = class TwData {
   }
 
   async getFriends() {
-    return Friend.find();
+    return Friend.aggregate([{ $match: {} }, { $sort: { screenName: 1 } }]);
   }
 
   async loadFriends(screenName) {
     const friends = await twitter.getFriends(screenName);
 
     // Clean out DB and re-load with new friend list.
-    Friend.remove({}).then(() => {
-      friends.forEach(friend => {
+    await Friend.deleteMany({});
+    const promArr = [];
+    friends.forEach(friend => {
+      promArr.push(
         Friend.create({
           id: friend.id_str,
           screenName: friend.screen_name,
           name: friend.name,
           imgUrl: friend.profile_image_url_https
-        }).then(newFriend => {
-          console.log(`Added friend ${newFriend.screenName}`);
-        });
-      });
+        })
+      );
     });
-    return friends;
+    await Promise.all(promArr);
+    return this.getFriends();
   }
 
   async getAppData(screenName) {
@@ -143,12 +144,12 @@ module.exports = class TwData {
     if (unreadOnly) {
       return Tweet.aggregate([
         { $match: { userScreenName: screenName, isRead: false } },
-        { $sort: { timestamp: 1 } }
+        { $sort: { timestamp: -1 } }
       ]).limit(maxResults);
     }
     return Tweet.aggregate([
       { $match: { userScreenName: screenName } },
-      { $sort: { timestamp: 1 } }
+      { $sort: { timestamp: -1 } }
     ]).limit(maxResults);
   }
 
