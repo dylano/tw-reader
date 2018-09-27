@@ -4,6 +4,7 @@ const Friend = require("../models/friend");
 const Tweet = require("../models/tweet");
 const AppData = require("../models/appdata");
 
+const DEFAULT_MAX_TIMELINE_TWEETS = 250;
 const twitter = new Twitter();
 
 function formatTweet(tweet) {
@@ -39,9 +40,11 @@ module.exports = class TwData {
     return tweets;
   }
 
-  async getTimelineTweets() {
-    // return Tweet.find();
-    return Tweet.aggregate([{ $sort: { timestamp: -1 } }]);
+  async getTimelineTweets(maxResults = DEFAULT_MAX_TIMELINE_TWEETS) {
+    if (maxResults <= 0) {
+      maxResults = DEFAULT_MAX_TIMELINE_TWEETS;
+    }
+    return Tweet.aggregate([{ $sort: { timestamp: -1 } }]).limit(maxResults);
   }
 
   async markTweetAsRead(tweetMongoId) {
@@ -127,20 +130,26 @@ module.exports = class TwData {
     }
   }
 
-  async getTweetsByScreenName(screenName, unreadOnly = false) {
-    // db.tweets.aggregate([{$match: {userScreenName: "TheAthleticSF"}},{ $sort: { timestamp: -1 } }])
+  async getTweetsByScreenName(
+    screenName,
+    unreadOnly = false,
+    maxResults = DEFAULT_MAX_TIMELINE_TWEETS
+  ) {
+    if (maxResults <= 0) {
+      maxResults = DEFAULT_MAX_TIMELINE_TWEETS;
+    }
 
-    console.log(`twdata.getTweetsByFriend ${screenName}`);
+    // db.tweets.aggregate([{$match: {userScreenName: "TheAthleticSF"}},{ $sort: { timestamp: -1 } }])
     if (unreadOnly) {
       return Tweet.aggregate([
         { $match: { userScreenName: screenName, isRead: false } },
         { $sort: { timestamp: 1 } }
-      ]);
+      ]).limit(maxResults);
     }
     return Tweet.aggregate([
       { $match: { userScreenName: screenName } },
       { $sort: { timestamp: 1 } }
-    ]);
+    ]).limit(maxResults);
   }
 
   // (users with unread tweets)> db.tweets.aggregate([ {$match : {"isRead":false} }, {$group : {_id:"$userId", count:{$sum:1}}}, {$sort:{"count":-1}} ])
