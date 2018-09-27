@@ -64,7 +64,13 @@ module.exports = class TwData {
   }
 
   async getFriends() {
-    return Friend.aggregate([{ $match: {} }, { $sort: { screenName: 1 } }]);
+    const friends = await Friend.find();
+    return friends.sort((a, b) => {
+      if (a.name.toLowerCase() < b.name.toLowerCase()) {
+        return -1;
+      }
+      return 1;
+    });
   }
 
   async loadFriends(screenName) {
