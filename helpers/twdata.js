@@ -65,12 +65,9 @@ module.exports = class TwData {
 
   async getFriends() {
     const friends = await Friend.find();
-    return friends.sort((a, b) => {
-      if (a.name.toLowerCase() < b.name.toLowerCase()) {
-        return -1;
-      }
-      return 1;
-    });
+    return friends.sort(
+      (a, b) => (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1)
+    );
   }
 
   async loadFriends(screenName) {
@@ -150,12 +147,12 @@ module.exports = class TwData {
     if (unreadOnly) {
       return Tweet.aggregate([
         { $match: { userScreenName: screenName, isRead: false } },
-        { $sort: { timestamp: -1 } }
+        { $sort: { timestamp: 1 } }
       ]).limit(maxResults);
     }
     return Tweet.aggregate([
       { $match: { userScreenName: screenName } },
-      { $sort: { timestamp: -1 } }
+      { $sort: { timestamp: 1 } }
     ]).limit(maxResults);
   }
 
@@ -164,8 +161,7 @@ module.exports = class TwData {
     // get users with unread tweets
     const users = await Tweet.aggregate([
       { $match: { isRead: false } },
-      { $group: { _id: "$userScreenName", count: { $sum: 1 } } },
-      { $sort: { _id: 1 } }
+      { $group: { _id: "$userScreenName", count: { $sum: 1 } } }
     ]);
     /*
     [ { _id: 'AandGShow', count: 6 },
@@ -180,9 +176,11 @@ module.exports = class TwData {
     });
     const usertweets = await Promise.all(promArray);
 
-    return users.map((user, idx) => ({
-      name: user._id,
-      tweets: usertweets[idx]
-    }));
+    return users
+      .map((user, idx) => ({
+        name: user._id,
+        tweets: usertweets[idx]
+      }))
+      .sort((a, b) => (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1));
   }
 };
