@@ -2,6 +2,29 @@ const TwData = require("./twdata");
 
 const twData = new TwData();
 
+exports.getAllTweets = async (req, res) => {
+  console.log("API getTweets");
+  // get all the current friends
+  const friends = await twData.getFriends();
+
+  // get all the tweets for current friends
+  const promArray = [];
+  friends.forEach(friend => {
+    promArray.push(twData.getTweetsByScreenName(friend.screenName));
+  });
+  const usertweets = await Promise.all(promArray);
+
+  // stick them together
+  const newfr = friends.map((friend, idx) => {
+    return {
+      friend,
+      tweets: usertweets[idx]
+    };
+  });
+
+  return res.json({ friends: newfr });
+};
+
 exports.getFriends = async (req, res) => res.json(await twData.getFriends());
 
 exports.getFriend = async (req, res) => {
@@ -9,10 +32,7 @@ exports.getFriend = async (req, res) => {
   console.log(`getNewTweets is ${getNewTweets}`);
 
   const friend = await twData.getFriend(req.params.id);
-  const tweets = await twData.getTweetsByScreenName(
-    friend.screenName,
-    getNewTweets
-  );
+  const tweets = await twData.getTweetsByScreenName(friend.screenName, getNewTweets);
 
   return res.json({
     friend,
@@ -20,11 +40,9 @@ exports.getFriend = async (req, res) => {
   });
 };
 
-exports.getUserTweets = async (req, res) =>
-  res.json(await twData.getUserTweets(process.env.TW_USERNAME));
+exports.getUserTweets = async (req, res) => res.json(await twData.getUserTweets(process.env.TW_USERNAME));
 
-exports.getTimeline = async (req, res) =>
-  res.json(await twData.getTimelineTweets());
+exports.getTimeline = async (req, res) => res.json(await twData.getTimelineTweets());
 
 exports.updateTweet = async (req, res) => {
   const updatedTweet = await twData.markTweetAsRead(req.params.id);

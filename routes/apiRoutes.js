@@ -3,6 +3,8 @@ const apiHelper = require("../helpers/apiHelper");
 
 const router = express.Router();
 
+router.get("/tweets", apiHelper.getAllTweets);
+
 router.get("/user", apiHelper.getUserTweets);
 router.get("/friends/:id", apiHelper.getFriend);
 
