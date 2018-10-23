@@ -4,6 +4,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const methodOverride = require("method-override");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 const apiRoutes = require("./routes/apiRoutes");
 const appRoutes = require("./routes/appRoutes");
 
@@ -13,6 +14,7 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
+app.use(cors());
 
 app.use(express.static(`${__dirname}/public`));
 app.set("view engine", "ejs");
