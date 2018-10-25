@@ -48,26 +48,17 @@ module.exports = class TwData {
   }
 
   async markTweetAsRead(tweetMongoId) {
-    return Tweet.findByIdAndUpdate(
-      tweetMongoId,
-      { isRead: true },
-      { new: true }
-    );
+    return Tweet.findByIdAndUpdate(tweetMongoId, { isRead: true }, { new: true });
   }
 
   async markAllTweetsAsRead(screenName) {
     // db.tweets.updateMany({ "userScreenName" : "TheAthleticSF","isRead":false }, {$set:{"isRead":true}} )
-    await Tweet.updateMany(
-      { userScreenName: screenName, isRead: false },
-      { $set: { isRead: true } }
-    );
+    await Tweet.updateMany({ userScreenName: screenName, isRead: false }, { $set: { isRead: true } });
   }
 
   async getFriends() {
     const friends = await Friend.find();
-    return friends.sort(
-      (a, b) => (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1)
-    );
+    return friends.sort((a, b) => (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1));
   }
 
   async loadFriends(screenName) {
@@ -106,11 +97,7 @@ module.exports = class TwData {
 
       // save the latest tweet ID from new tweets
       if (tweets && tweets.length) {
-        await AppData.update(
-          { screenName },
-          { screenName, mostRecentTweet: tweets[0].id_str },
-          { upsert: true }
-        );
+        await AppData.update({ screenName }, { screenName, mostRecentTweet: tweets[0].id_str }, { upsert: true });
       }
 
       // save new tweets to DB
@@ -134,11 +121,7 @@ module.exports = class TwData {
     }
   }
 
-  async getTweetsByScreenName(
-    screenName,
-    unreadOnly = false,
-    maxResults = DEFAULT_MAX_TIMELINE_TWEETS
-  ) {
+  async getTweetsByScreenName(screenName, unreadOnly = false, maxResults = DEFAULT_MAX_TIMELINE_TWEETS) {
     if (maxResults <= 0) {
       maxResults = DEFAULT_MAX_TIMELINE_TWEETS;
     }
@@ -147,13 +130,12 @@ module.exports = class TwData {
     if (unreadOnly) {
       return Tweet.aggregate([
         { $match: { userScreenName: screenName, isRead: false } },
-        { $sort: { timestamp: 1 } }
+        { $sort: { timestamp: -1 } }
       ]).limit(maxResults);
     }
-    return Tweet.aggregate([
-      { $match: { userScreenName: screenName } },
-      { $sort: { timestamp: 1 } }
-    ]).limit(maxResults);
+    return Tweet.aggregate([{ $match: { userScreenName: screenName } }, { $sort: { timestamp: -1 } }]).limit(
+      maxResults
+    );
   }
 
   // (users with unread tweets)> db.tweets.aggregate([ {$match : {"isRead":false} }, {$group : {_id:"$userId", count:{$sum:1}}}, {$sort:{"count":-1}} ])
