@@ -8,9 +8,10 @@ exports.getAllTweets = async (req, res) => {
   const friends = await twData.getFriends();
 
   // get all the tweets for current friends
+  const MAX_TWEETS_PER_USER = 25;
   const promArray = [];
   friends.forEach(friend => {
-    promArray.push(twData.getTweetsByScreenName(friend.screenName));
+    promArray.push(twData.getTweetsByScreenName(friend.screenName, false, MAX_TWEETS_PER_USER));
   });
   const usertweets = await Promise.all(promArray);
 
