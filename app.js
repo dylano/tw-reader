@@ -17,7 +17,7 @@ app.use(methodOverride("_method"));
 app.use(cors());
 
 app.use(express.static(`${__dirname}/public`));
-app.use(express.static(`${__dirname}/app/build`));
+app.use(express.static(`${__dirname}/react-app/build`));
 app.set("view engine", "ejs");
 
 const dbconnect = process.env.MONGODB_URI || "mongodb://localhost/twreader";
@@ -32,7 +32,7 @@ app.use("/api", apiRoutes);
 app.use("/", appRoutes);
 
 app.get("/app", (req, res) => {
-  res.sendFile(`${__dirname}/app/build/index.html`);
+  res.sendFile(`${__dirname}/react-app/build/index.html`);
 });
 
 app.listen(PORT, () => {
