@@ -23,9 +23,10 @@
     "prettier": "^1.10.2"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "lint": "eslint '**/*.js' --quiet"
+    "lint": "eslint '**/*.js' --quiet",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "author": "",
   "license": "ISC"
