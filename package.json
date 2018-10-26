@@ -26,7 +26,7 @@
     "start": "node app.js",
     "lint": "eslint '**/*.js' --quiet",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "heroku-postbuild": "cd client && npm install && npm run build"
+    "heroku-postbuild": "cd react-app && npm install && npm run build"
   },
   "author": "",
   "license": "ISC"
