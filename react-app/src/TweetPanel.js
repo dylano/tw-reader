@@ -11,7 +11,7 @@ const TweetPanel = ({ friend, tweets, showAllTweets = false }) => {
   if (tweets.length === 0) {
     content = <div className="tweet-panel-message">No tweetz :(</div>;
   } else {
-    content = tweets.sort((a, b) => b.timestamp < a.timestamp).map(tweet => {
+    content = tweets.sort((a, b) => a.timestamp.localeCompare(b.timestamp)).map(tweet => {
       const className = tweet.isRead ? "tweet-panel-tweet" : "tweet-panel-tweet tweet-panel-tweet-new";
       return (
         <div className={className} key={tweet._id}>
