@@ -16,12 +16,10 @@ exports.getAllTweets = async (req, res) => {
   const usertweets = await Promise.all(promArray);
 
   // stick them together
-  const newfr = friends.map((friend, idx) => {
-    return {
-      friend,
-      tweets: usertweets[idx]
-    };
-  });
+  const newfr = friends.map((friend, idx) => ({
+    friend,
+    tweets: usertweets[idx]
+  }));
 
   return res.json({ friends: newfr });
 };

@@ -1,0 +1,20 @@
+.sidebar {
+  flex: 0 0 200px;
+  line-height: 1.5;
+  text-align: left;
+  overflow: hidden;
+}
+
+.sidebar-friendlist-item {
+  cursor: pointer;
+  transition: all 500ms;
+}
+
+.sidebar .selected {
+  color: green;
+  transform: translateX(50px);
+  background-color: var(--tweet-bg-color);
+  color: black;
+  border-radius: 5px;
+  padding-left: 5px;
+}
