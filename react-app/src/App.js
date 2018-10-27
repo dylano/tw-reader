@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import ToggleButton from "react-toggle-button";
+import Header from "./Header";
 import Sidebar from "./Sidebar";
 import TweetPanel from "./TweetPanel";
 import EmptyPanel from "./EmptyPanel";
@@ -13,6 +13,7 @@ class App extends Component {
     super();
     this.state = {
       selectedFriend: null,
+      isFetchingData: false,
       showAllTweets: false,
       error: `api`,
       friends: []
@@ -28,15 +29,19 @@ class App extends Component {
     if (USE_FAKE_DATA) {
       this.setState({ ...static_data, error: "static-data" });
     } else {
-      fetch(`/api/tweets`)
-        .then(res => res.json())
-        .then(json => {
-          this.setState({ ...json });
-        })
-        .catch(err => this.onError(err));
+      this.getTweetData();
     }
     // this.processTweetDataAfterFetch(tweetData.friends);
   }
+
+  getTweetData = () => {
+    fetch(`/api/tweets`)
+      .then(res => res.json())
+      .then(json => {
+        this.setState({ ...json });
+      })
+      .catch(err => this.onError(err));
+  };
 
   // reorganize data to easier(??) structure
   processTweetDataAfterFetch(friends) {
@@ -58,6 +63,15 @@ class App extends Component {
 
   onFriendSelect = friendId => {
     this.setState({ selectedFriend: friendId });
+  };
+
+  onChangeShowAllTweets = () => {
+    this.setState({ showAllTweets: !this.state.showAllTweets });
+  };
+
+  onRefreshTweets = () => {
+    this.setState({ isFetchingData: !this.state.isFetchingData });
+    //todo: trigger API server to update tweets and then call to getTweetData() (?)
   };
 
   chooseMainPanel() {
@@ -97,23 +111,13 @@ class App extends Component {
     const contentPanel = this.chooseMainPanel();
     return (
       <div className="App">
-        <header className="app-header">
-          <div className="app-error">{this.state.error}</div>
-          <div className="new-tweet-toggle">
-            <span className="toggle-label">Show read?</span>
-            <ToggleButton
-              classname="toggle-button"
-              value={this.state.showAllTweets || false}
-              activeLabel="Yes"
-              inactiveLabel="No"
-              onToggle={value => {
-                this.setState({
-                  showAllTweets: !this.state.showAllTweets
-                });
-              }}
-            />
-          </div>
-        </header>
+        <div className="app-error">{this.state.error}</div>
+        <Header
+          showAllTweets={this.state.showAllTweets}
+          onChangeShowAllTweets={this.onChangeShowAllTweets}
+          onRefreshTweets={this.onRefreshTweets}
+          isFetchingData={this.state.isFetchingData}
+        />
         <main className="app-main">
           <Sidebar
             friends={this.buildSidebarFriendData()}

@@ -1,0 +1,14 @@
+.app-header {
+  flex: 0;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.new-tweet-toggle {
+  margin-right: 10px;
+}
+
+.btn-new-tweets {
+  margin-left: 10px;
+}
