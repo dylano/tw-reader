@@ -2,7 +2,10 @@
 @import "~@blueprintjs/icons/lib/css/blueprint-icons.css";
 
 :root {
-  --app-bg-color: rgb(55, 54, 73);
+  /* --app-bg-color: rgb(55, 54, 73);
+  --tweet-bg-color: grey; */
+  --app-bg-color: black;
+  --app-color: green;
   --tweet-bg-color: grey;
 }
 
@@ -13,7 +16,7 @@
   flex-direction: column;
   min-height: 100vh;
   background-color: var(--app-bg-color);
-  color: white;
+  color: var(--app-color);
 }
 
 .app-main {

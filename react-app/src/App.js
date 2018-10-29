@@ -76,6 +76,12 @@ class App extends Component {
     this.setState({ isFetchingData: !this.state.isFetchingData });
   };
 
+  onTweetRead = async tweetId => {
+    this.setState({ error: `read ${tweetId}` });
+    await fetch(`/api/tweets/${tweetId}`, { method: "PUT" });
+    this.getTweetData(); //todo: get rid of this brute force getTweetData() refresh and find/update the tweet inside this.state
+  };
+
   chooseMainPanel() {
     if (this.state.selectedFriend) {
       return (
@@ -83,6 +89,7 @@ class App extends Component {
           friend={this.getFriend(this.state.selectedFriend)}
           tweets={this.getTweetsByFriendId(this.state.selectedFriend)}
           showAllTweets={this.state.showAllTweets}
+          onTweetRead={this.onTweetRead}
         />
       );
     } else {

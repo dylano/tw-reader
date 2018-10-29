@@ -1,8 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
+import Swipe from "react-easy-swipe";
 import "./TweetPanel.css";
 
-const TweetPanel = ({ friend, tweets, showAllTweets = false }) => {
+const TweetPanel = ({ friend, tweets, onTweetRead, showAllTweets = false }) => {
   if (!showAllTweets) {
     tweets = tweets.filter(tweet => tweet.isRead === false);
   }
@@ -14,9 +15,11 @@ const TweetPanel = ({ friend, tweets, showAllTweets = false }) => {
     content = tweets.sort((a, b) => a.timestamp.localeCompare(b.timestamp)).map(tweet => {
       const className = tweet.isRead ? "tweet-panel-tweet" : "tweet-panel-tweet tweet-panel-tweet-new";
       return (
-        <div className={className} key={tweet._id}>
-          {tweet.text}
-        </div>
+        <Swipe onSwipeRight={() => onTweetRead(tweet._id)} key={tweet._id}>
+          <div className={className} key={tweet._id}>
+            {tweet.text}
+          </div>
+        </Swipe>
       );
     });
   }
@@ -30,6 +33,7 @@ const TweetPanel = ({ friend, tweets, showAllTweets = false }) => {
 TweetPanel.propTypes = {
   tweets: PropTypes.array.isRequired,
   friend: PropTypes.object.isRequired,
+  onTweetRead: PropTypes.func.isRequired,
   showAllTweets: PropTypes.bool
 };
 
