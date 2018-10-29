@@ -12,7 +12,7 @@
 
 .sidebar .selected {
   color: green;
-  transform: translateX(50px);
+  transform: translateX(50px) scale(1.2);
   background-color: var(--tweet-bg-color);
   color: black;
   border-radius: 5px;

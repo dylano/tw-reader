@@ -24,6 +24,12 @@ exports.getAllTweets = async (req, res) => {
   return res.json({ friends: newfr });
 };
 
+exports.refreshTweets = async (req, res) => {
+  console.log("API refreshTweets");
+  await twData.loadTweets(process.env.TW_USERNAME, 100);
+  res.status(204).json({});
+};
+
 exports.getFriends = async (req, res) => res.json(await twData.getFriends());
 
 exports.getFriend = async (req, res) => {

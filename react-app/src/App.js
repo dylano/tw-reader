@@ -69,9 +69,11 @@ class App extends Component {
     this.setState({ showAllTweets: !this.state.showAllTweets });
   };
 
-  onRefreshTweets = () => {
+  onRefreshTweets = async () => {
     this.setState({ isFetchingData: !this.state.isFetchingData });
-    //todo: trigger API server to update tweets and then call to getTweetData() (?)
+    await fetch(`/api/tweets`, { method: "POST" });
+    await this.getTweetData();
+    this.setState({ isFetchingData: !this.state.isFetchingData });
   };
 
   chooseMainPanel() {

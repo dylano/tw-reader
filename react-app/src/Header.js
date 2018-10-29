@@ -7,7 +7,7 @@ const Header = ({ showAllTweets, onChangeShowAllTweets, onRefreshTweets, isFetch
   return (
     <header className="app-header">
       <Button className="btn-new-tweets" icon="refresh" small={true} loading={isFetchingData} onClick={onRefreshTweets}>
-        New tweetz
+        Update
       </Button>
       <Switch
         className="new-tweet-toggle"
