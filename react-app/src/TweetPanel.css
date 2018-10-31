@@ -4,6 +4,7 @@
   background-color: var(--tweet-bg-color);
   border-radius: 5px;
   margin-right: 5px;
+  flex-basis: 800px;
 }
 
 .tweet-panel-header {
@@ -17,11 +18,12 @@
 
 .tweet-panel-header-title {
   font-weight: 600;
-  text-align: center;
+  text-align: left;
 }
 
 .tweet-panel-header-action {
   cursor: pointer;
+  text-align: right;
 }
 
 .tweet-panel-tweet {
@@ -61,4 +63,10 @@
 
 .action-right {
   transform: translateX(-50%);
+}
+
+@media screen and (max-width: 800px) {
+  .tweet-panel {
+    flex-basis: 500px;
+  }
 }

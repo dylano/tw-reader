@@ -20,7 +20,7 @@ const TweetPanel = ({ friend, tweets, onTweetRead, onUserRead, showAllTweets = f
         <div className="tweet-panel-tweet" key={tweet._id}>
           <span className="tweet-action action-open action-left">
             <a href={tweetLink} target="_blank" rel="noopener noreferrer">
-              <i class="fas fa-dove" />
+              <i className="fas fa-dove" />
             </a>
           </span>
           <div className={className}>{tweet.text}</div>
@@ -28,7 +28,7 @@ const TweetPanel = ({ friend, tweets, onTweetRead, onUserRead, showAllTweets = f
             className="tweet-action action-close action-right"
             onClick={() => onTweetRead(tweet._id)}
           >
-            <i class="far fa-times-circle" />
+            <i className="far fa-times-circle" />
           </span>
         </div>
       );

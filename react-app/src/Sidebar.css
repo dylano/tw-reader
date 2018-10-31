@@ -1,5 +1,5 @@
 .sidebar {
-  flex: 0 0 200px;
+  flex: 0 0 150px;
   line-height: 1.5;
   text-align: left;
   overflow: hidden;
@@ -12,7 +12,7 @@
 
 .sidebar .selected {
   color: green;
-  transform: translateX(50px) scale(1.2);
+  transform: translateX(25px) scale(1.2);
   background-color: var(--tweet-bg-color);
   color: black;
   border-radius: 5px;
