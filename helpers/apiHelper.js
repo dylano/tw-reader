@@ -8,7 +8,7 @@ exports.getAllTweets = async (req, res) => {
   const friends = await twData.getFriends();
 
   // get all the tweets for current friends
-  const MAX_TWEETS_PER_USER = 25;
+  const MAX_TWEETS_PER_USER = 50;
   const promArray = [];
   friends.forEach(friend => {
     promArray.push(twData.getTweetsByScreenName(friend.screenName, false, MAX_TWEETS_PER_USER));
@@ -45,7 +45,8 @@ exports.getFriend = async (req, res) => {
   });
 };
 
-exports.getUserTweets = async (req, res) => res.json(await twData.getUserTweets(process.env.TW_USERNAME));
+exports.getUserTweets = async (req, res) =>
+  res.json(await twData.getUserTweets(process.env.TW_USERNAME));
 
 exports.getTimeline = async (req, res) => res.json(await twData.getTimelineTweets());
 
