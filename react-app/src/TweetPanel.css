@@ -31,8 +31,9 @@
   padding-right: 20px;
 }
 
-.tweet-panel-tweet-content::before {
-  content: "♥ ";
+.tweet-panel-tweet-new::before {
+  content: "♥";
+  margin-right: 5px;
 }
 
 .tweet-action {

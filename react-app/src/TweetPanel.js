@@ -9,21 +9,21 @@ const TweetPanel = ({ friend, tweets, onTweetRead, showAllTweets = false }) => {
 
   let content;
   if (tweets.length === 0) {
-    content = <div className="tweet-panel-message">No tweetz :(</div>;
+    content = <div className="tweet-panel-tweet tweet-panel-tweet-content">No tweetz :(</div>;
   } else {
     content = tweets.sort((a, b) => a.timestamp.localeCompare(b.timestamp)).map(tweet => {
       const className = tweet.isRead
-        ? "tweet-panel-tweet"
-        : "tweet-panel-tweet tweet-panel-tweet-new";
+        ? "tweet-panel-tweet-content"
+        : "tweet-panel-tweet-content tweet-panel-tweet-new";
       const tweetLink = `https://twitter.com/${friend.screenName}/status/${tweet.id}`;
       return (
-        <div className={className} key={tweet._id}>
+        <div className="tweet-panel-tweet" key={tweet._id}>
           <span className="tweet-action action-open action-left">
             <a href={tweetLink} target="_blank" rel="noopener noreferrer">
               <i class="fas fa-dove" />
             </a>
           </span>
-          <div className="tweet-panel-tweet-content">{tweet.text}</div>
+          <div className={className}>{tweet.text}</div>
           <span
             className="tweet-action action-close action-right"
             onClick={() => onTweetRead(tweet._id)}
