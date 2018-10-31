@@ -125,14 +125,12 @@ class App extends Component {
         return f;
       })
       .sort((a, b) => {
-        if (a.newTweetCount && b.newTweetCount) {
-          return b.screenName.toLowerCase() < a.screenName.toLowerCase();
-        } else if (a.newTweetCount) {
+        if (a.newTweetCount && !b.newTweetCount) {
           return -1;
-        } else if (b.newTweetCount) {
+        } else if (b.newTweetCount && !a.newTweetCount) {
           return 1;
         }
-        return b.screenName.toLowerCase() < a.screenName.toLowerCase();
+        return a.screenName.toLowerCase().localeCompare(b.screenName.toLowerCase());
       });
   }
 
@@ -155,9 +153,6 @@ class App extends Component {
           />
           {contentPanel}
         </main>
-        <footer className="app-footer">
-          <div className="app-footer-text">Footer stuff</div>
-        </footer>
       </div>
     );
   }
