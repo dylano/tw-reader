@@ -37,16 +37,9 @@
   background-color: var(--app-bg-color);
   border-radius: 5px;
   color: var(--app-color);
-  padding: 10px;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding: 10px 20px;
   border: 2px solid var(--app-color);
   font-size: 0.8em;
-}
-
-.tweet-panel-tweet-new::before {
-  content: "♥";
-  margin-right: 5px;
 }
 
 .tweet-action {

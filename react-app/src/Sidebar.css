@@ -14,7 +14,7 @@
   color: green;
   transform: translateX(25px) scale(1.2);
   background-color: var(--tweet-bg-color);
-  color: black;
+  color: var(--app-color);
   border-radius: 5px;
   padding-left: 5px;
 }
