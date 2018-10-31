@@ -16,12 +16,39 @@
 }
 
 .tweet-panel-tweet {
+  display: flex;
+  align-items: center;
   margin: 10px;
+}
+
+.tweet-panel-tweet-content {
+  padding: 5px;
   background-color: var(--app-bg-color);
   border-radius: 5px;
   color: var(--app-color);
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
-.tweet-panel-tweet-new::before {
+.tweet-panel-tweet-content::before {
   content: "♥ ";
+}
+
+.tweet-action {
+  border: 2px solid var(--app-color);
+  background-color: black;
+  color: white;
+  border-radius: 20px;
+  padding: 3px;
+  padding-bottom: 1px;
+  /* font-size: 0.8em; */
+}
+
+.action-left {
+  transform: translateX(50%);
+}
+
+.action-right {
+  transform: translateX(-50%);
 }
