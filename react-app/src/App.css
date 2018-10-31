@@ -5,8 +5,8 @@
   /* --app-bg-color: rgb(55, 54, 73);
   --tweet-bg-color: grey; */
   --app-bg-color: black;
-  --app-color: green;
-  --tweet-bg-color: grey;
+  --app-color: rgb(163, 151, 151);
+  --tweet-bg-color: rgb(63, 69, 122);
 }
 
 .App {

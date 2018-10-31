@@ -16,6 +16,16 @@ const TweetPanel = ({ friend, tweets, onTweetRead, onUserRead, showAllTweets = f
         ? "tweet-panel-tweet-content"
         : "tweet-panel-tweet-content tweet-panel-tweet-new";
       const tweetLink = `https://twitter.com/${friend.screenName}/status/${tweet.id}`;
+      const markReadAction = tweet.isRead ? (
+        <span />
+      ) : (
+        <span
+          className="tweet-action action-close action-right"
+          onClick={() => onTweetRead(tweet._id)}
+        >
+          <i className="far fa-check-circle" />
+        </span>
+      );
       return (
         <div className="tweet-panel-tweet" key={tweet._id}>
           <span className="tweet-action action-open action-left">
@@ -24,12 +34,7 @@ const TweetPanel = ({ friend, tweets, onTweetRead, onUserRead, showAllTweets = f
             </a>
           </span>
           <div className={className}>{tweet.text}</div>
-          <span
-            className="tweet-action action-close action-right"
-            onClick={() => onTweetRead(tweet._id)}
-          >
-            <i className="far fa-times-circle" />
-          </span>
+          {markReadAction}
         </div>
       );
     });

@@ -40,6 +40,8 @@
   padding: 10px;
   padding-left: 20px;
   padding-right: 20px;
+  border: 2px solid var(--app-color);
+  font-size: 0.8em;
 }
 
 .tweet-panel-tweet-new::before {
@@ -50,7 +52,7 @@
 .tweet-action {
   border: 2px solid var(--app-color);
   background-color: black;
-  color: white;
+  color: var(--app-color);
   border-radius: 20px;
   padding: 3px;
   padding-bottom: 1px;
