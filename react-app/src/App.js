@@ -54,7 +54,9 @@ class App extends Component {
   }
 
   getFriend(friendId) {
-    return friendId ? this.state.friends.find(friend => friend.friend._id === friendId).friend : null;
+    return friendId
+      ? this.state.friends.find(friend => friend.friend._id === friendId).friend
+      : null;
   }
 
   getTweetsByFriendId(friendId) {
@@ -77,9 +79,22 @@ class App extends Component {
   };
 
   onTweetRead = async tweetId => {
-    this.setState({ error: `read ${tweetId}` });
+    this.setState({ error: `read tweet ${tweetId}` });
+
+    // todo: find the tweet in state, change isRead, leave evrything else as is
+
+    // todo: then make the fetch call optimistically, don't await on result
     await fetch(`/api/tweets/${tweetId}`, { method: "PUT" });
+
+    // todo: and no need to call getTweetData again
     this.getTweetData(); //todo: get rid of this brute force getTweetData() refresh and find/update the tweet inside this.state
+  };
+
+  onUserRead = async screenName => {
+    this.setState({ isFetchingData: !this.state.isFetchingData, error: `read user ${screenName}` });
+    await fetch(`/api/friends/${screenName}`, { method: "PUT" });
+    await this.getTweetData();
+    this.setState({ isFetchingData: !this.state.isFetchingData, selectedFriend: null });
   };
 
   chooseMainPanel() {
@@ -90,6 +105,7 @@ class App extends Component {
           tweets={this.getTweetsByFriendId(this.state.selectedFriend)}
           showAllTweets={this.state.showAllTweets}
           onTweetRead={this.onTweetRead}
+          onUserRead={this.onUserRead}
         />
       );
     } else {

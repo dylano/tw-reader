@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import "./TweetPanel.css";
 
-const TweetPanel = ({ friend, tweets, onTweetRead, showAllTweets = false }) => {
+const TweetPanel = ({ friend, tweets, onTweetRead, onUserRead, showAllTweets = false }) => {
   if (!showAllTweets) {
     tweets = tweets.filter(tweet => !tweet.isRead);
   }
@@ -36,7 +36,12 @@ const TweetPanel = ({ friend, tweets, onTweetRead, showAllTweets = false }) => {
   }
   return (
     <div className="tweet-panel">
-      <header className="tweet-panel-header">{friend.name}</header>
+      <header className="tweet-panel-header">
+        <span className="tweet-panel-header-title">{friend.name}</span>
+        <span className="tweet-panel-header-action" onClick={() => onUserRead(friend.screenName)}>
+          Mark All Read
+        </span>
+      </header>
       {content}
     </div>
   );
@@ -45,6 +50,7 @@ TweetPanel.propTypes = {
   tweets: PropTypes.array.isRequired,
   friend: PropTypes.object.isRequired,
   onTweetRead: PropTypes.func.isRequired,
+  onUserRead: PropTypes.func.isRequired,
   showAllTweets: PropTypes.bool
 };
 
