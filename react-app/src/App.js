@@ -34,15 +34,6 @@ class App extends Component {
     // this.processTweetDataAfterFetch(tweetData.friends);
   }
 
-  getTweetData = () => {
-    fetch(`/api/tweets`)
-      .then(res => res.json())
-      .then(json => {
-        this.setState({ ...json });
-      })
-      .catch(err => this.onError(err));
-  };
-
   // reorganize data to easier(??) structure
   processTweetDataAfterFetch(friends) {
     let xFriends = friends.reduce((ob, friend) => {
@@ -53,14 +44,29 @@ class App extends Component {
     this.setState({ xFriends });
   }
 
+  getTweetData = () => {
+    fetch(`/api/tweets`)
+      .then(res => res.json())
+      .then(json => {
+        this.setState({ ...json });
+      })
+      .catch(err => this.onError(err));
+  };
+
   getFriend(friendId) {
-    return friendId
-      ? this.state.friends.find(friend => friend.friend._id === friendId).friend
-      : null;
+    if (!friendId) {
+      return null;
+    }
+    const friendObj = this.state.friends.find(friend => friend.friend._id === friendId);
+    return friendObj ? friendObj.friend : null;
   }
 
   getTweetsByFriendId(friendId) {
-    return friendId ? this.state.friends.find(friend => friend.friend._id === friendId).tweets : [];
+    if (!friendId) {
+      return null;
+    }
+    const friendObj = this.state.friends.find(friend => friend.friend._id === friendId);
+    return friendObj ? friendObj.tweets : [];
   }
 
   onFriendSelect = friendId => {
@@ -79,15 +85,24 @@ class App extends Component {
   };
 
   onTweetRead = async tweetId => {
-    this.setState({ error: `read tweet ${tweetId}` });
+    // find the tweet in state, change isRead, leave evrything else as is
+    const newFriends = this.state.friends.map(friend => {
+      const tweetIndex = friend.tweets.findIndex(tweet => tweet._id === tweetId);
+      if (tweetIndex >= 0) {
+        let updatedTweet = {};
+        Object.assign(updatedTweet, friend.tweets[tweetIndex], { isRead: true });
+        friend.tweets = [
+          ...friend.tweets.slice(0, tweetIndex),
+          updatedTweet,
+          ...friend.tweets.slice(tweetIndex + 1, friend.tweets.length)
+        ];
+      }
+      return friend;
+    });
+    this.setState({ friends: newFriends });
 
-    // todo: find the tweet in state, change isRead, leave evrything else as is
-
-    // todo: then make the fetch call optimistically, don't await on result
+    // make the fetch call optimistically, don't await on result
     await fetch(`/api/tweets/${tweetId}`, { method: "PUT" });
-
-    // todo: and no need to call getTweetData again
-    this.getTweetData(); //todo: get rid of this brute force getTweetData() refresh and find/update the tweet inside this.state
   };
 
   onUserRead = async screenName => {
