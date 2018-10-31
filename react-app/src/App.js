@@ -15,14 +15,14 @@ class App extends Component {
       selectedFriend: null,
       isFetchingData: false,
       showAllTweets: false,
-      error: `api`,
+      error: ``,
       friends: []
     };
   }
 
   onError(err) {
     console.log(`ERROR: ${err}`);
-    this.setState({ error: "Error: " + err });
+    this.setState({ error: `Error: ${err}` });
   }
 
   componentDidMount() {
@@ -31,17 +31,6 @@ class App extends Component {
     } else {
       this.getTweetData();
     }
-    // this.processTweetDataAfterFetch(tweetData.friends);
-  }
-
-  // reorganize data to easier(??) structure
-  processTweetDataAfterFetch(friends) {
-    let xFriends = friends.reduce((ob, friend) => {
-      ob[friend.friend.screenName] = friend.friend;
-      ob[friend.friend.screenName].tweets = friend.tweets;
-      return ob;
-    }, {});
-    this.setState({ xFriends });
   }
 
   getTweetData = () => {
@@ -106,7 +95,7 @@ class App extends Component {
   };
 
   onUserRead = async screenName => {
-    this.setState({ isFetchingData: !this.state.isFetchingData, error: `read user ${screenName}` });
+    this.setState({ isFetchingData: !this.state.isFetchingData });
     await fetch(`/api/friends/${screenName}`, { method: "PUT" });
     await this.getTweetData();
     this.setState({ isFetchingData: !this.state.isFetchingData, selectedFriend: null });
