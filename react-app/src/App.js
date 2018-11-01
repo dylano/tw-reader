@@ -98,7 +98,7 @@ class App extends Component {
     this.setState({ isFetchingData: !this.state.isFetchingData });
     await fetch(`/api/friends/${screenName}`, { method: "PUT" });
     await this.getTweetData();
-    this.setState({ isFetchingData: !this.state.isFetchingData, selectedFriend: null });
+    this.setState({ isFetchingData: !this.state.isFetchingData });
   };
 
   chooseMainPanel() {
