@@ -31,7 +31,11 @@ module.exports = class TwData {
   }
 
   async getFriendByTwitterUserId(userId) {
-    return Friend.find({ id: userId });
+    const friendArr = await Friend.find({ id: userId });
+    if (friendArr.length) {
+      return friendArr[0];
+    }
+    return null;
   }
 
   // get count most recent tweets by the logged in user
@@ -76,7 +80,8 @@ module.exports = class TwData {
           id: friend.id_str,
           screenName: friend.screen_name,
           name: friend.name,
-          imgUrl: friend.profile_image_url_https
+          imgUrl: friend.profile_image_url_https,
+          checkForDuplicates: false
         })
       );
     });
@@ -110,31 +115,38 @@ module.exports = class TwData {
       const tweetCache = {};
 
       tweets.forEach(async tweet => {
-        // check against most recent tweets from this user and don't add if this is a duplicate of an earlier tweet
-        // todo: don't do this for everyone. store names of known offenders in settings data and check there
-        if (!tweetCache[tweet.user.screen_name]) {
-          tweetCache[tweet.user.screen_name] = await this.getTweetsByScreenName(
-            tweet.user.screen_name,
-            false,
-            25
-          );
-        }
-
         const tweetStr = tweet.full_text || tweet.text;
 
+        // check against most recent tweets from this user and don't add if this is a duplicate of an earlier tweet
+        const thisFriend = await this.getFriendByTwitterUserId(tweet.user.id_str);
         let maxSim = 0;
-        let maxStr = '';
-        tweetCache[tweet.user.screen_name].forEach(cmpTweet => {
-          const simval = stringSimilarity.compareTwoStrings(tweetStr, cmpTweet.text);
-          if (simval > maxSim) {
-            maxSim = simval;
-            maxStr = cmpTweet.text;
+
+        if (true || thisFriend.checkForDuplicates) {
+          //todo: remove true case
+          console.log(`friend ${thisFriend.screenName} is flagged for duplicate check.`);
+
+          if (!tweetCache[tweet.user.screen_name]) {
+            console.log(`loading recent tweet cache for ${tweet.user.screen_name}`);
+            tweetCache[tweet.user.screen_name] = await this.getTweetsByScreenName(
+              tweet.user.screen_name,
+              false,
+              25
+            );
           }
-        });
-        if (maxSim > 0) {
-          console.log(`maxSim for ${tweetStr} is ${maxSim} based on ${maxStr}`);
+
+          let maxStr = '';
+          tweetCache[tweet.user.screen_name].forEach(cmpTweet => {
+            const simval = stringSimilarity.compareTwoStrings(tweetStr, cmpTweet.text);
+            if (simval > maxSim) {
+              maxSim = simval;
+              maxStr = cmpTweet.text;
+            }
+          });
+          if (maxSim > 0) {
+            console.log(`maxSim for ${tweetStr} is ${maxSim} based on ${maxStr}`);
+          }
+          // todo: if max sim is too high (>.75?), do not add to Tweets table
         }
-        // todo: if max sim is too high (>.75?), do not add to Tweets table
 
         // save new tweets to DB
         Tweet.update(
