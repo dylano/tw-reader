@@ -30,6 +30,10 @@
                     </div>
                     <span class="tweetstr sizeable-text">
                         <%-tweet.text%>
+                        <% if(tweet.similarity) { %>
+                        (
+                        <%=tweet.similarity%> )
+                        <% }%>
                     </span>
                     <% } %>
                 </li>

@@ -1,8 +1,9 @@
 /* eslint class-methods-use-this: 0 */ // --> OFF
-const Twitter = require("./twitter");
-const Friend = require("../models/friend");
-const Tweet = require("../models/tweet");
-const AppData = require("../models/appdata");
+const stringSimilarity = require('string-similarity');
+const Twitter = require('./twitter');
+const Friend = require('../models/friend');
+const Tweet = require('../models/tweet');
+const AppData = require('../models/appdata');
 
 const DEFAULT_MAX_TIMELINE_TWEETS = 250;
 const twitter = new Twitter();
@@ -26,7 +27,6 @@ module.exports = class TwData {
   }
 
   async getFriend(friendId) {
-    // todo: if not in local db, retrieve from twitter and insert
     return Friend.findById(friendId);
   }
 
@@ -53,7 +53,10 @@ module.exports = class TwData {
 
   async markAllTweetsAsRead(screenName) {
     // db.tweets.updateMany({ "userScreenName" : "TheAthleticSF","isRead":false }, {$set:{"isRead":true}} )
-    await Tweet.updateMany({ userScreenName: screenName, isRead: false }, { $set: { isRead: true } });
+    await Tweet.updateMany(
+      { userScreenName: screenName, isRead: false },
+      { $set: { isRead: true } }
+    );
   }
 
   async getFriends() {
@@ -89,7 +92,7 @@ module.exports = class TwData {
     try {
       // get most recent timeline tweet seen for this user
       const userAppData = await this.getAppData(screenName);
-      const sinceId = userAppData ? userAppData.mostRecentTweet : "1";
+      const sinceId = userAppData ? userAppData.mostRecentTweet : '1';
 
       // get tweets
       const tweets = await twitter.getHomeTimeline(screenName, sinceId, count);
@@ -97,31 +100,68 @@ module.exports = class TwData {
 
       // save the latest tweet ID from new tweets
       if (tweets && tweets.length) {
-        await AppData.update({ screenName }, { screenName, mostRecentTweet: tweets[0].id_str }, { upsert: true });
+        await AppData.update(
+          { screenName },
+          { screenName, mostRecentTweet: tweets[0].id_str },
+          { upsert: true }
+        );
       }
 
-      // save new tweets to DB
-      tweets.forEach(tweet => {
+      const tweetCache = {};
+
+      tweets.forEach(async tweet => {
+        // check against most recent tweets from this user and don't add if this is a duplicate of an earlier tweet
+        // todo: don't do this for everyone. store names of known offenders in settings data and check there
+        if (!tweetCache[tweet.user.screen_name]) {
+          tweetCache[tweet.user.screen_name] = await this.getTweetsByScreenName(
+            tweet.user.screen_name,
+            false,
+            25
+          );
+        }
+
+        const tweetStr = tweet.full_text || tweet.text;
+
+        let maxSim = 0;
+        let maxStr = '';
+        tweetCache[tweet.user.screen_name].forEach(cmpTweet => {
+          const simval = stringSimilarity.compareTwoStrings(tweetStr, cmpTweet.text);
+          if (simval > maxSim) {
+            maxSim = simval;
+            maxStr = cmpTweet.text;
+          }
+        });
+        if (maxSim > 0) {
+          console.log(`maxSim for ${tweetStr} is ${maxSim} based on ${maxStr}`);
+        }
+        // todo: if max sim is too high (>.75?), do not add to Tweets table
+
+        // save new tweets to DB
         Tweet.update(
           { id: tweet.id_str },
           {
             id: tweet.id_str,
-            text: tweet.full_text || tweet.text,
+            text: tweetStr,
             timestamp: tweet.created_at,
             userId: tweet.user.id_str,
             userName: tweet.user.name,
             userScreenName: tweet.user.screen_name,
-            isRead: false
+            isRead: false,
+            similarity: maxSim.toFixed(2)
           },
           { upsert: true }
         ).then(() => {});
       });
     } catch (err) {
-      console.error("loadTweets error:", err);
+      console.error('loadTweets error:', err);
     }
   }
 
-  async getTweetsByScreenName(screenName, unreadOnly = false, maxResults = DEFAULT_MAX_TIMELINE_TWEETS) {
+  async getTweetsByScreenName(
+    screenName,
+    unreadOnly = false,
+    maxResults = DEFAULT_MAX_TIMELINE_TWEETS
+  ) {
     if (maxResults <= 0) {
       maxResults = DEFAULT_MAX_TIMELINE_TWEETS;
     }
@@ -133,9 +173,10 @@ module.exports = class TwData {
         { $sort: { timestamp: -1 } }
       ]).limit(maxResults);
     }
-    return Tweet.aggregate([{ $match: { userScreenName: screenName } }, { $sort: { timestamp: -1 } }]).limit(
-      maxResults
-    );
+    return Tweet.aggregate([
+      { $match: { userScreenName: screenName } },
+      { $sort: { timestamp: -1 } }
+    ]).limit(maxResults);
   }
 
   // (users with unread tweets)> db.tweets.aggregate([ {$match : {"isRead":false} }, {$group : {_id:"$userId", count:{$sum:1}}}, {$sort:{"count":-1}} ])
@@ -143,7 +184,7 @@ module.exports = class TwData {
     // get users with unread tweets
     const users = await Tweet.aggregate([
       { $match: { isRead: false } },
-      { $group: { _id: "$userScreenName", count: { $sum: 1 } } }
+      { $group: { _id: '$userScreenName', count: { $sum: 1 } } }
     ]);
     /*
     [ { _id: 'AandGShow', count: 6 },

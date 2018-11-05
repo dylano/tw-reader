@@ -1,9 +1,10 @@
-const TwData = require("./twdata");
+const stringSimilarity = require('string-similarity');
+const TwData = require('./twdata');
 
 const twData = new TwData();
 
 exports.getAllTweets = async (req, res) => {
-  console.log("API getTweets");
+  console.log('API getTweets');
   // get all the current friends
   const friends = await twData.getFriends();
 
@@ -25,7 +26,7 @@ exports.getAllTweets = async (req, res) => {
 };
 
 exports.refreshTweets = async (req, res) => {
-  console.log("API refreshTweets");
+  console.log('API refreshTweets');
   await twData.loadTweets(process.env.TW_USERNAME, 100);
   res.status(204).json({});
 };
@@ -33,7 +34,7 @@ exports.refreshTweets = async (req, res) => {
 exports.getFriends = async (req, res) => res.json(await twData.getFriends());
 
 exports.getFriend = async (req, res) => {
-  const getNewTweets = req.query.new === "1";
+  const getNewTweets = req.query.new === '1';
   console.log(`getNewTweets is ${getNewTweets}`);
 
   const friend = await twData.getFriend(req.params.id);
@@ -58,6 +59,24 @@ exports.updateTweet = async (req, res) => {
 exports.updateFriend = async (req, res) => {
   await twData.markAllTweetsAsRead(req.params.screenName);
   res.status(204).json({});
+};
+
+exports.testSimilarity = async (req, res) => {
+  const tweet1 = req.body.tweet1;
+  const comps = [];
+  for (let i = 0; i < 50; i++) {
+    comps.push('Hue Jackson: If only the Browns had listened more to Hue Jackson: ');
+  }
+
+  let maxSim = 0;
+  if (tweet1) {
+    comps.forEach(str => {
+      const simval = stringSimilarity.compareTwoStrings(tweet1, str);
+      maxSim = simval > maxSim ? simval : maxSim;
+    });
+  }
+
+  res.json({ sim: maxSim });
 };
 
 module.exports = exports;

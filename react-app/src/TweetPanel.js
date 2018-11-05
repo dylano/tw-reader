@@ -1,6 +1,6 @@
-import React from "react";
-import PropTypes from "prop-types";
-import "./TweetPanel.css";
+import React from 'react';
+import PropTypes from 'prop-types';
+import './TweetPanel.css';
 
 const TweetPanel = ({ friend, tweets, onTweetRead, onUserRead, showAllTweets = false }) => {
   if (!showAllTweets) {
@@ -13,8 +13,8 @@ const TweetPanel = ({ friend, tweets, onTweetRead, onUserRead, showAllTweets = f
   } else {
     content = tweets.sort((a, b) => a.timestamp.localeCompare(b.timestamp)).map(tweet => {
       const className = tweet.isRead
-        ? "tweet-panel-tweet-content"
-        : "tweet-panel-tweet-content tweet-panel-tweet-new";
+        ? 'tweet-panel-tweet-content'
+        : 'tweet-panel-tweet-content tweet-panel-tweet-new';
       const tweetLink = `https://twitter.com/${friend.screenName}/status/${tweet.id}`;
       const markReadAction = tweet.isRead ? (
         <span />
@@ -33,7 +33,9 @@ const TweetPanel = ({ friend, tweets, onTweetRead, onUserRead, showAllTweets = f
               <i className="fas fa-dove" />
             </a>
           </span>
-          <div className={className}>{tweet.text}</div>
+          <div className={className}>
+            {tweet.text}({tweet.similarity})
+          </div>
           {markReadAction}
         </div>
       );
