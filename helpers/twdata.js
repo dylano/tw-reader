@@ -26,12 +26,12 @@ module.exports = class TwData {
     console.log(tweet);
   }
 
-  async getFriend(friendId) {
-    return Friend.findById(friendId);
+  async getFriend(databaseId) {
+    return Friend.findById(databaseId);
   }
 
-  async getFriendByTwitterUserId(userId) {
-    const friendArr = await Friend.find({ id: userId });
+  async getFriendByTwitterUserId(twitterUserId) {
+    const friendArr = await Friend.find({ id: twitterUserId });
     if (friendArr.length) {
       return friendArr[0];
     }
@@ -39,8 +39,8 @@ module.exports = class TwData {
   }
 
   // get count most recent tweets by the logged in user
-  async getUserTweets(screenName, count) {
-    const tweets = await twitter.getUserTimeline(screenName, count);
+  async getUserTweets(twitterAccountUsername, count) {
+    const tweets = await twitter.getUserTimeline(twitterAccountUsername, count);
     return tweets;
   }
 
@@ -51,8 +51,8 @@ module.exports = class TwData {
     return Tweet.aggregate([{ $sort: { timestamp: -1 } }]).limit(maxResults);
   }
 
-  async markTweetAsRead(tweetMongoId) {
-    return Tweet.findByIdAndUpdate(tweetMongoId, { isRead: true }, { new: true });
+  async markTweetAsRead(databaseId) {
+    return Tweet.findByIdAndUpdate(databaseId, { isRead: true }, { new: true });
   }
 
   async markAllTweetsAsRead(screenName) {
@@ -68,8 +68,8 @@ module.exports = class TwData {
     return friends.sort((a, b) => (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1));
   }
 
-  async loadFriends(screenName) {
-    const friends = await twitter.getFriends(screenName);
+  async loadFriends(twitterAccountUsername) {
+    const friends = await twitter.getFriends(twitterAccountUsername);
 
     // Clean out DB and re-load with new friend list.
     await Friend.deleteMany({});
@@ -89,77 +89,79 @@ module.exports = class TwData {
     return this.getFriends();
   }
 
-  async getAppData(screenName) {
-    return AppData.findOne({ screenName });
+  async getAppData(twitterAccountUsername) {
+    return AppData.findOne({ screenName: twitterAccountUsername });
   }
 
-  async loadTweets(screenName, count) {
+  async loadTweets(twitterAccountUsername, count) {
     try {
       // get most recent timeline tweet seen for this user
-      const userAppData = await this.getAppData(screenName);
+      const userAppData = await this.getAppData(twitterAccountUsername);
       const sinceId = userAppData ? userAppData.mostRecentTweet : '1';
 
       // get tweets
-      const tweets = await twitter.getHomeTimeline(screenName, sinceId, count);
-      console.log(`Retrived ${tweets.length} tweets from twitter`);
+      const newTweets = await twitter.getHomeTimeline(twitterAccountUsername, sinceId, count);
+      console.log(`Retrived ${newTweets.length} tweets from twitter`);
 
       // save the latest tweet ID from new tweets
-      if (tweets && tweets.length) {
+      if (newTweets && newTweets.length) {
         await AppData.update(
-          { screenName },
-          { screenName, mostRecentTweet: tweets[0].id_str },
+          { screenName: twitterAccountUsername },
+          { screenName: twitterAccountUsername, mostRecentTweet: newTweets[0].id_str },
           { upsert: true }
         );
       }
 
       const tweetCache = {};
 
-      tweets.forEach(async tweet => {
-        const tweetStr = tweet.full_text || tweet.text;
+      newTweets.forEach(async newTweet => {
+        const newTweetStr = newTweet.full_text || newTweet.text;
 
         // check against most recent tweets from this user and don't add if this is a duplicate of an earlier tweet
-        const thisFriend = await this.getFriendByTwitterUserId(tweet.user.id_str);
-        let maxSim = 0;
+        const newTweetFriend = await this.getFriendByTwitterUserId(newTweet.user.id_str);
+        let maxSimScore = 0;
 
-        if (true || thisFriend.checkForDuplicates) {
+        if (true || newTweetFriend.checkForDuplicates) {
           //todo: remove true case
-          console.log(`friend ${thisFriend.screenName} is flagged for duplicate check.`);
+          console.log(`friend ${newTweetFriend.screenName} is flagged for duplicate check.`);
 
-          if (!tweetCache[tweet.user.screen_name]) {
-            console.log(`loading recent tweet cache for ${tweet.user.screen_name}`);
-            tweetCache[tweet.user.screen_name] = await this.getTweetsByScreenName(
-              tweet.user.screen_name,
+          if (!tweetCache[newTweet.user.screen_name]) {
+            console.log(`loading recent tweet cache for ${newTweet.user.screen_name}`);
+            tweetCache[newTweet.user.screen_name] = await this.getTweetsByScreenName(
+              newTweet.user.screen_name,
               false,
               25
             );
           }
 
-          let maxStr = '';
-          tweetCache[tweet.user.screen_name].forEach(cmpTweet => {
-            const simval = stringSimilarity.compareTwoStrings(tweetStr, cmpTweet.text);
-            if (simval > maxSim) {
-              maxSim = simval;
-              maxStr = cmpTweet.text;
+          let maxSimStr = '';
+          tweetCache[newTweet.user.screen_name].forEach(existingTweet => {
+            const simval = stringSimilarity.compareTwoStrings(newTweetStr, existingTweet.text);
+            if (simval > maxSimScore) {
+              maxSimScore = simval.toFixed(2);
+              maxSimStr = existingTweet.text;
             }
           });
-          if (maxSim > 0) {
-            console.log(`maxSim for ${tweetStr} is ${maxSim} based on ${maxStr}`);
+          if (maxSimScore > 0) {
+            console.log(
+              `${maxSimScore} maxSimScore for '${newTweetStr}' -- based on '${maxSimStr}'`
+            );
           }
           // todo: if max sim is too high (>.75?), do not add to Tweets table
         }
 
         // save new tweets to DB
         Tweet.update(
-          { id: tweet.id_str },
+          { id: newTweet.id_str },
           {
-            id: tweet.id_str,
-            text: tweetStr,
-            timestamp: tweet.created_at,
-            userId: tweet.user.id_str,
-            userName: tweet.user.name,
-            userScreenName: tweet.user.screen_name,
+            id: newTweet.id_str,
+            text: newTweetStr,
+            timestamp: newTweet.created_at,
+            userId: newTweet.user.id_str,
+            userName: newTweet.user.name,
+            userScreenName: newTweet.user.screen_name,
             isRead: false,
-            similarity: maxSim.toFixed(2)
+            similarity: maxSimScore
           },
           { upsert: true }
         ).then(() => {});
