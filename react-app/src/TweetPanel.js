@@ -34,7 +34,7 @@ const TweetPanel = ({ friend, tweets, onTweetRead, onUserRead, showAllTweets = f
             </a>
           </span>
           <div className={className}>
-            {tweet.text}({tweet.similarity})
+            ({tweet.similarity}) {tweet.text}
           </div>
           {markReadAction}
         </div>

@@ -29,11 +29,11 @@
                         </button>
                     </div>
                     <span class="tweetstr sizeable-text">
-                        <%-tweet.text%>
                         <% if(tweet.similarity) { %>
                         (
                         <%=tweet.similarity%> )
                         <% }%>
+                        <%-tweet.text%>
                     </span>
                     <% } %>
                 </li>
