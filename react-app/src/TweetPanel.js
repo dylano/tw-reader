@@ -12,7 +12,7 @@ const TweetPanel = ({ friend, tweets, onTweetRead, onUserRead, showAllTweets = f
     content = <div className="tweet-panel-tweet tweet-panel-tweet-content">No tweetz :(</div>;
   } else {
     content = tweets.sort((a, b) => a.timestamp.localeCompare(b.timestamp)).map(tweet => {
-      const className = tweet.isRead
+      const tweetClass = tweet.isRead
         ? 'tweet-panel-tweet-content'
         : 'tweet-panel-tweet-content tweet-panel-tweet-new';
       const tweetLink = `https://twitter.com/${friend.screenName}/status/${tweet.id}`;
@@ -26,6 +26,17 @@ const TweetPanel = ({ friend, tweets, onTweetRead, onUserRead, showAllTweets = f
           <i className="far fa-check-circle" />
         </span>
       );
+
+      // similarity display
+      let similarityReport = '';
+      if (tweet.similarity && tweet.similarity > 0.5) {
+        similarityReport = (
+          <div className="tweet-panel-tweet-similarity">
+            ({tweet.similarity}) {tweet.similarityString}
+          </div>
+        );
+      }
+
       return (
         <div className="tweet-panel-tweet" key={tweet._id}>
           <span className="tweet-action action-open action-left">
@@ -33,8 +44,8 @@ const TweetPanel = ({ friend, tweets, onTweetRead, onUserRead, showAllTweets = f
               <i className="fas fa-dove" />
             </a>
           </span>
-          <div className={className}>
-            ({tweet.similarity}) {tweet.text}
+          <div className={tweetClass}>
+            {tweet.text} {similarityReport}
           </div>
           {markReadAction}
         </div>

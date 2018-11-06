@@ -29,11 +29,16 @@
                         </button>
                     </div>
                     <span class="tweetstr sizeable-text">
-                        <% if(tweet.similarity) { %>
-                        (
-                        <%=tweet.similarity%> )
-                        <% }%>
+
                         <%-tweet.text%>
+                        <% if(tweet.similarity && tweet.similarity > .5) { %>
+                        <div style="font-size: .75em; font-style: italic; padding-left: 10px; color: tomato">
+                            (
+                            <%= tweet.similarity %>
+                            )
+                            <%= tweet.similarityString %>
+                        </div>
+                        <% }%>
                     </span>
                     <% } %>
                 </li>
