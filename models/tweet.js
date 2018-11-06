@@ -8,7 +8,8 @@ const tweetSchema = mongoose.Schema({
   userId: String,
   userName: String,
   userScreenName: String,
-  similarity: Number
+  similarity: Number,
+  similarityString: String
 });
 
 module.exports = mongoose.model('Tweet', tweetSchema);

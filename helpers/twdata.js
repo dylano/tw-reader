@@ -120,6 +120,7 @@ module.exports = class TwData {
         // check against most recent tweets from this user and don't add if this is a duplicate of an earlier tweet
         const newTweetFriend = await this.getFriendByTwitterUserId(newTweet.user.id_str);
         let maxSimScore = 0;
+        let maxSimStr = '';
 
         if (true || newTweetFriend.checkForDuplicates) {
           //todo: remove true case
@@ -134,7 +135,6 @@ module.exports = class TwData {
             );
           }
 
-          let maxSimStr = '';
           tweetCache[newTweet.user.screen_name].forEach(existingTweet => {
             const simval = stringSimilarity.compareTwoStrings(newTweetStr, existingTweet.text);
             if (simval > maxSimScore) {
@@ -161,7 +161,8 @@ module.exports = class TwData {
             userName: newTweet.user.name,
             userScreenName: newTweet.user.screen_name,
             isRead: false,
-            similarity: maxSimScore
+            similarity: maxSimScore,
+            similarityString: maxSimStr
           },
           { upsert: true }
         ).then(() => {});
