@@ -27,9 +27,10 @@ const TweetPanel = ({ friend, tweets, onTweetRead, onUserRead, showAllTweets = f
         </span>
       );
 
-      // similarity display
+      // similarity display if this looks like a duplicate tweet
+      // todo: add a property for similarity display threshold once we've done a test drive to decide on best value
       let similarityReport = '';
-      if (tweet.similarity && tweet.similarity > 0.5) {
+      if (tweet.similarity > 0.5) {
         similarityReport = (
           <div className="tweet-panel-tweet-similarity">
             ({tweet.similarity}) {tweet.similarityString}
