@@ -1,6 +1,6 @@
-import React from "react";
-import PropTypes from "prop-types";
-import "./TweetPanel.css";
+import React from 'react';
+import PropTypes from 'prop-types';
+import './TweetPanel.css';
 
 const TweetPanel = ({ friend, tweets, onTweetRead, onUserRead, showAllTweets = false }) => {
   if (!showAllTweets) {
@@ -12,9 +12,9 @@ const TweetPanel = ({ friend, tweets, onTweetRead, onUserRead, showAllTweets = f
     content = <div className="tweet-panel-tweet tweet-panel-tweet-content">No tweetz :(</div>;
   } else {
     content = tweets.sort((a, b) => a.timestamp.localeCompare(b.timestamp)).map(tweet => {
-      const className = tweet.isRead
-        ? "tweet-panel-tweet-content"
-        : "tweet-panel-tweet-content tweet-panel-tweet-new";
+      const tweetClass = tweet.isRead
+        ? 'tweet-panel-tweet-content'
+        : 'tweet-panel-tweet-content tweet-panel-tweet-new';
       const tweetLink = `https://twitter.com/${friend.screenName}/status/${tweet.id}`;
       const markReadAction = tweet.isRead ? (
         <span />
@@ -26,6 +26,18 @@ const TweetPanel = ({ friend, tweets, onTweetRead, onUserRead, showAllTweets = f
           <i className="far fa-check-circle" />
         </span>
       );
+
+      // similarity display if this looks like a duplicate tweet
+      // todo: add a property for similarity display threshold once we've done a test drive to decide on best value
+      let similarityReport = '';
+      if (tweet.similarity > 0.5) {
+        similarityReport = (
+          <div className="tweet-panel-tweet-similarity">
+            ({tweet.similarity}) {tweet.similarityString}
+          </div>
+        );
+      }
+
       return (
         <div className="tweet-panel-tweet" key={tweet._id}>
           <span className="tweet-action action-open action-left">
@@ -33,7 +45,9 @@ const TweetPanel = ({ friend, tweets, onTweetRead, onUserRead, showAllTweets = f
               <i className="fas fa-dove" />
             </a>
           </span>
-          <div className={className}>{tweet.text}</div>
+          <div className={tweetClass}>
+            {tweet.text} {similarityReport}
+          </div>
           {markReadAction}
         </div>
       );

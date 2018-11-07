@@ -1,10 +1,13 @@
 /* eslint class-methods-use-this: 0 */ // --> OFF
-const Twitter = require("./twitter");
-const Friend = require("../models/friend");
-const Tweet = require("../models/tweet");
-const AppData = require("../models/appdata");
+const stringSimilarity = require('string-similarity');
+const Twitter = require('./twitter');
+const Friend = require('../models/friend');
+const Tweet = require('../models/tweet');
+const AppData = require('../models/appdata');
 
 const DEFAULT_MAX_TIMELINE_TWEETS = 250;
+const NUM_TWEETS_DUPE_LOOKBACK = 50;
+const SIMILARITY_THRESHOLD = 0.7;
 const twitter = new Twitter();
 
 function formatTweet(tweet) {
@@ -25,18 +28,21 @@ module.exports = class TwData {
     console.log(tweet);
   }
 
-  async getFriend(friendId) {
-    // todo: if not in local db, retrieve from twitter and insert
-    return Friend.findById(friendId);
+  async getFriend(databaseId) {
+    return Friend.findById(databaseId);
   }
 
-  async getFriendByTwitterUserId(userId) {
-    return Friend.find({ id: userId });
+  async getFriendByTwitterUserId(twitterUserId) {
+    const friendArr = await Friend.find({ id: twitterUserId });
+    if (friendArr.length) {
+      return friendArr[0];
+    }
+    return null;
   }
 
   // get count most recent tweets by the logged in user
-  async getUserTweets(screenName, count) {
-    const tweets = await twitter.getUserTimeline(screenName, count);
+  async getUserTweets(twitterAccountUsername, count) {
+    const tweets = await twitter.getUserTimeline(twitterAccountUsername, count);
     return tweets;
   }
 
@@ -47,13 +53,16 @@ module.exports = class TwData {
     return Tweet.aggregate([{ $sort: { timestamp: -1 } }]).limit(maxResults);
   }
 
-  async markTweetAsRead(tweetMongoId) {
-    return Tweet.findByIdAndUpdate(tweetMongoId, { isRead: true }, { new: true });
+  async markTweetAsRead(databaseId) {
+    return Tweet.findByIdAndUpdate(databaseId, { isRead: true }, { new: true });
   }
 
   async markAllTweetsAsRead(screenName) {
     // db.tweets.updateMany({ "userScreenName" : "TheAthleticSF","isRead":false }, {$set:{"isRead":true}} )
-    await Tweet.updateMany({ userScreenName: screenName, isRead: false }, { $set: { isRead: true } });
+    await Tweet.updateMany(
+      { userScreenName: screenName, isRead: false },
+      { $set: { isRead: true } }
+    );
   }
 
   async getFriends() {
@@ -61,8 +70,8 @@ module.exports = class TwData {
     return friends.sort((a, b) => (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1));
   }
 
-  async loadFriends(screenName) {
-    const friends = await twitter.getFriends(screenName);
+  async loadFriends(twitterAccountUsername) {
+    const friends = await twitter.getFriends(twitterAccountUsername);
 
     // Clean out DB and re-load with new friend list.
     await Friend.deleteMany({});
@@ -73,7 +82,8 @@ module.exports = class TwData {
           id: friend.id_str,
           screenName: friend.screen_name,
           name: friend.name,
-          imgUrl: friend.profile_image_url_https
+          imgUrl: friend.profile_image_url_https,
+          checkForDuplicates: false
         })
       );
     });
@@ -81,47 +91,89 @@ module.exports = class TwData {
     return this.getFriends();
   }
 
-  async getAppData(screenName) {
-    return AppData.findOne({ screenName });
+  async getAppData(twitterAccountUsername) {
+    return AppData.findOne({ screenName: twitterAccountUsername });
   }
 
-  async loadTweets(screenName, count) {
+  async loadTweets(twitterAccountUsername, count) {
     try {
       // get most recent timeline tweet seen for this user
-      const userAppData = await this.getAppData(screenName);
-      const sinceId = userAppData ? userAppData.mostRecentTweet : "1";
+      const userAppData = await this.getAppData(twitterAccountUsername);
+      const sinceId = userAppData ? userAppData.mostRecentTweet : '1';
 
       // get tweets
-      const tweets = await twitter.getHomeTimeline(screenName, sinceId, count);
-      console.log(`Retrived ${tweets.length} tweets from twitter`);
+      const newTweets = await twitter.getHomeTimeline(twitterAccountUsername, sinceId, count);
+      console.log(`Retrived ${newTweets.length} tweets from twitter`);
 
       // save the latest tweet ID from new tweets
-      if (tweets && tweets.length) {
-        await AppData.update({ screenName }, { screenName, mostRecentTweet: tweets[0].id_str }, { upsert: true });
+      if (newTweets && newTweets.length) {
+        await AppData.update(
+          { screenName: twitterAccountUsername },
+          { screenName: twitterAccountUsername, mostRecentTweet: newTweets[0].id_str },
+          { upsert: true }
+        );
       }
 
-      // save new tweets to DB
-      tweets.forEach(tweet => {
+      const tweetCache = {};
+
+      newTweets.forEach(async newTweet => {
+        const newTweetStr = newTweet.full_text || newTweet.text;
+
+        const newTweetFriend = await this.getFriendByTwitterUserId(newTweet.user.id_str);
+        let maxSimScore = 0;
+        let maxSimStr = '';
+
+        // for known double tweet offenders, check for recent duplicate tweets
+        if (newTweetFriend.checkForDuplicates) {
+          console.log(`friend ${newTweetFriend.screenName} is flagged for duplicate check.`);
+
+          // todo: cache doesn't appear to be working, multiple tweets from one user result in multiple DB queries to load
+          // load cache with most recent tweets from this user
+          if (!tweetCache[newTweet.user.screen_name]) {
+            tweetCache[newTweet.user.screen_name] = await this.getTweetsByScreenName(
+              newTweet.user.screen_name,
+              false,
+              NUM_TWEETS_DUPE_LOOKBACK
+            );
+          }
+
+          // compare against all tweets in the lookback window
+          tweetCache[newTweet.user.screen_name].forEach(existingTweet => {
+            const simval = stringSimilarity.compareTwoStrings(newTweetStr, existingTweet.text);
+            if (simval > maxSimScore) {
+              maxSimScore = simval.toFixed(2);
+              maxSimStr = existingTweet.text;
+            }
+          });
+        }
+
+        // save new tweets to DB
         Tweet.update(
-          { id: tweet.id_str },
+          { id: newTweet.id_str },
           {
-            id: tweet.id_str,
-            text: tweet.full_text || tweet.text,
-            timestamp: tweet.created_at,
-            userId: tweet.user.id_str,
-            userName: tweet.user.name,
-            userScreenName: tweet.user.screen_name,
-            isRead: false
+            id: newTweet.id_str,
+            text: newTweetStr,
+            timestamp: newTweet.created_at,
+            userId: newTweet.user.id_str,
+            userName: newTweet.user.name,
+            userScreenName: newTweet.user.screen_name,
+            isRead: maxSimScore > SIMILARITY_THRESHOLD,
+            similarity: maxSimScore,
+            similarityString: maxSimStr
           },
           { upsert: true }
         ).then(() => {});
       });
     } catch (err) {
-      console.error("loadTweets error:", err);
+      console.error('loadTweets error:', err);
     }
   }
 
-  async getTweetsByScreenName(screenName, unreadOnly = false, maxResults = DEFAULT_MAX_TIMELINE_TWEETS) {
+  async getTweetsByScreenName(
+    screenName,
+    unreadOnly = false,
+    maxResults = DEFAULT_MAX_TIMELINE_TWEETS
+  ) {
     if (maxResults <= 0) {
       maxResults = DEFAULT_MAX_TIMELINE_TWEETS;
     }
@@ -133,9 +185,10 @@ module.exports = class TwData {
         { $sort: { timestamp: -1 } }
       ]).limit(maxResults);
     }
-    return Tweet.aggregate([{ $match: { userScreenName: screenName } }, { $sort: { timestamp: -1 } }]).limit(
-      maxResults
-    );
+    return Tweet.aggregate([
+      { $match: { userScreenName: screenName } },
+      { $sort: { timestamp: -1 } }
+    ]).limit(maxResults);
   }
 
   // (users with unread tweets)> db.tweets.aggregate([ {$match : {"isRead":false} }, {$group : {_id:"$userId", count:{$sum:1}}}, {$sort:{"count":-1}} ])
@@ -143,7 +196,7 @@ module.exports = class TwData {
     // get users with unread tweets
     const users = await Tweet.aggregate([
       { $match: { isRead: false } },
-      { $group: { _id: "$userScreenName", count: { $sum: 1 } } }
+      { $group: { _id: '$userScreenName', count: { $sum: 1 } } }
     ]);
     /*
     [ { _id: 'AandGShow', count: 6 },

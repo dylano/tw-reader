@@ -41,6 +41,12 @@
   border: 2px solid var(--app-color);
   font-size: 0.8em;
 }
+.tweet-panel-tweet-similarity {
+  font-size: 0.75em;
+  font-style: italic;
+  color: tomato;
+  padding-left: 10px;
+}
 
 .tweet-action {
   border: 2px solid var(--app-color);

@@ -29,7 +29,15 @@
                         </button>
                     </div>
                     <span class="tweetstr sizeable-text">
+
                         <%-tweet.text%>
+                        <!-- todo: add a property for similarity display threshold after a test drive to decide on best value -->
+                        <% if(tweet.similarity && tweet.similarity > .5) { %>
+                        <div style="font-size: .75em; font-style: italic; padding-left: 10px; color: tomato">
+                            <%= tweet.similarity %> -
+                            <%= tweet.similarityString %>
+                        </div>
+                        <% }%>
                     </span>
                     <% } %>
                 </li>
