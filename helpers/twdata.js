@@ -6,6 +6,8 @@ const Tweet = require('../models/tweet');
 const AppData = require('../models/appdata');
 
 const DEFAULT_MAX_TIMELINE_TWEETS = 250;
+const NUM_TWEETS_DUPE_LOOKBACK = 50;
+const SIMILARITY_THRESHOLD = 0.7;
 const twitter = new Twitter();
 
 function formatTweet(tweet) {
@@ -117,24 +119,25 @@ module.exports = class TwData {
       newTweets.forEach(async newTweet => {
         const newTweetStr = newTweet.full_text || newTweet.text;
 
-        // check against most recent tweets from this user and don't add if this is a duplicate of an earlier tweet
         const newTweetFriend = await this.getFriendByTwitterUserId(newTweet.user.id_str);
         let maxSimScore = 0;
         let maxSimStr = '';
 
-        if (true || newTweetFriend.checkForDuplicates) {
-          //todo: remove true case
+        // for known double tweet offenders, check for recent duplicate tweets
+        if (newTweetFriend.checkForDuplicates) {
           console.log(`friend ${newTweetFriend.screenName} is flagged for duplicate check.`);
 
+          // todo: cache doesn't appear to be working, multiple tweets from one user result in multiple DB queries to load
+          // load cache with most recent tweets from this user
           if (!tweetCache[newTweet.user.screen_name]) {
-            console.log(`loading recent tweet cache for ${newTweet.user.screen_name}`);
             tweetCache[newTweet.user.screen_name] = await this.getTweetsByScreenName(
               newTweet.user.screen_name,
               false,
-              25
+              NUM_TWEETS_DUPE_LOOKBACK
             );
           }
 
+          // compare against all tweets in the lookback window
           tweetCache[newTweet.user.screen_name].forEach(existingTweet => {
             const simval = stringSimilarity.compareTwoStrings(newTweetStr, existingTweet.text);
             if (simval > maxSimScore) {
@@ -142,12 +145,6 @@ module.exports = class TwData {
               maxSimStr = existingTweet.text;
             }
           });
-          if (maxSimScore > 0) {
-            console.log(
-              `${maxSimScore} maxSimScore for '${newTweetStr}' -- based on '${maxSimStr}'`
-            );
-          }
-          // todo: if max sim is too high (>.75?), do not add to Tweets table
         }
 
         // save new tweets to DB
@@ -160,7 +157,7 @@ module.exports = class TwData {
             userId: newTweet.user.id_str,
             userName: newTweet.user.name,
             userScreenName: newTweet.user.screen_name,
-            isRead: false,
+            isRead: maxSimScore > SIMILARITY_THRESHOLD,
             similarity: maxSimScore,
             similarityString: maxSimStr
           },
