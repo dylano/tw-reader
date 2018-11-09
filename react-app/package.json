@@ -5,6 +5,7 @@
   "dependencies": {
     "@blueprintjs/core": "^3.7.0",
     "react": "^16.5.2",
+    "react-autolinker": "^1.0.7",
     "react-dom": "^16.5.2",
     "react-easy-swipe": "0.0.17",
     "react-scripts": "2.0.5"

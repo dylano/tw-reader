@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import ReactAutolinker from 'react-autolinker';
 import './TweetPanel.css';
+
+const autolinkerOptions = { className: 'autolinker' };
 
 const TweetPanel = ({ friend, tweets, onTweetRead, onUserRead, showAllTweets = false }) => {
   if (!showAllTweets) {
@@ -46,7 +49,8 @@ const TweetPanel = ({ friend, tweets, onTweetRead, onUserRead, showAllTweets = f
             </a>
           </span>
           <div className={tweetClass}>
-            {tweet.text} {similarityReport}
+            <ReactAutolinker text={tweet.text} options={autolinkerOptions} />
+            {similarityReport}
           </div>
           {markReadAction}
         </div>
