@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import Header from "./Header";
-import Sidebar from "./Sidebar";
-import TweetPanel from "./TweetPanel";
-import EmptyPanel from "./EmptyPanel";
-import { static_data } from "./static-data";
-import "./App.css";
+import React, { Component } from 'react';
+import Header from './Header';
+import Sidebar from './Sidebar';
+import TweetPanel from './TweetPanel';
+import EmptyPanel from './EmptyPanel';
+import { static_data } from './static-data';
+import './App.css';
 
 const USE_FAKE_DATA = 0;
 
@@ -27,7 +27,7 @@ class App extends Component {
 
   componentDidMount() {
     if (USE_FAKE_DATA) {
-      this.setState({ ...static_data, error: "static-data" });
+      this.setState({ ...static_data, error: 'static-data' });
     } else {
       this.getTweetData();
     }
@@ -68,7 +68,7 @@ class App extends Component {
 
   onRefreshTweets = async () => {
     this.setState({ isFetchingData: !this.state.isFetchingData });
-    await fetch(`/api/tweets`, { method: "POST" });
+    await fetch(`/api/tweets`, { method: 'POST' });
     await this.getTweetData();
     this.setState({ isFetchingData: !this.state.isFetchingData });
   };
@@ -91,12 +91,12 @@ class App extends Component {
     this.setState({ friends: newFriends });
 
     // make the fetch call optimistically, don't await on result
-    await fetch(`/api/tweets/${tweetId}`, { method: "PUT" });
+    await fetch(`/api/tweets/${tweetId}`, { method: 'PUT' });
   };
 
   onUserRead = async screenName => {
     this.setState({ isFetchingData: !this.state.isFetchingData });
-    await fetch(`/api/friends/${screenName}`, { method: "PUT" });
+    await fetch(`/api/friends/${screenName}`, { method: 'PUT' });
     await this.getTweetData();
     this.setState({ isFetchingData: !this.state.isFetchingData });
   };
@@ -118,7 +118,7 @@ class App extends Component {
   }
 
   buildSidebarFriendData() {
-    return this.state.friends
+    const sortedFriends = this.state.friends
       .map(friend => {
         let f = friend.friend;
         f.newTweetCount = friend.tweets.filter(tweet => !tweet.isRead).length;
@@ -132,6 +132,13 @@ class App extends Component {
         }
         return a.screenName.toLowerCase().localeCompare(b.screenName.toLowerCase());
       });
+
+    // select the first friend in list
+    if (!this.state.selectedFriend && sortedFriends.length > 0) {
+      this.setState({ selectedFriend: sortedFriends[0]._id });
+    }
+
+    return sortedFriends;
   }
 
   render() {
