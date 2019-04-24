@@ -16,11 +16,11 @@ RUN npm install --only=production
 # Copy local code to the container image.
 COPY . .
  
-ENV MONGODB_URI mongodb://reader:qwer4321@ds139198.mlab.com:39198/reader-gcp
-ENV TW_CONSUMER_KEY qJa6m7SdPBNVp9MkloaPDPgf3
-ENV TW_CONSUMER_SECRET 9AUXgNSSi1tNFfLJMla6J593LhwgWpcD5icpqQ3v8gGV4DkSqM
-ENV TW_TOKEN_KEY 16049000-U7OEyf0F6PkMSWmPLUCm10i5fj516Xc0Upg7GsGVQ
-ENV TW_TOKEN_SECRET MGlUmlCPH5na4g4K59UaTSn3AxKehLpBoIpRz5yceZAQl
+ENV MONGODB_URI todo
+ENV TW_CONSUMER_KEY todo
+ENV TW_CONSUMER_SECRET todo
+ENV TW_TOKEN_KEY todo
+ENV TW_TOKEN_SECRET todo
 
 # Run the web service on container startup.
 CMD [ "npm", "start" ]
