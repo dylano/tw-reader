@@ -8,7 +8,8 @@
     "react-autolinker": "^1.0.7",
     "react-dom": "^16.5.2",
     "react-easy-swipe": "0.0.17",
-    "react-scripts": "2.0.5"
+    "eslint-config-react-app": "^4.0.0",
+    "react-scripts": "3.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
