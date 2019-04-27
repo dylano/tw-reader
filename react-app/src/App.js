@@ -1,12 +1,13 @@
-import React, { Component } from 'react';
-import Header from './Header';
-import Sidebar from './Sidebar';
-import TweetPanel from './TweetPanel';
-import EmptyPanel from './EmptyPanel';
-import { static_data } from './static-data';
-import './App.css';
+import React, {Component} from "react";
+import Header from "./Header";
+import Sidebar from "./Sidebar";
+import TweetPanel from "./TweetPanel";
+import EmptyPanel from "./EmptyPanel";
+import {static_data} from "./static-data";
+import "./App.css";
 
 const USE_FAKE_DATA = 0;
+const URL_BASE = process.env.REACT_APP_URL_BASE || "";
 
 class App extends Component {
   constructor() {
@@ -22,22 +23,22 @@ class App extends Component {
 
   onError(err) {
     console.log(`ERROR: ${err}`);
-    this.setState({ error: `Error: ${err}` });
+    this.setState({error: `Error: ${err}`});
   }
 
   componentDidMount() {
     if (USE_FAKE_DATA) {
-      this.setState({ ...static_data, error: 'static-data' });
+      this.setState({...static_data, error: "static-data"});
     } else {
       this.getTweetData();
     }
   }
 
   getTweetData = () => {
-    fetch(`/api/tweets`)
+    fetch(`${URL_BASE}/api/tweets`)
       .then(res => res.json())
       .then(json => {
-        this.setState({ ...json });
+        this.setState({...json});
       })
       .catch(err => this.onError(err));
   };
@@ -59,18 +60,18 @@ class App extends Component {
   }
 
   onFriendSelect = friendId => {
-    this.setState({ selectedFriend: friendId });
+    this.setState({selectedFriend: friendId});
   };
 
   onChangeShowAllTweets = () => {
-    this.setState({ showAllTweets: !this.state.showAllTweets });
+    this.setState({showAllTweets: !this.state.showAllTweets});
   };
 
   onRefreshTweets = async () => {
-    this.setState({ isFetchingData: !this.state.isFetchingData });
-    await fetch(`/api/tweets`, { method: 'POST' });
+    this.setState({isFetchingData: !this.state.isFetchingData});
+    await fetch(`${URL_BASE}/api/tweets`, {method: "POST"});
     await this.getTweetData();
-    this.setState({ isFetchingData: !this.state.isFetchingData });
+    this.setState({isFetchingData: !this.state.isFetchingData});
   };
 
   onTweetRead = async tweetId => {
@@ -79,7 +80,7 @@ class App extends Component {
       const tweetIndex = friend.tweets.findIndex(tweet => tweet._id === tweetId);
       if (tweetIndex >= 0) {
         let updatedTweet = {};
-        Object.assign(updatedTweet, friend.tweets[tweetIndex], { isRead: true });
+        Object.assign(updatedTweet, friend.tweets[tweetIndex], {isRead: true});
         friend.tweets = [
           ...friend.tweets.slice(0, tweetIndex),
           updatedTweet,
@@ -88,17 +89,17 @@ class App extends Component {
       }
       return friend;
     });
-    this.setState({ friends: newFriends });
+    this.setState({friends: newFriends});
 
     // make the fetch call optimistically, don't await on result
-    await fetch(`/api/tweets/${tweetId}`, { method: 'PUT' });
+    await fetch(`${URL_BASE}/api/tweets/${tweetId}`, {method: "PUT"});
   };
 
   onUserRead = async screenName => {
-    this.setState({ isFetchingData: !this.state.isFetchingData });
-    await fetch(`/api/friends/${screenName}`, { method: 'PUT' });
+    this.setState({isFetchingData: !this.state.isFetchingData});
+    await fetch(`${URL_BASE}/api/friends/${screenName}`, {method: "PUT"});
     await this.getTweetData();
-    this.setState({ isFetchingData: !this.state.isFetchingData });
+    this.setState({isFetchingData: !this.state.isFetchingData});
   };
 
   chooseMainPanel() {
@@ -135,7 +136,7 @@ class App extends Component {
 
     // select the first friend in list
     if (!this.state.selectedFriend && sortedFriends.length > 0) {
-      this.setState({ selectedFriend: sortedFriends[0]._id });
+      this.setState({selectedFriend: sortedFriends[0]._id});
     }
 
     return sortedFriends;
