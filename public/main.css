@@ -27,12 +27,8 @@ button:active {
   transform: scale(0.8);
 }
 
-ul {
-  list-style-type: none;
-}
-
-li {
-  transition: all 0.2s;
+.sizeable-text {
+  transition: all 0.1s;
 }
 
 .big {
@@ -61,7 +57,7 @@ li {
 
 .friendlist {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   grid-gap: 10px;
 }
 
@@ -113,6 +109,24 @@ main {
 
 .markreaduser {
   align-self: flex-end;
+}
+
+.friendlist-item {
+  display: flex;
+}
+
+.friendlist-image {
+  align-self: center;
+}
+
+.friendlist-item-values {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+}
+
+.friendlist-item-option {
+  font-weight: 400;
 }
 
 @media screen and (min-width: 800px) {
