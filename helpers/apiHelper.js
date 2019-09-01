@@ -57,8 +57,21 @@ exports.updateTweet = async (req, res) => {
 };
 
 exports.updateFriend = async (req, res) => {
-  await twData.markAllTweetsAsRead(req.params.screenName);
-  res.status(204).json({});
+  const {action} = req.body;
+  if (action) {
+    if (action === "markRead") {
+      await twData.markAllTweetsAsRead(req.params.screenName);
+      res.status(200).json({action: `${action}`});
+    } else if (action === "checkDuplicates") {
+      const shouldCheck = !!req.body.value;
+      await twData.updateFriendDuplicateCheck(req.params.screenName, shouldCheck || false);
+      res.status(200).json({action: `${action}`});
+    } else {
+      res.status(400).json({error: `Unknown action: ${action}`});
+    }
+  } else {
+    res.status(400).json({error: `'action' parameter required in request body`});
+  }
 };
 
 exports.testSimilarity = async (req, res) => {
