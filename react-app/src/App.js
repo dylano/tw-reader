@@ -97,7 +97,12 @@ class App extends Component {
 
   onUserRead = async screenName => {
     this.setState({isFetchingData: !this.state.isFetchingData});
-    await fetch(`${URL_BASE}/api/friends/${screenName}`, {method: "PUT"});
+    const body = JSON.stringify({action: "markRead"});
+    await fetch(`${URL_BASE}/api/friends/${screenName}`, {
+      method: "PUT",
+      body,
+      headers: {"Content-Type": "application/json"}
+    });
     await this.getTweetData();
     this.setState({isFetchingData: !this.state.isFetchingData});
   };
