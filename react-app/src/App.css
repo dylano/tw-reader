@@ -19,9 +19,17 @@
 }
 
 .app-main {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 3fr;
   flex: 1;
   justify-content: center;
+}
+
+@media only screen and (max-width: 600px) {
+  .app-main {
+    grid-template-columns: 1fr;
+    grid-template-rows: 20vh 1fr;
+  }
 }
 
 .app-error {
