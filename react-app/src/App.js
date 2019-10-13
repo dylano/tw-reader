@@ -153,6 +153,7 @@ class App extends Component {
       <div className="App">
         <div className="app-error">{this.state.error}</div>
         <Header
+          className="app-header"
           showAllTweets={this.state.showAllTweets}
           onChangeShowAllTweets={this.onChangeShowAllTweets}
           onRefreshTweets={this.onRefreshTweets}

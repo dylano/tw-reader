@@ -5,6 +5,7 @@
   line-height: 1.5;
   text-align: left;
   overflow: scroll;
+  overflow-x: hidden;
   height: 95vh;
 }
 
