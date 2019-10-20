@@ -119,7 +119,14 @@ module.exports = class TwData {
       const tweetCache = {};
 
       newTweets.forEach(async newTweet => {
-        const newTweetStr = newTweet.full_text || newTweet.text;
+        if (newTweet.retweeted_status) {
+          console.log("retweet? ", {newTweet});
+        }
+        const newTweetStr = newTweet.retweeted_status
+          ? `(RT @${newTweet.retweeted_status.user.screen_name}) ${
+              newTweet.retweeted_status.full_text
+            }`
+          : newTweet.full_text || newTweet.text;
 
         const newTweetFriend = await this.getFriendByTwitterUserId(newTweet.user.id_str);
         let maxSimScore = 0;
