@@ -1,53 +1,56 @@
 <% include partials/header %>
 
 <main>
-    <header class='sub-header'>
-        <h3>Tweets</h3>
-        <div id="load-animation" class="dot-pulse not-loading"></div>
-        <form id="btnNewTweets" action='/main' method="POST" class="text-right">
-            <button>Get new tweets</button>
-        </form>
-    </header>
+  <header class="sub-header">
+    <h3>Tweets</h3>
+    <div id="load-animation" class="dot-pulse not-loading"></div>
+    <form id="btnNewTweets" action="/main" method="POST" class="text-right">
+      <button>Get new tweets</button>
+    </form>
+  </header>
 
-    <div class='friend-tweets-list'>
-        <% data.forEach( item => { %>
-        <div class="friend-tweets" data-key="<%=item.name%>">
-            <a class="sizeable-text" href="https://twitter.com/<%=item.name%>" target="_blank">
-                <%= item.name %>
+  <div class="friend-tweets-list">
+    <% data.forEach( item => { %>
+    <div class="friend-tweets" data-key="<%=item.name%>">
+      <a class="sizeable-text" href="https://twitter.com/<%=item.name%>" target="_blank">
+        <%= item.name %>
+      </a>
+      <% if(item.tweets) { %>
+      <ul>
+        <% item.tweets.reverse().forEach(tweet => { %> <% if(!tweet.isRead) { %>
+        <li class="main-tweet" data-key="<%=tweet._id%>">
+          <div class="main-tweet-buttons">
+            <a
+              class="twitterlink"
+              href="https://twitter.com/<%=item.name%>/status/<%=tweet.id%>"
+              target="_blank"
+            >
+              <span class="glyphicon glyphicon-comment sizeable-text" aria-hidden="true"></span>
             </a>
-            <% if(item.tweets) { %>
-            <ul>
-                <% item.tweets.reverse().forEach(tweet => { %>
-                <% if(!tweet.isRead) { %>
-                <li class='main-tweet' data-key="<%=tweet._id%>">
-                    <div class="main-tweet-buttons">
-                        <a class="twitterlink" href="https://twitter.com/<%=item.name%>/status/<%=tweet.id%>" target="_blank">
-                            <span class="glyphicon glyphicon-comment sizeable-text" aria-hidden="true"></span>
-                        </a>
-                        <button class="btn btn-link btn-sm markreaditem sizeable-text">
-                            <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
-                        </button>
-                    </div>
-                    <span class="tweetstr sizeable-text">
-
-                        <%-tweet.text%>
-                        <!-- todo: add a property for similarity display threshold after a test drive to decide on best value -->
-                        <% if(tweet.similarity && tweet.similarity > .5) { %>
-                        <div style="font-size: .75em; font-style: italic; padding-left: 10px; color: tomato">
-                            <%= tweet.similarity %> -
-                            <%= tweet.similarityString %>
-                        </div>
-                        <% }%>
-                    </span>
-                    <% } %>
-                </li>
-                <% }) %>
-            </ul>
-            <button class="btn btn-link btn-xs markreaduser sizeable-text">Mark All Read</button>
-            <% } %>
-        </div>
+            <button class="btn btn-link btn-sm markreaditem sizeable-text">
+              <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
+            </button>
+          </div>
+          <span class="tweetstr sizeable-text">
+            <% if(tweet.retweetUserName) { %>
+            <span class="retweet-user"> @<%=tweet.retweetUserName%> </span> <% } %>&nbsp;
+            <%-tweet.text%>
+            <!-- todo: add a property for similarity display threshold after a test drive to decide on best value -->
+            <% if(tweet.similarity && tweet.similarity > .5) { %>
+            <div style="font-size: .75em; font-style: italic; padding-left: 10px; color: tomato">
+              <%= tweet.similarity %> - <%= tweet.similarityString %>
+            </div>
+            <% }%>
+          </span>
+          <% } %>
+        </li>
         <% }) %>
+      </ul>
+      <button class="btn btn-link btn-xs markreaduser sizeable-text">Mark All Read</button>
+      <% } %>
     </div>
+    <% }) %>
+  </div>
 </main>
 
 <script type="text/javascript" src="js/main.js"></script>
