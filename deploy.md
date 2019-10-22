@@ -40,7 +40,7 @@ Build and deployment are done from the GCP console:
 
 Surge hosts only the React front end of the app. This is an alternative to Netlify with a simple push from command line. For any changes to the React app, run a new build and push it to Surge:
 
-1. Make sure the following environment variable is set before building: `REACT_APP_URL_BASE=https://reader.doliver.net`
+1. Make sure the following environment variable is set before building: `export REACT_APP_URL_BASE=https://reader.doliver.net`
 2. Run the build from the react-app/ directory: `npm run build`
 3. Deploy to Surge from the react-app/ directory: `npm run deploy-surge`
 
