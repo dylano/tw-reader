@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const tweetSchema = mongoose.Schema({
   id: String,
@@ -8,8 +8,9 @@ const tweetSchema = mongoose.Schema({
   userId: String,
   userName: String,
   userScreenName: String,
+  retweetUserName: String,
   similarity: Number,
   similarityString: String
 });
 
-module.exports = mongoose.model('Tweet', tweetSchema);
+module.exports = mongoose.model("Tweet", tweetSchema);

@@ -63,6 +63,17 @@
   transform: translateX(-50%);
 }
 
+.retweet-user {
+  background-color: #3f457a;
+  color: var(--app-color);
+  border-radius: 50px;
+  padding: 2px 8px;
+}
+
+ReactAutolinker {
+  display: inline;
+}
+
 @media screen and (max-width: 800px) {
   .tweet-panel {
     flex-basis: 500px;

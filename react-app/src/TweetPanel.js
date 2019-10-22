@@ -43,6 +43,11 @@ const TweetPanel = ({friend, tweets, onTweetRead, onUserRead, showAllTweets = fa
           );
         }
 
+        let retweetUser = "";
+        if (tweet.retweetUserName) {
+          retweetUser = <span className="retweet-user">@{tweet.retweetUserName}</span>;
+        }
+
         return (
           <div className="tweet-panel-tweet" key={tweet._id}>
             <span className="tweet-action action-open action-left">
@@ -51,6 +56,7 @@ const TweetPanel = ({friend, tweets, onTweetRead, onUserRead, showAllTweets = fa
               </a>
             </span>
             <div className={tweetClass}>
+              {retweetUser}
               <ReactAutolinker text={tweet.text} options={autolinkerOptions} />
               {similarityReport}
             </div>
