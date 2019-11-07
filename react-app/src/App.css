@@ -1,5 +1,5 @@
-@import "~@blueprintjs/core/lib/css/blueprint.css";
-@import "~@blueprintjs/icons/lib/css/blueprint-icons.css";
+@import '~@blueprintjs/core/lib/css/blueprint.css';
+@import '~@blueprintjs/icons/lib/css/blueprint-icons.css';
 
 :root {
   --app-bg-color: black;
@@ -29,11 +29,16 @@
   .app-main {
     grid-template-columns: 1fr;
     grid-template-rows: 20vh 1fr;
-    order: 1;
   }
 
   .app-header {
-    order: 2;
+    position: fixed;
+    bottom: 0;
+    background-color: var(--app-bg-color);
+    width: 100vw;
+    z-index: 1;
+    margin: 0;
+    padding: 5px;
   }
 }
 
