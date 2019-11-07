@@ -12,6 +12,7 @@
     "method-override": "^2.3.10",
     "mongoose": "^5.0.9",
     "request": "^2.83.0",
+    "serve-favicon": "^2.5.0",
     "string-similarity": "^2.0.0",
     "twitter": "^1.7.1"
   },
