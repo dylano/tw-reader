@@ -1,6 +1,7 @@
 .tweet-panel {
   width: 100%;
   background-color: var(--tweet-bg-color);
+  padding-bottom: 2rem;
 }
 
 .tweet-panel-header {
