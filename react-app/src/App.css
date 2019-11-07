@@ -39,6 +39,7 @@
     z-index: 1;
     margin: 0;
     padding: 5px;
+    height: 1rem; /* causes tweet panel to fill content area */
   }
 }
 
