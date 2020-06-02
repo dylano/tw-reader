@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "tw-reader",
+  "name": "Twitter Reader is reading your Twitter",
   "icons": [
     {
       "src": "favicon.ico",
