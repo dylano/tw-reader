@@ -4,12 +4,11 @@
   "private": true,
   "dependencies": {
     "@blueprintjs/core": "^3.7.0",
-    "react": "^16.5.2",
+    "react": "^16.13.1",
     "react-autolinker": "^1.0.7",
-    "react-dom": "^16.5.2",
-    "react-easy-swipe": "0.0.17",
+    "react-dom": "^16.13.1",
     "eslint-config-react-app": "^4.0.0",
-    "react-scripts": "3.0.0"
+    "react-scripts": "3.4.1"
   },
   "scripts": {
     "start": "react-scripts start",

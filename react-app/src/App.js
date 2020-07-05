@@ -7,7 +7,7 @@ import {static_data} from "./static-data";
 import "./App.css";
 
 const USE_FAKE_DATA = 0;
-const URL_BASE = process.env.REACT_APP_URL_BASE || ""; // if not defined, will proxy calls to localhost:5000
+const URL_BASE = process.env.REACT_APP_URL_BASE ?? ""; // if not defined, will proxy calls to localhost:5000
 
 class App extends Component {
   constructor() {
