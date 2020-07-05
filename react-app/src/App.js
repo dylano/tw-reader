@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import Header from './Header';
-import Sidebar from './Sidebar';
-import TweetPanel from './TweetPanel';
-import EmptyPanel from './EmptyPanel';
+import Header from './components/Header';
+import Sidebar from './components/Sidebar';
+import TweetPanel from './components/TweetPanel';
+import EmptyPanel from './components/EmptyPanel';
 import { static_data } from './static-data';
 import './App.css';
 
