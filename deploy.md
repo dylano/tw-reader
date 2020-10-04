@@ -5,21 +5,18 @@
 - Netlify: https://tw-reader.netlify.com/
 - Surge: https://tw-reader.surge.sh/
 
-## Heroku
+## Heroku | [Dashboard](https://dashboard.heroku.com/apps/tw-reader)
 
-- [Dashboard](https://dashboard.heroku.com/apps/tw-reader)
 - serves both static and react apps
 - This app is on free tier dyno, will take ~15 seconds to spin up from idle
 - connected to github repo, does auto build & deploy on commits to master
-  - React hosted at `/`
-  - Static at `/main`
-  - Database is at [Mongo Atlas](https://cloud.mongodb.com/v2/5f792075b299ca0efb0e2cfc#clusters).
+  - React app is hosted at `/`
+  - Static site at `/main`
+  - Database is at [Mongo Atlas](https://cloud.mongodb.com/v2/5f792075b299ca0efb0e2cfc#clusters)
 
-## GCP
+## GCP | [Dashboard](https://console.cloud.google.com/home/dashboard?project=treader)
 
-GCP hosts the back end server and connects to DB at [Mongo Atlas](https://cloud.mongodb.com/v2/5f792075b299ca0efb0e2cfc#clusters).
-
-- [Dashboard](https://console.cloud.google.com/home/dashboard?project=treader)
+GCP hosts the back end server and connects to DB at [Mongo Atlas](https://cloud.mongodb.com/v2/5f792075b299ca0efb0e2cfc#clusters)
 
 Build and deployment are done from the GCP console:
 
@@ -30,9 +27,8 @@ Build and deployment are done from the GCP console:
 1. Deploy the image with `npm run gcp-deploy`
 1. Note: don't push anything back to master from here
 
-## Netlify
+## Netlify | [Dashboard](https://app.netlify.com/sites/tw-reader/overview)
 
-- [Dashboard](https://app.netlify.com/sites/tw-reader/overview)
 - serves react app only
 - connected to github repo, does auto build & deploy on commits to master
 - env vars are defined in netlify.toml
