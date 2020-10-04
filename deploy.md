@@ -5,20 +5,18 @@
 - Netlify: https://tw-reader.netlify.com/
 - Surge: https://tw-reader.surge.sh/
 
-## Heroku
+## Heroku | [Dashboard](https://dashboard.heroku.com/apps/tw-reader)
 
-- [Dashboard](https://dashboard.heroku.com/apps/tw-reader)
 - serves both static and react apps
 - This app is on free tier dyno, will take ~15 seconds to spin up from idle
 - connected to github repo, does auto build & deploy on commits to master
-  - React hosted at `/`
-  - Static at `/main`
+  - React app is hosted at `/`
+  - Static site at `/main`
+  - Database is at [Mongo Atlas](https://cloud.mongodb.com/v2/5f792075b299ca0efb0e2cfc#clusters)
 
-## GCP
+## GCP | [Dashboard](https://console.cloud.google.com/home/dashboard?project=treader)
 
-GCP hosts the back end server and connects to DB at [MLab](https://mlab.com/databases/reader-gcp).
-
-- [Dashboard](https://console.cloud.google.com/home/dashboard?project=treader)
+GCP hosts the back end server and connects to DB at [Mongo Atlas](https://cloud.mongodb.com/v2/5f792075b299ca0efb0e2cfc#clusters)
 
 Build and deployment are done from the GCP console:
 
@@ -29,16 +27,15 @@ Build and deployment are done from the GCP console:
 1. Deploy the image with `npm run gcp-deploy`
 1. Note: don't push anything back to master from here
 
-## Netlify
+## Netlify | [Dashboard](https://app.netlify.com/sites/tw-reader/overview)
 
-- [Dashboard](https://app.netlify.com/sites/tw-reader/overview)
-- serves react app only
+- serves react app only and connects to the GCP back end
 - connected to github repo, does auto build & deploy on commits to master
 - env vars are defined in netlify.toml
 
 ## Surge
 
-Surge hosts only the React front end of the app. This is an alternative to Netlify with a simple push from command line. For any changes to the React app, run a new build and push it to Surge:
+Surge hosts only the React front end of the app and connects to the back end at GCP. This is an alternative to Netlify with a simple push from command line. For any changes to the React app, run a new build and push it to Surge:
 
 1. Make sure the following environment variable is set before building: `export REACT_APP_URL_BASE=https://reader.doliver.net`
 2. Run the build from the react-app/ directory: `npm run build`
