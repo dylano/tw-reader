@@ -17,17 +17,6 @@ function formatTweet(tweet) {
 }
 
 module.exports = class TwData {
-  async getTweet(tweetId) {
-    /*
-    todo: check db for tweet
-    else retrieve from twitter & store
-    return db.find()
-    */
-    const tweet = await twitter.getTweet(tweetId);
-    console.log(formatTweet(tweet));
-    console.log(tweet);
-  }
-
   async getFriend(databaseId) {
     return Friend.findById(databaseId);
   }
@@ -38,6 +27,13 @@ module.exports = class TwData {
       return friendArr[0];
     }
     return null;
+  }
+
+  // Retrieve Tweet directly from Twitter. This does not interact with local tw-reader data store.
+  async getTweetByTwitterId(tweetId) {
+    const tweet = await twitter.getTweet(tweetId);
+    console.log(formatTweet(tweet));
+    console.log(tweet);
   }
 
   // get count most recent tweets by the logged in user
@@ -53,13 +49,20 @@ module.exports = class TwData {
     return Tweet.aggregate([{$sort: {timestamp: -1}}]).limit(maxResults);
   }
 
+  async toggleTweetSaveStatus(databaseId) {
+    const tweet = await Tweet.findById(databaseId);
+    return tweet.update({isSaved: !tweet.isSaved}, {new: true});
+  }
+
   async markTweetAsRead(databaseId) {
     return Tweet.findByIdAndUpdate(databaseId, {isRead: true}, {new: true});
   }
 
+  // db.tweets.updateMany({ "userScreenName" : "TheAthleticSF","isRead":false }, {$set:{"isRead":true}} )
   async markAllTweetsAsRead(screenName) {
-    // db.tweets.updateMany({ "userScreenName" : "TheAthleticSF","isRead":false }, {$set:{"isRead":true}} )
-    await Tweet.updateMany({userScreenName: screenName, isRead: false}, {$set: {isRead: true}});
+    // All unread, un-saved tweets will be marked as Read. Saved tweets must be individually marked as read, this
+    // batch operation is designed to ignore them.
+    await Tweet.updateMany({userScreenName: screenName, isRead: false, isSaved: false}, {$set: {isRead: true}});
   }
 
   async updateFriendDuplicateCheck(screenName, checkForDuplicates) {
@@ -168,7 +171,8 @@ module.exports = class TwData {
             userScreenName: newTweet.user.screen_name,
             isRead: maxSimScore > SIMILARITY_THRESHOLD,
             similarity: maxSimScore,
-            similarityString: maxSimStr
+            similarityString: maxSimStr,
+            isSaved: false
           },
           {upsert: true}
         ).then(() => {});

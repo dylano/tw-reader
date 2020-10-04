@@ -10,7 +10,8 @@ const tweetSchema = mongoose.Schema({
   userScreenName: String,
   retweetUserName: String,
   similarity: Number,
-  similarityString: String
+  similarityString: String,
+  isSaved: Boolean
 });
 
 module.exports = mongoose.model("Tweet", tweetSchema);
