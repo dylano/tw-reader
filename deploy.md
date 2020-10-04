@@ -13,10 +13,11 @@
 - connected to github repo, does auto build & deploy on commits to master
   - React hosted at `/`
   - Static at `/main`
+  - Database is at [Mongo Atlas](https://cloud.mongodb.com/v2/5f792075b299ca0efb0e2cfc#clusters).
 
 ## GCP
 
-GCP hosts the back end server and connects to DB at [MLab](https://mlab.com/databases/reader-gcp).
+GCP hosts the back end server and connects to DB at [Mongo Atlas](https://cloud.mongodb.com/v2/5f792075b299ca0efb0e2cfc#clusters).
 
 - [Dashboard](https://console.cloud.google.com/home/dashboard?project=treader)
 
