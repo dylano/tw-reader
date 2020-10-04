@@ -29,13 +29,13 @@ Build and deployment are done from the GCP console:
 
 ## Netlify | [Dashboard](https://app.netlify.com/sites/tw-reader/overview)
 
-- serves react app only
+- serves react app only and connects to the GCP back end
 - connected to github repo, does auto build & deploy on commits to master
 - env vars are defined in netlify.toml
 
 ## Surge
 
-Surge hosts only the React front end of the app. This is an alternative to Netlify with a simple push from command line. For any changes to the React app, run a new build and push it to Surge:
+Surge hosts only the React front end of the app and connects to the back end at GCP. This is an alternative to Netlify with a simple push from command line. For any changes to the React app, run a new build and push it to Surge:
 
 1. Make sure the following environment variable is set before building: `export REACT_APP_URL_BASE=https://reader.doliver.net`
 2. Run the build from the react-app/ directory: `npm run build`
