@@ -1,13 +1,13 @@
-import React, {Component} from "react";
-import Header from "./Header";
-import Sidebar from "./Sidebar";
-import TweetPanel from "./TweetPanel";
-import EmptyPanel from "./EmptyPanel";
-import {static_data} from "./static-data";
-import "./App.css";
+import React, { Component } from 'react';
+import Header from './components/Header';
+import Sidebar from './components/Sidebar';
+import TweetPanel from './components/TweetPanel';
+import EmptyPanel from './components/EmptyPanel';
+import { static_data } from './static-data';
+import './App.css';
 
 const USE_FAKE_DATA = 0;
-const URL_BASE = process.env.REACT_APP_URL_BASE || ""; // if not defined, will proxy calls to localhost:5000
+const URL_BASE = process.env.REACT_APP_URL_BASE ?? ''; // if not defined, will proxy calls to localhost:5000
 
 class App extends Component {
   constructor() {
@@ -17,18 +17,18 @@ class App extends Component {
       isFetchingData: false,
       showAllTweets: false,
       error: ``,
-      friends: []
+      friends: [],
     };
   }
 
   onError(err) {
     console.log(`ERROR: ${err}`);
-    this.setState({error: `Error: ${err}`});
+    this.setState({ error: `Error: ${err}` });
   }
 
   componentDidMount() {
     if (USE_FAKE_DATA) {
-      this.setState({...static_data, error: "static-data"});
+      this.setState({ ...static_data, error: 'static-data' });
     } else {
       this.getTweetData();
     }
@@ -36,18 +36,18 @@ class App extends Component {
 
   getTweetData = () => {
     fetch(`${URL_BASE}/api/tweets`)
-      .then(res => res.json())
-      .then(json => {
-        this.setState({...json});
+      .then((res) => res.json())
+      .then((json) => {
+        this.setState({ ...json });
       })
-      .catch(err => this.onError(err));
+      .catch((err) => this.onError(err));
   };
 
   getFriend(friendId) {
     if (!friendId) {
       return null;
     }
-    const friendObj = this.state.friends.find(friend => friend.friend._id === friendId);
+    const friendObj = this.state.friends.find((friend) => friend.friend._id === friendId);
     return friendObj ? friendObj.friend : null;
   }
 
@@ -55,56 +55,56 @@ class App extends Component {
     if (!friendId) {
       return null;
     }
-    const friendObj = this.state.friends.find(friend => friend.friend._id === friendId);
+    const friendObj = this.state.friends.find((friend) => friend.friend._id === friendId);
     return friendObj ? friendObj.tweets : [];
   }
 
-  onFriendSelect = friendId => {
-    this.setState({selectedFriend: friendId});
+  onFriendSelect = (friendId) => {
+    this.setState({ selectedFriend: friendId });
   };
 
   onChangeShowAllTweets = () => {
-    this.setState({showAllTweets: !this.state.showAllTweets});
+    this.setState({ showAllTweets: !this.state.showAllTweets });
   };
 
   onRefreshTweets = async () => {
-    this.setState({isFetchingData: !this.state.isFetchingData});
-    await fetch(`${URL_BASE}/api/tweets`, {method: "POST"});
+    this.setState({ isFetchingData: !this.state.isFetchingData });
+    await fetch(`${URL_BASE}/api/tweets`, { method: 'POST' });
     await this.getTweetData();
-    this.setState({isFetchingData: !this.state.isFetchingData});
+    this.setState({ isFetchingData: !this.state.isFetchingData });
   };
 
-  onTweetRead = async tweetId => {
+  onTweetRead = async (tweetId) => {
     // find the tweet in state, change isRead, leave evrything else as is
-    const newFriends = this.state.friends.map(friend => {
-      const tweetIndex = friend.tweets.findIndex(tweet => tweet._id === tweetId);
+    const newFriends = this.state.friends.map((friend) => {
+      const tweetIndex = friend.tweets.findIndex((tweet) => tweet._id === tweetId);
       if (tweetIndex >= 0) {
         let updatedTweet = {};
-        Object.assign(updatedTweet, friend.tweets[tweetIndex], {isRead: true});
+        Object.assign(updatedTweet, friend.tweets[tweetIndex], { isRead: true });
         friend.tweets = [
           ...friend.tweets.slice(0, tweetIndex),
           updatedTweet,
-          ...friend.tweets.slice(tweetIndex + 1, friend.tweets.length)
+          ...friend.tweets.slice(tweetIndex + 1, friend.tweets.length),
         ];
       }
       return friend;
     });
-    this.setState({friends: newFriends});
+    this.setState({ friends: newFriends });
 
     // make the fetch call optimistically, don't await on result
-    await fetch(`${URL_BASE}/api/tweets/${tweetId}`, {method: "PUT"});
+    await fetch(`${URL_BASE}/api/tweets/${tweetId}`, { method: 'PUT' });
   };
 
-  onUserRead = async screenName => {
-    this.setState({isFetchingData: !this.state.isFetchingData});
-    const body = JSON.stringify({action: "markRead"});
+  onUserRead = async (screenName) => {
+    this.setState({ isFetchingData: !this.state.isFetchingData });
+    const body = JSON.stringify({ action: 'markRead' });
     await fetch(`${URL_BASE}/api/friends/${screenName}`, {
-      method: "PUT",
+      method: 'PUT',
       body,
-      headers: {"Content-Type": "application/json"}
+      headers: { 'Content-Type': 'application/json' },
     });
     await this.getTweetData();
-    this.setState({isFetchingData: !this.state.isFetchingData});
+    this.setState({ isFetchingData: !this.state.isFetchingData });
   };
 
   chooseMainPanel() {
@@ -125,9 +125,9 @@ class App extends Component {
 
   buildSidebarFriendData() {
     const sortedFriends = this.state.friends
-      .map(friend => {
+      .map((friend) => {
         let f = friend.friend;
-        f.newTweetCount = friend.tweets.filter(tweet => !tweet.isRead).length;
+        f.newTweetCount = friend.tweets.filter((tweet) => !tweet.isRead).length;
         return f;
       })
       .sort((a, b) => {
@@ -141,7 +141,7 @@ class App extends Component {
 
     // select the first friend in list
     if (!this.state.selectedFriend && sortedFriends.length > 0) {
-      this.setState({selectedFriend: sortedFriends[0]._id});
+      this.setState({ selectedFriend: sortedFriends[0]._id });
     }
 
     return sortedFriends;
@@ -150,16 +150,16 @@ class App extends Component {
   render() {
     const contentPanel = this.chooseMainPanel();
     return (
-      <div className="App">
-        <div className="app-error">{this.state.error}</div>
+      <div className='App'>
+        <div className='app-error'>{this.state.error}</div>
         <Header
-          className="app-header"
+          className='app-header'
           showAllTweets={this.state.showAllTweets}
           onChangeShowAllTweets={this.onChangeShowAllTweets}
           onRefreshTweets={this.onRefreshTweets}
           isFetchingData={this.state.isFetchingData}
         />
-        <main className="app-main">
+        <main className='app-main'>
           <Sidebar
             friends={this.buildSidebarFriendData()}
             selectedFriend={this.state.selectedFriend}
