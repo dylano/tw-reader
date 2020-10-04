@@ -1,6 +1,29 @@
 const tweetItems = [...document.querySelectorAll('div li')];
 let selectedIndex = -1;
 
+const ACTION_READ = 'read';
+const ACTION_SAVE = 'save';
+
+function updateTweet(tweetId, action) {
+  fetch(`/tweets/${tweetId}`, {
+    method: 'put',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ action })
+  });
+}
+
+function saveItem(li) {
+  // Toggle the selected state of the save indicator and trigger save call in DB
+  const tweetId = li.getAttribute('data-key');
+  const saveButton = li.querySelector('.saveitem');
+  if (saveButton) {
+    saveButton.classList.toggle('selected');
+  }
+  updateTweet(tweetId, ACTION_SAVE);
+}
+
 function markItemRead(li) {
   // remove list item from page and mark tweet as read in DB
   const tweetId = li.getAttribute('data-key');
@@ -8,7 +31,7 @@ function markItemRead(li) {
   const index = tweetItems.indexOf(li);
   tweetItems.splice(index, 1);
   li.remove();
-  fetch(`/tweets/${tweetId}`, { method: 'put' });
+  updateTweet(tweetId, ACTION_READ);
 
   // if there are no visible items left, hide the section
   let hasChildren = false;
@@ -24,20 +47,30 @@ function markItemRead(li) {
 
 function markUserRead(div) {
   const screenName = div.getAttribute('data-key');
-  div.classList.add('hidden');
   fetch(`/friends/${screenName}`, { method: 'PUT' });
 
-  // remove the elements from the tweetItems array and adjust the selection
+  // remove the elements from the tweetItems array
   const children = div.querySelectorAll('li');
-  children.forEach(child => {
-    const index = tweetItems.indexOf(child);
-    tweetItems.splice(index, 1);
-    if (selectedIndex >= index) {
-      selectedIndex--;
-      console.log(`new index: ${selectedIndex}`);
+  children.forEach(childItem => {
+    const isTweetSaved = childItem.querySelector('.saveitem.selected');
+    if (!isTweetSaved) {
+      const index = tweetItems.indexOf(childItem);
+      tweetItems.splice(index, 1);
+      childItem.remove();
+      if (selectedIndex >= index) {
+        selectedIndex--;
+        console.log(`new index: ${selectedIndex}`);
+      }
     }
   });
-  div.remove();
+
+  // Remove the user div if all children are gone
+  const remainingChildren =  div.querySelectorAll('li');
+  if(!remainingChildren.length) {
+    div.remove();
+  }
+
+  // Adjust selected item if necessary
   if (selectedIndex < 0) {
     selectedIndex = 0;
   } else if (selectedIndex > tweetItems.length) {
@@ -47,7 +80,12 @@ function markUserRead(div) {
 }
 
 function markReadItemClicked() {
-  markItemRead(this.parentElement.parentElement);
+  markItemRead(this.parentElement.parentElement.parentElement);
+}
+
+function saveItemClicked() {
+  saveItem(this.parentElement.parentElement.parentElement);
+  document.activeElement.blur();
 }
 
 function markReadUserClicked() {
@@ -63,10 +101,17 @@ function showLoader() {
 function processKeypress(event) {
   const keypress = event.key;
   if (keypress === '?') {
+    // eslint-disable-next-line no-alert
     alert(
-      'G - retrieve new tweets\nj / k - down/up\no - open current on Twitter\nL - open URL embedded in tweet\nx - mark tweet read\nX - mark all read for current user'
+      `G - retrieve new tweets
+      j / k - down/up
+      o - open current on Twitter
+      L - open URL embedded in tweet
+      s - toggle save/unsave tweet
+      x - mark tweet read
+      X - mark all read for current user`
     );
-  } else if (['j', 'k', 'l', 'L', 'o', 'x', 'X', 'G', '-', '='].includes(keypress)) {
+  } else if (['j', 'k', 'l', 'L', 'o', 's', 'x', 'X', 'G', '-', '='].includes(keypress)) {
     // page actions
     if (keypress === 'G') {
       showLoader();
@@ -85,6 +130,8 @@ function processKeypress(event) {
       tweetItems[--selectedIndex].classList.add('selected');
     } else if (keypress === 'o') {
       tweetItems[selectedIndex].querySelector('.twitterlink').click();
+    } else if (keypress === 's') {
+      saveItem(tweetItems[selectedIndex]);
     } else if (keypress === 'x') {
       markItemRead(tweetItems[selectedIndex]);
       if (selectedIndex === tweetItems.length) {
@@ -133,6 +180,10 @@ document.querySelectorAll('.markreaditem').forEach(btn => {
 
 document.querySelectorAll('.markreaduser').forEach(btn => {
   btn.addEventListener('click', markReadUserClicked);
+});
+
+document.querySelectorAll('.saveitem').forEach(btn => {
+  btn.addEventListener('click', saveItemClicked);
 });
 
 tweetItems.forEach(item => {

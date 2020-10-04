@@ -51,8 +51,8 @@ module.exports = class TwitterWrapper {
     try {
       while (cursor !== "0") {
         params.cursor = cursor;
-        // eslint-disable-next-line no-await-in-loop, call depends on previous iteration
-        const fList = await client.get("friends/list", params);
+        // eslint-disable-next-line no-await-in-loop
+        const fList = await client.get("friends/list", params); // await because call depends on previous iteration
         allFriends = allFriends.concat(fList.users);
         cursor = fList.next_cursor_str;
       }
