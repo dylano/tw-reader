@@ -1,6 +1,7 @@
 :root {
   --bg-color: rgb(0, 0, 0);
   --text-color: rgb(0, 180, 0);
+  --highlight-color: rgba(255, 255, 0, 0.75);
   --text-shadow: rgba(0, 255, 0, 0.25);
 }
 
@@ -46,7 +47,7 @@ button:active {
 }
 
 .selected {
-  color: rgba(255, 255, 0, 0.75);
+  color: var(--highlight-color);
 }
 
 .removing {
@@ -89,6 +90,10 @@ main {
   padding: 5px;
 }
 
+.friend-tweets > ul {
+  padding: 0;
+}
+
 .friend-tweets:nth-child(odd) {
   background-color: rgba(100, 100, 100, 0.35);
 }
@@ -102,9 +107,9 @@ main {
 .main-tweet-buttons {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   align-items: center;
   padding-top: 3px;
+  min-width: 9rem;
 }
 
 .retweet-user {
@@ -133,15 +138,4 @@ main {
 
 .friendlist-item-option {
   font-weight: 400;
-}
-
-@media screen and (min-width: 800px) {
-  .main-tweet-buttons {
-    flex-direction: row;
-  }
-
-  .main-tweet {
-    align-items: center;
-    padding: 0;
-  }
 }

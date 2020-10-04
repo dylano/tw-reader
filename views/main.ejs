@@ -27,9 +27,17 @@
             >
               <span class="glyphicon glyphicon-comment sizeable-text" aria-hidden="true"></span>
             </a>
-            <button class="btn btn-link btn-sm markreaditem sizeable-text">
-              <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
-            </button>
+            <div class="tweet-actions">
+              <button class="btn btn-link btn-sm markreaditem sizeable-text">
+                <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
+              </button>
+              <%
+                const selClass = tweet.isSaved ? 'selected' : '';
+              %>
+              <button class="btn btn-link btn-sm sizeable-text saveitem <%= selClass %>">
+                <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
+              </button>
+            </div>
           </div>
           <span class="tweetstr sizeable-text">
             <% if(tweet.retweetUserName) { %>

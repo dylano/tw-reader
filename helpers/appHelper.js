@@ -52,7 +52,13 @@ exports.renderFriend = async (req, res) => {
 
 exports.updateTweet = async (req, res) => {
   try {
-    await twData.markTweetAsRead(req.params.id);
+    const {action} = req.body;
+    if(action === 'read') {
+      await twData.markTweetAsRead(req.params.id);
+    } else if (action === 'save') {
+      await twData.toggleTweetSaveStatus(req.params.id);
+    }
+
     if (req.query.dest) {
       res.redirect(`/${req.query.dest}`);
     } else {
