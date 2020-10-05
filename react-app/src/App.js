@@ -92,26 +92,22 @@ class App extends Component {
       this.setState({ friends: newFriends });
   }
 
-  onTweetRead = async (tweetId) => {
-    this.modifyTweetState(tweetId, { isRead: true });
-
-    const body = JSON.stringify({ action: 'read' });
-    await fetch(`${URL_BASE}/api/tweets/${tweetId}`, { 
-      method: 'PUT',
-      body,
+  sendTweetChangeAction = async (tweetId, action) => {
+    return fetch(`${URL_BASE}/api/tweets/${tweetId}`, { 
+      method: 'PUT',  //todo: this should be PATCH
+      body: JSON.stringify({ action }),
       headers: { 'Content-Type': 'application/json' },
     });
+  }
+
+  onTweetRead = async (tweetId) => {
+    this.modifyTweetState(tweetId, { isRead: true });
+    await this.sendTweetChangeAction(tweetId, 'read');
   };
 
   onTweetSave = async (tweetId, newState) => {
     this.modifyTweetState(tweetId, { isSaved: newState });
-
-    const body = JSON.stringify({ action: 'save' });
-    await fetch(`${URL_BASE}/api/tweets/${tweetId}`, { 
-      method: 'PUT',
-      body,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    await this.sendTweetChangeAction(tweetId, 'save');
   }
 
   onUserRead = async (screenName) => {
