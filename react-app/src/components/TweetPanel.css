@@ -64,6 +64,12 @@
   transform: translateX(-50%);
 }
 
+.action-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 .retweet-user {
   background-color: #3f457a;
   color: var(--app-color);
