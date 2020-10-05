@@ -52,7 +52,14 @@ exports.getUserTweets = async (req, res) =>
 exports.getTimeline = async (req, res) => res.json(await twData.getTimelineTweets());
 
 exports.updateTweet = async (req, res) => {
-  const updatedTweet = await twData.markTweetAsRead(req.params.id);
+  const {action} = req.body;
+  console.log(`API update body action ${action}`,)
+  let updatedTweet;
+  if(action === 'read') {
+    updatedTweet = await twData.markTweetAsRead(req.params.id);
+  } else if (action === 'save') {
+    updatedTweet = await twData.toggleTweetSaveStatus(req.params.id);
+  }
   res.json(updatedTweet);
 };
 

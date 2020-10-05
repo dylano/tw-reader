@@ -5,14 +5,19 @@ import './TweetPanel.css';
 
 const autolinkerOptions = { className: 'autolinker' };
 
-const TweetPanel = ({ friend, tweets, onTweetRead, onUserRead, showAllTweets = false }) => {
+const TweetPanel = ({ friend, tweets, onTweetRead, onTweetSave, onUserRead, showAllTweets = false }) => {
   if (!showAllTweets) {
     tweets = tweets.filter((tweet) => !tweet.isRead);
   }
 
   let content;
   if (tweets.length === 0) {
-    content = <div className='tweet-panel-tweet tweet-panel-tweet-content'>No tweetz :(</div>;
+    content = (
+      <div className='tweet-panel-tweet tweet-panel-tweet-content'>
+        <span>No tweetz</span>
+        <ion-icon name="sad"></ion-icon>
+      </div>
+    )
   } else {
     content = tweets
       .sort((a, b) => a.timestamp.localeCompare(b.timestamp))
@@ -21,14 +26,21 @@ const TweetPanel = ({ friend, tweets, onTweetRead, onUserRead, showAllTweets = f
           ? 'tweet-panel-tweet-content'
           : 'tweet-panel-tweet-content tweet-panel-tweet-new';
         const tweetLink = `https://twitter.com/${friend.screenName}/status/${tweet.id}`;
+        
+        // Mark read action icon
         const markReadAction = tweet.isRead ? (
-          <span />
+          null
         ) : (
-          <span
-            className='tweet-action action-close action-right'
-            onClick={() => onTweetRead(tweet._id)}
-          >
-            <i className='far fa-check-circle' />
+          <span className='tweet-action action-close' onClick={() => onTweetRead(tweet._id)}>
+            <ion-icon name="checkmark-circle"></ion-icon>
+          </span>
+        );
+
+        // Save action icon
+        const saveIconStyle = tweet.isSaved ? {color: `yellow`} : {};
+        const saveAction = (
+          <span className='tweet-action action-save' onClick={() => onTweetSave(tweet._id, !tweet.isSaved)}>
+            <ion-icon style={saveIconStyle} name="star"></ion-icon>
           </span>
         );
 
@@ -52,7 +64,7 @@ const TweetPanel = ({ friend, tweets, onTweetRead, onUserRead, showAllTweets = f
           <div className='tweet-panel-tweet' key={tweet._id}>
             <span className='tweet-action action-open action-left'>
               <a href={tweetLink} target='_blank' rel='noopener noreferrer'>
-                <i className='fas fa-dove' />
+              <ion-icon name="logo-twitter" />
               </a>
             </span>
             <div className={tweetClass}>
@@ -60,7 +72,10 @@ const TweetPanel = ({ friend, tweets, onTweetRead, onUserRead, showAllTweets = f
               <ReactAutolinker text={tweet.text} options={autolinkerOptions} />
               {similarityReport}
             </div>
-            {markReadAction}
+            <div className="action-right action-stack">
+              {markReadAction}
+              {saveAction}
+            </div>
           </div>
         );
       });
@@ -81,6 +96,7 @@ TweetPanel.propTypes = {
   tweets: PropTypes.array.isRequired,
   friend: PropTypes.object.isRequired,
   onTweetRead: PropTypes.func.isRequired,
+  onTweetSave: PropTypes.func.isRequired,
   onUserRead: PropTypes.func.isRequired,
   showAllTweets: PropTypes.bool,
 };

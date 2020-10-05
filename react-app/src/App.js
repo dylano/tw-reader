@@ -74,26 +74,45 @@ class App extends Component {
     this.setState({ isFetchingData: !this.state.isFetchingData });
   };
 
-  onTweetRead = async (tweetId) => {
-    // find the tweet in state, change isRead, leave evrything else as is
-    const newFriends = this.state.friends.map((friend) => {
-      const tweetIndex = friend.tweets.findIndex((tweet) => tweet._id === tweetId);
-      if (tweetIndex >= 0) {
-        let updatedTweet = {};
-        Object.assign(updatedTweet, friend.tweets[tweetIndex], { isRead: true });
-        friend.tweets = [
-          ...friend.tweets.slice(0, tweetIndex),
-          updatedTweet,
-          ...friend.tweets.slice(tweetIndex + 1, friend.tweets.length),
-        ];
-      }
-      return friend;
-    });
-    this.setState({ friends: newFriends });
+  modifyTweetState = (tweetId, change) => {
+      // find the tweet in state and apply the change
+      const newFriends = this.state.friends.map((friend) => {
+        const tweetIndex = friend.tweets.findIndex((tweet) => tweet._id === tweetId);
+        if (tweetIndex >= 0) {
+          let updatedTweet = {};
+          Object.assign(updatedTweet, friend.tweets[tweetIndex], change);
+          friend.tweets = [
+            ...friend.tweets.slice(0, tweetIndex),
+            updatedTweet,
+            ...friend.tweets.slice(tweetIndex + 1, friend.tweets.length),
+          ];
+        }
+        return friend;
+      });
+      this.setState({ friends: newFriends });
+  }
 
-    // make the fetch call optimistically, don't await on result
-    await fetch(`${URL_BASE}/api/tweets/${tweetId}`, { method: 'PUT' });
+  onTweetRead = async (tweetId) => {
+    this.modifyTweetState(tweetId, { isRead: true });
+
+    const body = JSON.stringify({ action: 'read' });
+    await fetch(`${URL_BASE}/api/tweets/${tweetId}`, { 
+      method: 'PUT',
+      body,
+      headers: { 'Content-Type': 'application/json' },
+    });
   };
+
+  onTweetSave = async (tweetId, newState) => {
+    this.modifyTweetState(tweetId, { isSaved: newState });
+
+    const body = JSON.stringify({ action: 'save' });
+    await fetch(`${URL_BASE}/api/tweets/${tweetId}`, { 
+      method: 'PUT',
+      body,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
 
   onUserRead = async (screenName) => {
     this.setState({ isFetchingData: !this.state.isFetchingData });
@@ -115,6 +134,7 @@ class App extends Component {
           tweets={this.getTweetsByFriendId(this.state.selectedFriend)}
           showAllTweets={this.state.showAllTweets}
           onTweetRead={this.onTweetRead}
+          onTweetSave={this.onTweetSave}
           onUserRead={this.onUserRead}
         />
       );
