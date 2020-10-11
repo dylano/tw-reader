@@ -19,6 +19,7 @@
   text-align: center;
   padding: 1rem;
   border-radius: 2px;
+  z-index: 5;
 }
 
 .tweet-panel-header-title {
