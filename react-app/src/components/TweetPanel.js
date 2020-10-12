@@ -29,7 +29,7 @@ const TweetPanel = ({ friend, tweets, onTweetRead, onTweetSave, onUserRead, show
           null
         ) : (
           <span className='tweet-action action-close' onClick={() => onTweetRead(tweet._id)}>
-            <ion-icon name="close"></ion-icon>
+            <ion-icon name="close" style={{color: 'red'}}></ion-icon>
           </span>
         );
 

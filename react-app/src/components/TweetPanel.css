@@ -69,9 +69,9 @@
 
 .tweet-action {
   border: 1px solid var(--app-color);
-  background-color: rgb(150,150,150);
+  background-color:black;
   color: white;
-  border-radius: 2px;
+  border-radius: 5px;
   padding: 3px;
   padding-bottom: 1px;
   cursor: pointer;
@@ -92,10 +92,10 @@
 }
 
 .retweet-user {
-  background-color: green;
+  background-color: cornflowerblue;
   color: var(--app-color);
   border-radius: 2px;
-  padding: 2px 8px;
+  padding: 2px;
 }
 
 @media screen and (max-width: 800px) {
