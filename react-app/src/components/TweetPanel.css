@@ -68,13 +68,14 @@
 }
 
 .tweet-action {
-  border: 1px solid var(--app-color);
   background-color:black;
   color: white;
   border-radius: 5px;
-  padding: 3px;
-  padding-bottom: 1px;
+  padding: .25rem;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .action-left {

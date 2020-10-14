@@ -29,15 +29,16 @@ const TweetPanel = ({ friend, tweets, onTweetRead, onTweetSave, onUserRead, show
           null
         ) : (
           <span className='tweet-action action-close' onClick={() => onTweetRead(tweet._id)}>
-            <ion-icon name="close" style={{color: 'red'}}></ion-icon>
+            <ion-icon name="close" style={{color: 'orangered'}}></ion-icon>
           </span>
         );
 
         // Save action icon
-        const saveIconStyle = tweet.isSaved ? {color: `yellow`} : {};
+        const iconName = tweet.isSaved ? 'star' : 'star-outline';
+        const styleColor = tweet.isSaved ?  'yellow' : 'white';
         const saveAction = (
-          <span className='tweet-action action-save' onClick={() => onTweetSave(tweet._id, !tweet.isSaved)}>
-            <ion-icon style={saveIconStyle} name="star"></ion-icon>
+          <span className='tweet-action action-save' style={{border: `1px solid ${styleColor}`}} onClick={() => onTweetSave(tweet._id, !tweet.isSaved)}>
+            <ion-icon style={{color: styleColor}} name={iconName}></ion-icon>
           </span>
         );
 
