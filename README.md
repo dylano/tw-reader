@@ -5,8 +5,8 @@
 Twitter timeline is retrieved and stored locally, then presented in a more useful way.
 
 <div>
-<img src="screenshots/tw-reader-ejs.png" alt="Static Screenshot" width=250/>
-<img src="screenshots/tw-reader-react.png" alt="React Screenshot" width=600/>
+<img src="screenshots/tw-reader-ejs.png" alt="Static Screenshot" width=600/>
+<img src="screenshots/tw-reader-react.png" alt="React Screenshot" width=250/>
 </div>
 
 ### Why?

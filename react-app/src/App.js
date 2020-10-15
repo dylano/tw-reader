@@ -122,7 +122,7 @@ class App extends Component {
     this.setState({ isFetchingData: !this.state.isFetchingData });
   };
 
-  chooseMainPanel() {
+  ContentPanel = () => {
     if (this.state.selectedFriend) {
       return (
         <TweetPanel
@@ -164,7 +164,6 @@ class App extends Component {
   }
 
   render() {
-    const contentPanel = this.chooseMainPanel();
     return (
       <div className='App'>
         <div className='app-error'>{this.state.error}</div>
@@ -181,7 +180,7 @@ class App extends Component {
             selectedFriend={this.state.selectedFriend}
             onFriendSelect={this.onFriendSelect}
           />
-          {contentPanel}
+          <this.ContentPanel/>
         </main>
       </div>
     );

@@ -22,9 +22,6 @@ const TweetPanel = ({ friend, tweets, onTweetRead, onTweetSave, onUserRead, show
     content = tweets
       .sort((a, b) => a.timestamp.localeCompare(b.timestamp))
       .map((tweet) => {
-        const tweetClass = tweet.isRead
-          ? 'tweet-panel-tweet-content'
-          : 'tweet-panel-tweet-content tweet-panel-tweet-new';
         const tweetLink = `https://twitter.com/${friend.screenName}/status/${tweet.id}`;
         
         // Mark read action icon
@@ -32,15 +29,16 @@ const TweetPanel = ({ friend, tweets, onTweetRead, onTweetSave, onUserRead, show
           null
         ) : (
           <span className='tweet-action action-close' onClick={() => onTweetRead(tweet._id)}>
-            <ion-icon name="close"></ion-icon>
+            <ion-icon name="close" style={{color: 'orangered'}}></ion-icon>
           </span>
         );
 
         // Save action icon
-        const saveIconStyle = tweet.isSaved ? {color: `yellow`} : {};
+        const iconName = tweet.isSaved ? 'star' : 'star-outline';
+        const styleColor = tweet.isSaved ?  'yellow' : 'white';
         const saveAction = (
-          <span className='tweet-action action-save' onClick={() => onTweetSave(tweet._id, !tweet.isSaved)}>
-            <ion-icon style={saveIconStyle} name="star"></ion-icon>
+          <span className='tweet-action action-save' style={{border: `1px solid ${styleColor}`}} onClick={() => onTweetSave(tweet._id, !tweet.isSaved)}>
+            <ion-icon style={{color: styleColor}} name={iconName}></ion-icon>
           </span>
         );
 
@@ -66,7 +64,7 @@ const TweetPanel = ({ friend, tweets, onTweetRead, onTweetSave, onUserRead, show
               <ion-icon name="logo-twitter" />
               </a>
             </span>
-            <div className={tweetClass}>
+            <div className='tweet-panel-tweet-content'>
               {retweetUser}
               <ReactAutolinker text={tweet.text} options={autolinkerOptions} />
               {similarityReport}
@@ -79,12 +77,16 @@ const TweetPanel = ({ friend, tweets, onTweetRead, onTweetSave, onUserRead, show
         );
       });
   }
+  console.log(friend)
   return (
     <div className='tweet-panel'>
       <header className='tweet-panel-header'>
-        <span className='tweet-panel-header-title'>{friend.name}</span>
+        <div className='tweet-panel-header-title'>
+          <img className='tweet-panel-header-image' src={friend.imgUrl} alt={friend.name}/>
+          <span className='tweet-panel-header-name'>{friend.name}</span>
+        </div>
         <span className='tweet-panel-header-action' onClick={() => onUserRead(friend.screenName)}>
-          Mark All Read
+          Mark<br/>Read
         </span>
       </header>
       {content}
