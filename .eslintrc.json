@@ -1,5 +1,6 @@
 {
   "extends": ["airbnb-base", "prettier"],
+  "ignorePatterns": ["react-app"],
   "rules": {
     "no-underscore-dangle": 0,
     "no-console": 0,
@@ -8,6 +9,8 @@
   },
   "env": {
     "browser": true,
-    "node": true
+    "node": true,
+    "es6": true,
+    "jest": true
   }
 }
