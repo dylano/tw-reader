@@ -1,4 +1,4 @@
-export const static_data = {
+export const staticData = {
   friends: [
     {
       friend: {

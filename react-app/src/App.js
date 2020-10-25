@@ -3,7 +3,7 @@ import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import TweetPanel from './components/TweetPanel';
 import EmptyPanel from './components/EmptyPanel';
-import { static_data } from './static-data';
+import { staticData } from './static-data';
 import './App.css';
 
 const USE_FAKE_DATA = 0;
@@ -28,7 +28,7 @@ class App extends Component {
 
   componentDidMount() {
     if (USE_FAKE_DATA) {
-      this.setState({ ...static_data, error: 'static-data' });
+      this.setState({ ...staticData, error: 'static-data' });
     } else {
       this.getTweetData();
     }
@@ -79,7 +79,7 @@ class App extends Component {
       const newFriends = this.state.friends.map((friend) => {
         const tweetIndex = friend.tweets.findIndex((tweet) => tweet._id === tweetId);
         if (tweetIndex >= 0) {
-          let updatedTweet = {};
+          const updatedTweet = {};
           Object.assign(updatedTweet, friend.tweets[tweetIndex], change);
           friend.tweets = [
             ...friend.tweets.slice(0, tweetIndex),
@@ -92,13 +92,11 @@ class App extends Component {
       this.setState({ friends: newFriends });
   }
 
-  sendTweetChangeAction = async (tweetId, action) => {
-    return fetch(`${URL_BASE}/api/tweets/${tweetId}`, { 
-      method: 'PUT',  //todo: this should be PATCH
+  sendTweetChangeAction = async (tweetId, action) => fetch(`${URL_BASE}/api/tweets/${tweetId}`, { 
+      method: 'PUT',  // todo: this should be PATCH
       body: JSON.stringify({ action }),
       headers: { 'Content-Type': 'application/json' },
     });
-  }
 
   onTweetRead = async (tweetId) => {
     this.modifyTweetState(tweetId, { isRead: true });
@@ -134,15 +132,15 @@ class App extends Component {
           onUserRead={this.onUserRead}
         />
       );
-    } else {
-      return <EmptyPanel />;
-    }
+    } 
+    
+    return <EmptyPanel />;
   }
 
   buildSidebarFriendData() {
     const sortedFriends = this.state.friends
       .map((friend) => {
-        let f = friend.friend;
+        const f = friend.friend;
         f.newTweetCount = friend.tweets.filter((tweet) => !tweet.isRead).length;
         return f;
       })
