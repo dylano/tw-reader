@@ -26,7 +26,7 @@
   },
   "scripts": {
     "start": "node app.js",
-    "lint": "eslint '**/*.js' --quiet",
+    "lint": "eslint '**/*.js' --quiet --ignore-pattern react-app",
     "heroku-postbuild": "cd react-app && npm install && npm run build",
     "gcp-build": "gcloud builds submit --tag gcr.io/treader/tw-reader",
     "gcp-deploy": "gcloud beta run deploy --image gcr.io/treader/tw-reader"

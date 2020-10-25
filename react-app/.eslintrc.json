@@ -1,5 +1,6 @@
 {
-  // "extends": ["airbnb", "plugin:prettier/recommended", "prettier/react"],  Not yet compatible with react-scripts 4.0
+  // Following config not working with react-scripts 4.0 upgrade. Fight this fight another day.
+  // "extends": ["airbnb-base", "plugin:prettier/recommended", "prettier/react"],
   "env": {
     "browser": true,
     "commonjs": true,

@@ -147,7 +147,8 @@ class App extends Component {
       .sort((a, b) => {
         if (a.newTweetCount && !b.newTweetCount) {
           return -1;
-        } else if (b.newTweetCount && !a.newTweetCount) {
+        } 
+        if (b.newTweetCount && !a.newTweetCount) {
           return 1;
         }
         return a.screenName.toLowerCase().localeCompare(b.screenName.toLowerCase());
