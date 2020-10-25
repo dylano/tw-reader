@@ -1,6 +1,6 @@
 {
-  // Following config not working with react-scripts 4.0 upgrade. Fight this fight another day.
-  // "extends": ["airbnb-base", "plugin:prettier/recommended", "prettier/react"],
+  "root": true,
+  "extends": ["airbnb-base", "prettier"],
   "env": {
     "browser": true,
     "commonjs": true,
@@ -14,7 +14,7 @@
     "import/no-unresolved": ["off"],
     "no-param-reassign": ["off"],
     "import/prefer-default-export": ["off"],
-
+    "no-underscore-dangle": ["off"],
     "react/jsx-filename-extension": ["warn", { "extensions": [".js", ".jsx"] }],
     "max-len": [
       "warn",
