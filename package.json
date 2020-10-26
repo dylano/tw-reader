@@ -10,7 +10,7 @@
     "ejs": "^2.5.7",
     "express": "^4.16.2",
     "method-override": "^2.3.10",
-    "mongoose": "^5.0.9",
+    "mongoose": "^5.7.5",
     "request": "^2.83.0",
     "serve-favicon": "^2.5.0",
     "string-similarity": "^2.0.0",
