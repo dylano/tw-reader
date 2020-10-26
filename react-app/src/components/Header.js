@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { Button, Switch, Alignment } from '@blueprintjs/core';
 import './Header.css';
 
-const Header = ({ showAllTweets, onChangeShowAllTweets, onRefreshTweets, isFetchingData }) => {
-  return (
+const Header = ({ showAllTweets, onChangeShowAllTweets, onRefreshTweets, isFetchingData }) => (
     <header className='app-header'>
       <Switch
         className='new-tweet-toggle'
@@ -25,7 +24,6 @@ const Header = ({ showAllTweets, onChangeShowAllTweets, onRefreshTweets, isFetch
       </Button>
     </header>
   );
-};
 
 Header.propTypes = {
   showAllTweets: PropTypes.bool.isRequired,

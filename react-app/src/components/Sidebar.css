@@ -17,7 +17,7 @@
 
 .sidebar-friendlist-item {
   cursor: pointer;
-  transition: all 500ms;
+  transition: all 150ms;
 }
 
 .unread {
@@ -30,6 +30,6 @@
   transform: translateX(25px) scale(1.1);
   background-color: black;
   color: yellow;
-  border-radius: 5px;
+  border-radius: 1rem;
   padding-left: 5px;
 }

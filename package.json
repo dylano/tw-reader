@@ -17,16 +17,16 @@
     "twitter": "^1.7.1"
   },
   "devDependencies": {
-    "eslint": "^5.16.0",
-    "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-config-prettier": "^2.9.0",
-    "eslint-plugin-import": "^2.9.0",
-    "eslint-plugin-prettier": "^2.6.0",
+    "eslint": "^7.12.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-config-developit": "^1.2.0",
+    "eslint-config-prettier": "^6.14.0",
+    "eslint-plugin-import": "^2.22.1",
     "prettier": "^1.10.2"
   },
   "scripts": {
     "start": "node app.js",
-    "lint": "eslint '**/*.js' --quiet",
+    "lint": "eslint '**/*.js' --quiet --ignore-pattern react-app",
     "heroku-postbuild": "cd react-app && npm install && npm run build",
     "gcp-build": "gcloud builds submit --tag gcr.io/treader/tw-reader",
     "gcp-deploy": "gcloud beta run deploy --image gcr.io/treader/tw-reader"

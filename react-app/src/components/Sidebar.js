@@ -4,8 +4,8 @@ import './Sidebar.css';
 
 const Sidebar = ({ friends, selectedFriend, onFriendSelect }) => {
   const fList = friends.map((friend) => {
-    let newTweetsStr = '',
-      unreadClass = '';
+    let newTweetsStr = '';
+    let unreadClass = '';
     if (friend.newTweetCount) {
       newTweetsStr = ` (${friend.newTweetCount})`;
       unreadClass = 'unread';
