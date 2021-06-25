@@ -13,9 +13,13 @@ router
   .route("/timeline")
   .get(appHelper.renderTimeline)
   .post(appHelper.refreshTimeline);
-router
+  router
   .route("/friends")
   .get(appHelper.renderFriends)
+  .post(appHelper.refreshFriends);
+  router
+  .route("/friends-test")
+  .get(appHelper.renderFriendsTest)
   .post(appHelper.refreshFriends);
 
 router.get("/user", appHelper.renderUser);

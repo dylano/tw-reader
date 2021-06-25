@@ -21,6 +21,15 @@ exports.renderFriends = async (req, res) => {
   }
 };
 
+exports.renderFriendsTest = async (req, res) => {
+  try {
+    const friends = await twData.getFriends();
+    res.render("friends-test", { friends });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 exports.renderUser = async (req, res) => {
   try {
     const tweets = await twData.getUserTweets(TW_USER);
