@@ -1,0 +1,31 @@
+<% include partials/header %>
+
+<main>
+  <header class="sub-header">
+    <h3>Friends</h3>
+    <form class="text-right" action="/friends" method="POST">
+      <button>Find new friends!</button>
+    </form>
+  </header>
+
+  <div class="all-friends">
+    <div class="friendlist">
+      <% friends.forEach( friend => { %>
+        <% var checkedStr = friend.checkForDuplicates ? 'checked' : ''; %> 
+        <div class="friendlist-item">
+            <img class="friendlist-image" src="<%=friend.imgUrl%>" />
+            <div class="friendlist-item-values">
+                <div class="sizeable-text"><a href="/friends/<%=friend._id%>"> <%= friend.name %> </a></div>
+                <div>
+                    <label class="friendlist-item-option"><input name=<%=`cx-dup-${friend.screenName}`%> type="checkbox" <%=checkedStr%>> Filter duplicates</input></label>
+                </div>
+            </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</main>
+
+<script type="text/javascript" src="js/friends.js"></script>
+
+<% include partials/footer %>
