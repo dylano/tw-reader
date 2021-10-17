@@ -91,7 +91,7 @@ const TweetPanel = ({
         );
       });
   }
-  console.log(friend);
+
   return (
     <div className="tweet-panel">
       <header className="tweet-panel-header">
