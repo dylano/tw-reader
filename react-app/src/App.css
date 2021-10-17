@@ -2,11 +2,11 @@
 @import '~@blueprintjs/icons/lib/css/blueprint-icons.css';
 
 :root {
-  --app-color: black;
+  --app-color: rgb(33, 180, 33);
 }
 
 html {
-  background-color: rgb(200,200,200);
+  background-color: rgb(32, 32, 32);
 }
 
 .App {

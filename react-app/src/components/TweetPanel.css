@@ -51,13 +51,14 @@
 
 .tweet-panel-tweet-content {
   padding: 5px;
-  background-color: rgba(100,100,100,.5);
+  background-color: rgba(100, 100, 100, 0.25);
   padding: 10px 20px;
   border: 1px solid var(--app-color);
-  border-radius: .2rem;
+  border-radius: 0.2rem;
   font-size: 1.3rem;
   box-shadow: 2px 2px black;
-  width:100%;
+  width: 100%;
+  word-break: break-word;
 }
 
 .tweet-panel-tweet-similarity {
@@ -68,10 +69,10 @@
 }
 
 .tweet-action {
-  background-color:black;
+  background-color: black;
   color: white;
   border-radius: 5px;
-  padding: .25rem;
+  padding: 0.25rem;
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -93,7 +94,7 @@
 }
 
 .retweet-user {
-  background-color: cornflowerblue;
+  background-color: black;
   color: var(--app-color);
   border-radius: 2px;
   padding: 2px;
