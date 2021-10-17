@@ -51,7 +51,7 @@
 
 .tweet-panel-tweet-content {
   padding: 5px;
-  background-color: rgba(100, 100, 100, 0.5);
+  background-color: rgba(100, 100, 100, 0.25);
   padding: 10px 20px;
   border: 1px solid var(--app-color);
   border-radius: 0.2rem;
