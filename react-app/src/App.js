@@ -65,10 +65,10 @@ const App = () => {
   };
 
   const onRefreshTweets = async () => {
-    setIsFetchingData(!isFetchingData);
+    setIsFetchingData(true);
     await fetch(`${URL_BASE}/api/tweets`, { method: 'POST' });
     await getTweetData();
-    setIsFetchingData(!isFetchingData);
+    setIsFetchingData(false);
   };
 
   const modifyTweetState = (tweetId, change) => {
@@ -106,7 +106,7 @@ const App = () => {
   }
 
   const onUserRead = async (screenName) => {
-    setIsFetchingData(!isFetchingData);
+    setIsFetchingData(true);
     const body = JSON.stringify({ action: 'markRead' });
     await fetch(`${URL_BASE}/api/friends/${screenName}`, {
       method: 'PUT',
@@ -114,7 +114,7 @@ const App = () => {
       headers: { 'Content-Type': 'application/json' },
     });
     await getTweetData();
-    setIsFetchingData(!isFetchingData);
+    setIsFetchingData(false);
   };
 
   const ContentPanel = () => {
