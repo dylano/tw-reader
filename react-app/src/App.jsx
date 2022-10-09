@@ -16,11 +16,10 @@ const App = () => {
   const [error, setError] = useState(``);
   const [friends, setFriends] = useState([]);
 
-
   const onError = (err) => {
     console.log(`ERROR: ${err}`);
     setError(`Error: ${err}`);
-  }
+  };
 
   const getTweetData = () => {
     fetch(`${URL_BASE}/api/tweets`)
@@ -46,7 +45,7 @@ const App = () => {
     }
     const friendObj = friends.find((friend) => friend.friend._id === friendId);
     return friendObj ? friendObj.friend : null;
-  }
+  };
 
   const getTweetsByFriendId = (friendId) => {
     if (!friendId) {
@@ -54,7 +53,7 @@ const App = () => {
     }
     const friendObj = friends.find((friend) => friend.friend._id === friendId);
     return friendObj ? friendObj.tweets : [];
-  }
+  };
 
   const onFriendSelect = (friendId) => {
     setSelectedFriend(friendId);
@@ -74,7 +73,9 @@ const App = () => {
   const modifyTweetState = (tweetId, change) => {
     // find the tweet in state and apply the change
     const newFriends = friends.map((friend) => {
-      const tweetIndex = friend.tweets.findIndex((tweet) => tweet._id === tweetId);
+      const tweetIndex = friend.tweets.findIndex(
+        (tweet) => tweet._id === tweetId
+      );
       if (tweetIndex >= 0) {
         const updatedTweet = {};
         Object.assign(updatedTweet, friend.tweets[tweetIndex], change);
@@ -87,13 +88,14 @@ const App = () => {
       return friend;
     });
     setFriends(newFriends);
-  }
+  };
 
-  const sendTweetChangeAction = async (tweetId, action) => fetch(`${URL_BASE}/api/tweets/${tweetId}`, {
-    method: 'PUT',  // todo: this should be PATCH
-    body: JSON.stringify({ action }),
-    headers: { 'Content-Type': 'application/json' },
-  });
+  const sendTweetChangeAction = async (tweetId, action) =>
+    fetch(`${URL_BASE}/api/tweets/${tweetId}`, {
+      method: 'PUT', // todo: this should be PATCH
+      body: JSON.stringify({ action }),
+      headers: { 'Content-Type': 'application/json' },
+    });
 
   const onTweetRead = async (tweetId) => {
     modifyTweetState(tweetId, { isRead: true });
@@ -103,7 +105,7 @@ const App = () => {
   const onTweetSave = async (tweetId, newState) => {
     modifyTweetState(tweetId, { isSaved: newState });
     await sendTweetChangeAction(tweetId, 'save');
-  }
+  };
 
   const onUserRead = async (screenName) => {
     setIsFetchingData(true);
@@ -132,14 +134,15 @@ const App = () => {
     }
 
     return <EmptyPanel />;
-  }
+  };
 
   const buildSidebarFriendData = () => {
-    const sortedFriends = friends.map((friend) => {
-      const f = friend.friend;
-      f.newTweetCount = friend.tweets.filter((tweet) => !tweet.isRead).length;
-      return f;
-    })
+    const sortedFriends = friends
+      .map((friend) => {
+        const f = friend.friend;
+        f.newTweetCount = friend.tweets.filter((tweet) => !tweet.isRead).length;
+        return f;
+      })
       .sort((a, b) => {
         if (a.newTweetCount && !b.newTweetCount) {
           return -1;
@@ -147,7 +150,9 @@ const App = () => {
         if (b.newTweetCount && !a.newTweetCount) {
           return 1;
         }
-        return a.screenName.toLowerCase().localeCompare(b.screenName.toLowerCase());
+        return a.screenName
+          .toLowerCase()
+          .localeCompare(b.screenName.toLowerCase());
       });
 
     // select the first friend in list
@@ -156,19 +161,19 @@ const App = () => {
     }
 
     return sortedFriends;
-  }
+  };
 
   return (
-    <div className='App'>
-      <div className='app-error'>{error}</div>
+    <div className="App">
+      <div className="app-error">{error}</div>
       <Header
-        className='app-header'
+        className="app-header"
         showAllTweets={showAllTweets}
         onChangeShowAllTweets={onChangeShowAllTweets}
         onRefreshTweets={onRefreshTweets}
         isFetchingData={isFetchingData}
       />
-      <main className='app-main'>
+      <main className="app-main">
         <Sidebar
           friends={buildSidebarFriendData()}
           selectedFriend={selectedFriend}
@@ -178,7 +183,6 @@ const App = () => {
       </main>
     </div>
   );
-
-}
+};
 
 export default App;
