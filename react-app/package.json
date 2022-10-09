@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "vite --host",
-    "start": "npm dev",
+    "start": "yarn dev",
     "build": "vite build",
     "deploy-surge": "cp surge-domain build/CNAME && cd build && npx surge",
     "lint": "eslint src"

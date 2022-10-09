@@ -1,18 +1,8 @@
 # Deployments:
 
-- Heroku: https://tw-reader.herokuapp.com/
 - GCP: https://reader.doliver.net (https://tw-reader-erpc3bdnvq-uc.a.run.app)
 - Netlify: https://tw-reader.netlify.com/
 - Surge: https://tw-reader.surge.sh/
-
-## Heroku | [Dashboard](https://dashboard.heroku.com/apps/tw-reader)
-
-- serves both static and react apps
-- This app is on free tier dyno, will take ~15 seconds to spin up from idle
-- connected to github repo, does auto build & deploy on commits to master
-  - React app is hosted at `/`
-  - Static site at `/main`
-  - Database is at [Mongo Atlas](https://cloud.mongodb.com/v2/5f792075b299ca0efb0e2cfc#clusters)
 
 ## GCP | [Dashboard](https://console.cloud.google.com/home/dashboard?project=treader)
 
