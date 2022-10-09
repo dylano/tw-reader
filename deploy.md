@@ -1,6 +1,6 @@
 # Deployments:
 
-- GCP: https://reader.doliver.net (https://tw-reader-erpc3bdnvq-uc.a.run.app)
+- GCP: https://reader.doliver.net (https://tw-reader-erpc3bdnvq-uw.a.run.app)
 - Netlify: https://tw-reader.netlify.com/
 - Surge: https://tw-reader.surge.sh/
 
