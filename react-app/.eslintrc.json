@@ -1,35 +1,28 @@
 {
   "root": true,
-  "extends": ["airbnb-base", "prettier"],
+  "plugins": ["react"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:import/recommended",
+    "airbnb",
+    "prettier"
+  ],
   "env": {
     "browser": true,
-    "commonjs": true,
     "es6": true,
+    "es2020": true,
     "jest": true,
     "node": true
   },
   "rules": {
-    "no-console": ["off"],
-    "jsx-a11y/href-no-hash": ["off"],
-    "react/prop-types": ["off"],
-    "import/no-unresolved": ["off"],
-    "no-param-reassign": ["off"],
-    "import/prefer-default-export": ["off"],
-    "no-underscore-dangle": ["off"],
-    "react/jsx-filename-extension": ["warn", { "extensions": [".js", ".jsx"] }],
-    "max-len": [
-      "warn",
-      {
-        "code": 100,
-        "tabWidth": 2,
-        "comments": 100,
-        "ignoreComments": false,
-        "ignoreTrailingComments": true,
-        "ignoreUrls": true,
-        "ignoreStrings": true,
-        "ignoreTemplateLiterals": true,
-        "ignoreRegExpLiterals": true
-      }
-    ]
+    "arrow-body-style": "off",
+    "import/prefer-default-export": "off",
+    "react/jsx-filename-extension": [
+      "error",
+      { "allow": "as-needed", "extensions": [".tsx", ".jsx"] }
+    ],
+    "react/prop-types": "off"
   }
 }

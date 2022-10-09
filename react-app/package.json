@@ -2,30 +2,37 @@
   "name": "tw-reader-react",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "@blueprintjs/core": "^3.7.0",
-    "prop-types": "^15.7.2",
-    "react": "^16.13.1",
-    "react-autolinker": "^1.0.7",
-    "react-dom": "^16.13.1",
-    "react-scripts": "4.0.0"
+  "engines": {
+    "node": ">=16.17.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "deploy-surge": "cp surge-domain build/CNAME && cd build && npx surge"
+    "dev": "vite --host",
+    "start": "npm dev",
+    "build": "vite build",
+    "deploy-surge": "cp surge-domain build/CNAME && cd build && npx surge",
+    "lint": "eslint src"
+  },
+  "dependencies": {
+    "@blueprintjs/core": "^4.11.0",
+    "react": "^18.2.0",
+    "react-autolinker": "^1.0.7",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@vitejs/plugin-react": "^2.1.0",
+    "eslint-config-airbnb": "^19.0.1",
+    "eslint": "^8.25.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-html-reporter": "^0.7.4",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jest": "^27.0.2",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-react": "^7.31.5",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "prettier": "^2.0.5",
-    "eslint-config-airbnb-base": "^14.2.0",
-    "eslint-config-developit": "^1.2.0",
-    "eslint-config-prettier": "^6.14.0",
-    "eslint-plugin-import": "^2.22.1"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "vite": "^3.1.6",
+    "vite-jsconfig-paths": "^2.0.1",
+    "vite-plugin-eslint": "^1.8.1"
   },
   "proxy": "http://localhost:5000",
   "browserslist": [

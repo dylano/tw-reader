@@ -1,9 +1,8 @@
-import React from "react";
-import PropTypes from "prop-types";
-import ReactAutolinker from "react-autolinker";
-import "./TweetPanel.css";
+import React from 'react';
+import ReactAutolinker from 'react-autolinker';
+import './TweetPanel.css';
 
-const autolinkerOptions = { className: "autolinker" };
+const autolinkerOptions = { className: 'autolinker' };
 
 const TweetPanel = ({
   friend,
@@ -37,13 +36,13 @@ const TweetPanel = ({
             className="tweet-action action-close"
             onClick={() => onTweetRead(tweet._id)}
           >
-            <ion-icon name="close" style={{ color: "orangered" }}></ion-icon>
+            <ion-icon name="close" style={{ color: 'orangered' }}></ion-icon>
           </span>
         );
 
         // Save action icon
-        const iconName = tweet.isSaved ? "star" : "star-outline";
-        const styleColor = tweet.isSaved ? "yellow" : "white";
+        const iconName = tweet.isSaved ? 'star' : 'star-outline';
+        const styleColor = tweet.isSaved ? 'yellow' : 'white';
         const saveAction = (
           <span
             className="tweet-action action-save"
@@ -55,7 +54,7 @@ const TweetPanel = ({
         );
 
         // show similarity display if this looks like a duplicate tweet
-        let similarityReport = "";
+        let similarityReport = '';
         if (tweet.similarity > 0.5) {
           similarityReport = (
             <div className="tweet-panel-tweet-similarity">
@@ -64,7 +63,7 @@ const TweetPanel = ({
           );
         }
 
-        let retweetUser = "";
+        let retweetUser = '';
         if (tweet.retweetUserName) {
           retweetUser = (
             <span className="retweet-user">@{tweet.retweetUserName}</span>
@@ -115,14 +114,6 @@ const TweetPanel = ({
       {content}
     </div>
   );
-};
-TweetPanel.propTypes = {
-  tweets: PropTypes.array.isRequired,
-  friend: PropTypes.object.isRequired,
-  onTweetRead: PropTypes.func.isRequired,
-  onTweetSave: PropTypes.func.isRequired,
-  onUserRead: PropTypes.func.isRequired,
-  showAllTweets: PropTypes.bool,
 };
 
 export default TweetPanel;
