@@ -19,20 +19,17 @@ function App() {
     setError(`Error: ${err}`);
   };
 
-  const getTweetData = useCallback(() => {
-    fetch(`${URL_BASE}/api/tweets`)
-      .then((res) => res.json())
-      .then((json) => {
-        setFriends(json.friends);
-      })
-      .catch((err) => onError(err));
+  const getTweetData = useCallback(async () => {
+    const response = await fetch(`${URL_BASE}/api/tweets`);
+    const friendData = await response.json();
+    setFriends(friendData.friends);
   }, []);
 
   useEffect(() => {
     if (process.env.REACT_APP_USE_MOCK_SERVER === 'true') {
       setError(`mock data`);
     }
-    getTweetData();
+    getTweetData().catch(onError);
   }, [getTweetData]);
 
   const getFriend = (friendId) => {
@@ -60,10 +57,15 @@ function App() {
   };
 
   const onRefreshTweets = async () => {
-    setIsFetchingData(true);
-    await fetch(`${URL_BASE}/api/tweets`, { method: 'POST' });
-    await getTweetData();
-    setIsFetchingData(false);
+    try {
+      setIsFetchingData(true);
+      await fetch(`${URL_BASE}/api/tweets`, { method: 'POST' });
+      await getTweetData();
+    } catch (err) {
+      onError(err);
+    } finally {
+      setIsFetchingData(false);
+    }
   };
 
   const modifyTweetState = (tweetId, change) => {
@@ -104,33 +106,21 @@ function App() {
   };
 
   const onUserRead = async (screenName) => {
-    setIsFetchingData(true);
-    const body = JSON.stringify({ action: 'markRead' });
-    await fetch(`${URL_BASE}/api/friends/${screenName}`, {
-      method: 'PUT',
-      body,
-      headers: { 'Content-Type': 'application/json' },
-    });
-    await getTweetData();
-    setIsFetchingData(false);
-  };
-
-  function ContentPanel() {
-    if (selectedFriend) {
-      return (
-        <TweetPanel
-          friend={getFriend(selectedFriend)}
-          tweets={getTweetsByFriendId(selectedFriend)}
-          showAllTweets={showAllTweets}
-          onTweetRead={onTweetRead}
-          onTweetSave={onTweetSave}
-          onUserRead={onUserRead}
-        />
-      );
+    try {
+      setIsFetchingData(true);
+      const body = JSON.stringify({ action: 'markRead' });
+      await fetch(`${URL_BASE}/api/friends/${screenName}`, {
+        method: 'PUT',
+        body,
+        headers: { 'Content-Type': 'application/json' },
+      });
+      await getTweetData();
+    } catch (err) {
+      onError(err);
+    } finally {
+      setIsFetchingData(false);
     }
-
-    return <EmptyPanel />;
-  }
+  };
 
   const buildSidebarFriendData = () => {
     const sortedFriends = friends
@@ -175,7 +165,18 @@ function App() {
           selectedFriend={selectedFriend}
           onFriendSelect={onFriendSelect}
         />
-        <ContentPanel />
+        {selectedFriend ? (
+          <TweetPanel
+            friend={getFriend(selectedFriend)}
+            tweets={getTweetsByFriendId(selectedFriend)}
+            showAllTweets={showAllTweets}
+            onTweetRead={onTweetRead}
+            onTweetSave={onTweetSave}
+            onUserRead={onUserRead}
+          />
+        ) : (
+          <EmptyPanel />
+        )}
       </main>
     </div>
   );
