@@ -4,7 +4,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
-  background-color: rgb(100,100,100);
+  background-color: rgba(100, 100, 100, 0.5);
   color: white;
 }
 
@@ -14,4 +14,9 @@
 
 .btn-new-tweets {
   margin-left: 10px;
+}
+
+.disclaimer {
+  color: rgba(100, 100, 100, 1.5);
+  font-size: xx-small;
 }

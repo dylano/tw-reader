@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable no-underscore-dangle */
+import React, { useState, useEffect, useCallback } from 'react';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import TweetPanel from './components/TweetPanel';
 import EmptyPanel from './components/EmptyPanel';
-import { staticData } from './static-data';
 import './App.css';
 
-const USE_FAKE_DATA = 0;
-const URL_BASE = process.env.REACT_APP_URL_BASE ?? ''; // if not defined, will proxy calls to localhost:5000
+const URL_BASE = process.env.REACT_APP_URL_BASE || '';
 
-const App = () => {
+function App() {
   const [selectedFriend, setSelectedFriend] = useState(null);
   const [isFetchingData, setIsFetchingData] = useState(false);
   const [showAllTweets, setShowAllTweets] = useState(false);
@@ -17,27 +16,21 @@ const App = () => {
   const [friends, setFriends] = useState([]);
 
   const onError = (err) => {
-    console.log(`ERROR: ${err}`);
     setError(`Error: ${err}`);
   };
 
-  const getTweetData = () => {
-    fetch(`${URL_BASE}/api/tweets`)
-      .then((res) => res.json())
-      .then((json) => {
-        setFriends(json.friends);
-      })
-      .catch((err) => onError(err));
-  };
+  const getTweetData = useCallback(async () => {
+    const response = await fetch(`${URL_BASE}/api/tweets`);
+    const friendData = await response.json();
+    setFriends(friendData.friends);
+  }, []);
 
   useEffect(() => {
-    if (USE_FAKE_DATA) {
-      setFriends(staticData.friends);
-      setError(`static-data`);
-    } else {
-      getTweetData();
+    if (process.env.REACT_APP_USE_MOCK_SERVER === 'true') {
+      setError(`mock data`);
     }
-  }, []);
+    getTweetData().catch(onError);
+  }, [getTweetData]);
 
   const getFriend = (friendId) => {
     if (!friendId) {
@@ -64,10 +57,15 @@ const App = () => {
   };
 
   const onRefreshTweets = async () => {
-    setIsFetchingData(true);
-    await fetch(`${URL_BASE}/api/tweets`, { method: 'POST' });
-    await getTweetData();
-    setIsFetchingData(false);
+    try {
+      setIsFetchingData(true);
+      await fetch(`${URL_BASE}/api/tweets`, { method: 'POST' });
+      await getTweetData();
+    } catch (err) {
+      onError(err);
+    } finally {
+      setIsFetchingData(false);
+    }
   };
 
   const modifyTweetState = (tweetId, change) => {
@@ -108,32 +106,20 @@ const App = () => {
   };
 
   const onUserRead = async (screenName) => {
-    setIsFetchingData(true);
-    const body = JSON.stringify({ action: 'markRead' });
-    await fetch(`${URL_BASE}/api/friends/${screenName}`, {
-      method: 'PUT',
-      body,
-      headers: { 'Content-Type': 'application/json' },
-    });
-    await getTweetData();
-    setIsFetchingData(false);
-  };
-
-  const ContentPanel = () => {
-    if (selectedFriend) {
-      return (
-        <TweetPanel
-          friend={getFriend(selectedFriend)}
-          tweets={getTweetsByFriendId(selectedFriend)}
-          showAllTweets={showAllTweets}
-          onTweetRead={onTweetRead}
-          onTweetSave={onTweetSave}
-          onUserRead={onUserRead}
-        />
-      );
+    try {
+      setIsFetchingData(true);
+      const body = JSON.stringify({ action: 'markRead' });
+      await fetch(`${URL_BASE}/api/friends/${screenName}`, {
+        method: 'PUT',
+        body,
+        headers: { 'Content-Type': 'application/json' },
+      });
+      await getTweetData();
+    } catch (err) {
+      onError(err);
+    } finally {
+      setIsFetchingData(false);
     }
-
-    return <EmptyPanel />;
   };
 
   const buildSidebarFriendData = () => {
@@ -179,10 +165,21 @@ const App = () => {
           selectedFriend={selectedFriend}
           onFriendSelect={onFriendSelect}
         />
-        <ContentPanel />
+        {selectedFriend ? (
+          <TweetPanel
+            friend={getFriend(selectedFriend)}
+            tweets={getTweetsByFriendId(selectedFriend)}
+            showAllTweets={showAllTweets}
+            onTweetRead={onTweetRead}
+            onTweetSave={onTweetSave}
+            onUserRead={onUserRead}
+          />
+        ) : (
+          <EmptyPanel />
+        )}
       </main>
     </div>
   );
-};
+}
 
 export default App;
