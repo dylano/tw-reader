@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable no-underscore-dangle */
+import React, { useState, useEffect, useCallback } from 'react';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import TweetPanel from './components/TweetPanel';
 import EmptyPanel from './components/EmptyPanel';
-import { staticData } from './static-data';
 import './App.css';
 
-const USE_FAKE_DATA = 0;
-const URL_BASE = process.env.REACT_APP_URL_BASE ?? ''; // if not defined, will proxy calls to localhost:5000
+const URL_BASE = process.env.REACT_APP_URL_BASE || '';
 
-const App = () => {
+function App() {
   const [selectedFriend, setSelectedFriend] = useState(null);
   const [isFetchingData, setIsFetchingData] = useState(false);
   const [showAllTweets, setShowAllTweets] = useState(false);
@@ -17,27 +16,24 @@ const App = () => {
   const [friends, setFriends] = useState([]);
 
   const onError = (err) => {
-    console.log(`ERROR: ${err}`);
     setError(`Error: ${err}`);
   };
 
-  const getTweetData = () => {
+  const getTweetData = useCallback(() => {
     fetch(`${URL_BASE}/api/tweets`)
       .then((res) => res.json())
       .then((json) => {
         setFriends(json.friends);
       })
       .catch((err) => onError(err));
-  };
+  }, []);
 
   useEffect(() => {
-    if (USE_FAKE_DATA) {
-      setFriends(staticData.friends);
-      setError(`static-data`);
-    } else {
-      getTweetData();
+    if (process.env.REACT_APP_USE_MOCK_SERVER === 'true') {
+      setError(`mock data`);
     }
-  }, []);
+    getTweetData();
+  }, [getTweetData]);
 
   const getFriend = (friendId) => {
     if (!friendId) {
@@ -119,7 +115,7 @@ const App = () => {
     setIsFetchingData(false);
   };
 
-  const ContentPanel = () => {
+  function ContentPanel() {
     if (selectedFriend) {
       return (
         <TweetPanel
@@ -134,7 +130,7 @@ const App = () => {
     }
 
     return <EmptyPanel />;
-  };
+  }
 
   const buildSidebarFriendData = () => {
     const sortedFriends = friends
@@ -183,6 +179,6 @@ const App = () => {
       </main>
     </div>
   );
-};
+}
 
 export default App;

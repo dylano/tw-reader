@@ -20,8 +20,8 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^2.1.0",
-    "eslint-config-airbnb": "^19.0.1",
     "eslint": "^8.25.0",
+    "eslint-config-airbnb": "^19.0.1",
     "eslint-config-prettier": "^8.5.0",
     "eslint-html-reporter": "^0.7.4",
     "eslint-plugin-import": "^2.26.0",
@@ -29,6 +29,7 @@
     "eslint-plugin-jsx-a11y": "^6.6.1",
     "eslint-plugin-react": "^7.31.5",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "msw": "^0.47.4",
     "prettier": "^2.0.5",
     "vite": "^3.1.6",
     "vite-jsconfig-paths": "^2.0.1",
@@ -40,5 +41,8 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "msw": {
+    "workerDirectory": "public"
+  }
 }
