@@ -1,15 +1,15 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import './index.css';
-import { worker } from './mocks/browser';
-import App from './App';
+import { worker, unhandledRequestHandler } from './mocks/browser';
 import * as serviceWorker from './serviceWorker';
+import './index.css';
+import App from './App';
 
 if (
   process.env.NODE_ENV === 'development' &&
   process.env.REACT_APP_USE_MOCK_SERVER === 'true'
 ) {
-  worker.start();
+  worker.start({ onUnhandledRequest: unhandledRequestHandler });
 }
 const container =
   document.getElementById('root') || document.createElement('div');
