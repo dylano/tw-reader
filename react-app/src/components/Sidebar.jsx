@@ -1,7 +1,8 @@
+/* eslint-disable no-underscore-dangle */
 import React from 'react';
 import './Sidebar.css';
 
-const Sidebar = ({ friends, selectedFriend, onFriendSelect }) => {
+function Sidebar({ friends, selectedFriend, onFriendSelect }) {
   const fList = friends.map((friend) => {
     let newTweetsStr = '';
     let unreadClass = '';
@@ -15,13 +16,14 @@ const Sidebar = ({ friends, selectedFriend, onFriendSelect }) => {
         ? 'sidebar-friendlist-item selected'
         : `sidebar-friendlist-item ${unreadClass}`;
     return (
-      <div
+      <button
+        type="button"
         className={className}
         key={friend._id}
         onClick={() => onFriendSelect(friend._id)}
       >
         {label}
-      </div>
+      </button>
     );
   });
   return friends.length > 0 ? (
@@ -29,6 +31,6 @@ const Sidebar = ({ friends, selectedFriend, onFriendSelect }) => {
   ) : (
     <div className="sidebar sidebar-loading">Loading...</div>
   );
-};
+}
 
 export default Sidebar;

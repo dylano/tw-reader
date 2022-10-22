@@ -40,13 +40,16 @@
 
 .tweet-panel-header-action {
   cursor: pointer;
-  text-align: right;
+  text-align: center;
+  border: 1px solid green;
+  border-radius: 0.5rem;
+  width: 3.5rem;
 }
 
 .tweet-panel-tweet {
   display: flex;
   align-items: center;
-  margin: 10px;
+  margin-top: 5px;
 }
 
 .tweet-panel-tweet-content {
