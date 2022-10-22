@@ -4,7 +4,7 @@ import './EmptyPanel.css';
 function EmptyPanel() {
   return (
     <div className="empty-panel-content">
-      <span> &lt;-- Click a friend to view tweets</span>
+      <span>Loading up the tweets...</span>
     </div>
   );
 }

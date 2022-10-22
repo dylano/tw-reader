@@ -1,17 +1,18 @@
+/* eslint-disable no-underscore-dangle */
 import React from 'react';
 import ReactAutolinker from 'react-autolinker';
 import './TweetPanel.css';
 
 const autolinkerOptions = { className: 'autolinker' };
 
-const TweetPanel = ({
+function TweetPanel({
   friend,
   tweets,
   onTweetRead,
   onTweetSave,
   onUserRead,
   showAllTweets = false,
-}) => {
+}) {
   if (!showAllTweets) {
     tweets = tweets.filter((tweet) => !tweet.isRead);
   }
@@ -20,8 +21,7 @@ const TweetPanel = ({
   if (tweets.length === 0) {
     content = (
       <div className="tweet-panel-tweet tweet-panel-tweet-content">
-        <span>No tweetz</span>
-        <ion-icon name="sad"></ion-icon>
+        <span>No tweets have been twote.</span>
       </div>
     );
   } else {
@@ -32,25 +32,27 @@ const TweetPanel = ({
 
         // Mark read action icon
         const markReadAction = tweet.isRead ? null : (
-          <span
+          <button
+            type="button"
             className="tweet-action action-close"
             onClick={() => onTweetRead(tweet._id)}
           >
-            <ion-icon name="close" style={{ color: 'orangered' }}></ion-icon>
-          </span>
+            <ion-icon name="close" style={{ color: 'orangered' }} />
+          </button>
         );
 
         // Save action icon
         const iconName = tweet.isSaved ? 'star' : 'star-outline';
         const styleColor = tweet.isSaved ? 'yellow' : 'white';
         const saveAction = (
-          <span
+          <button
+            type="button"
             className="tweet-action action-save"
             style={{ border: `1px solid ${styleColor}` }}
             onClick={() => onTweetSave(tweet._id, !tweet.isSaved)}
           >
-            <ion-icon style={{ color: styleColor }} name={iconName}></ion-icon>
-          </span>
+            <ion-icon style={{ color: styleColor }} name={iconName} />
+          </button>
         );
 
         // show similarity display if this looks like a duplicate tweet
@@ -102,18 +104,17 @@ const TweetPanel = ({
           />
           <span className="tweet-panel-header-name">{friend.name}</span>
         </div>
-        <span
+        <button
+          type="button"
           className="tweet-panel-header-action"
           onClick={() => onUserRead(friend.screenName)}
         >
-          Mark
-          <br />
-          Read
-        </span>
+          Mark Read
+        </button>
       </header>
       {content}
     </div>
   );
-};
+}
 
 export default TweetPanel;
