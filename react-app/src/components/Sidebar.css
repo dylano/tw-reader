@@ -18,15 +18,24 @@
 .sidebar-friendlist-item {
   cursor: pointer;
   transition: all 150ms;
+  text-align: left;
+  color: yellow;
+}
+
+.sidebar-friendlist-item:focus {
+  outline: 0;
 }
 
 .unread {
-  font-style: italic;
-  font-weight: 600;
+  font-size: medium;
+  font-weight: bold;
 }
 
 .sidebar .selected {
-  transform: scale(1.2);
-  background-color: black;
-  color: yellow;
+  transform: translateX(2rem);
+  background: linear-gradient(90deg, yellow 0%, black 80%);
+  color: black;
+  font-weight: bold;
+  font-size: large;
+  border-radius: 2rem 0 0 2rem;
 }

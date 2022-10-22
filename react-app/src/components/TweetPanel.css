@@ -40,8 +40,9 @@
 
 .tweet-panel-header-action {
   cursor: pointer;
+  font-weight: bold;
   text-align: center;
-  border: 1px solid green;
+  border: 2px solid green;
   border-radius: 0.5rem;
   width: 3.5rem;
 }
