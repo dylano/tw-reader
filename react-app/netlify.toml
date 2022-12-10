@@ -1,5 +1,5 @@
 [context.production.environment]
   REACT_APP_URL_BASE = "https://reader.doliver.net"
   REACT_APP_USE_MOCK_SERVER = "false"
-  REACT_APP_VERSION = "2022.10.10"
+  REACT_APP_VERSION = "2022.12.10"
   NODE_VERSION = "16.17.1"
